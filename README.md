@@ -23,7 +23,8 @@ lean-workbench uses a number of open source projects to work properly:
 Installation
 --------------
 
-```git clone https://github.com/wigginslab/lean-workbench
+```
+git clone https://github.com/wigginslab/lean-workbench
 cd lean-workbench
 sudo pip install virtualenv
 virtualenv venv
