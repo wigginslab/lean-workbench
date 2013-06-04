@@ -19,7 +19,8 @@ lean-workbench uses a number of open source projects to work properly:
 * Flask-Auth- a Flask authentication module
 * Flask-Sqlalchemy- a Flask SQL database wrapper
 * Postgresql- A SQL database
-
+* HTML5Boilerplate
+ 
 Installation
 --------------
 
@@ -32,6 +33,19 @@ virtualenv venv
  pip install -r "requirements.txt"
 ```
 
+Environment Variables
+--------------------
+The following variables must be set on your machine:
+
+* db_url- url to a sqlalchemy compatible database
+* port- port from which you wish the serve the app
+
+Running the Application
+---------------------------
+Set the environment variables then:
+```
+python app.py
+```
 
 License
 -
@@ -47,6 +61,3 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Except as contained in this notice, the name of the author(s) shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from those author(s).
-
-    lean-workbench
-==============
