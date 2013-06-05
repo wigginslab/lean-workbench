@@ -16,7 +16,6 @@ lean-workbench uses a number of open source projects to work properly:
 
 * Python- an awesome scripting language
 * Flask - a lean python web framework
-* Flask-Auth- a Flask authentication module
 * Flask-Sqlalchemy- a Flask SQL database wrapper
 * Postgresql- A SQL database
 * HTML5Boilerplate
@@ -31,8 +30,8 @@ sudo pip install virtualenv
 virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
+python create_db.py
 ```
-
 Environment Variables
 --------------------
 The following variables must be set on your machine:

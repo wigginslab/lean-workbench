@@ -1,14 +1,48 @@
-from settings import *
-from flask.ext.security import UserMixin
-from roleusers import *
+from datetime import datetime
+from flask import Flask
+from flask.ext.sqlalchemy import *
+from werkzeug import generate_password_hash, check_password_hash
+import os
+import sys
 
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True)
-    password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users,
-                            backref=db.backref('users', lazy='dynamic'))
+db = SQLAlchemy(app)
 
+# Standard Databases
+class User(db.Model):
+
+    __tablename__ = 'users'
+    uid = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(60))
+    pwdhash = db.Column(db.String())
+    email = db.Column(db.String(60))
+    activate = db.Column(db.Boolean)
+    created = db.Column(db.DateTime)
+		
+    def __init__(self, username, password, email):
+        self.username = username
+        self.check_username()
+        self.pwdhash = generate_password_hash(password)
+        self.email = email
+        self.activate = True
+        self.created = datetime.utcnow()
+
+    def check_password(self, password):
+      	return check_password_hash(self.pwdhash, password)
+		
+    def check_username(self):
+        sameUsername = User.query.filter_by(username=self.username).all()
+        print 'sameUsername: '
+        print sameUsername
+        if sameUsername: 				    
+            print 'user already exists'
+            raise RuntimeError("1")#user already exists
+
+	
+    def __repr__(self):
+      """
+      Representation of the user object
+      """
+      return '<User %s>' %self.username

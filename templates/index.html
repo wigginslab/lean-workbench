@@ -1,4 +1,13 @@
 {% extends 'base.html'%}
+	{% block morehead %}
+		<script src="/static/js/underscore.js"></script>
+	    <script src="/static/js/socket.io.min.js"></script>
+		<script src="/static/js/app.js"></script>
+	{% endblock %}
+	{% block topform %}
+	{% endblock %}
+
 	{%block content%}
-	Logged in hooray!
-	{%endblock%}
+	{{alert}}
+	You, {{username}},  are logged in!
+ 	{%endblock%}
