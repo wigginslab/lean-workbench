@@ -1,6 +1,6 @@
 from werkzeug import SharedDataMiddleware
 import os
-from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for
+from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for, jsonify
 import datetime
 import random
 import re
@@ -10,6 +10,7 @@ from socketio.namespace import BaseNamespace
 import redis 
 from models.user import *
 from datetime import datetime
+from apps.crunchbase.crunchbase import Crunchbase
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -23,6 +24,13 @@ def index():
 		return render_template('index.html', username=username)
 	else:
 		return render_template('public.html')
+
+@app.route('/crunchbase')
+def crunchbase():
+	c = Crunchbase(os.getenv("crunchbase_key"))
+	#return jsonify(c.listCompanies)
+	companies = c.listCompanies()
+	return jsonify(companies)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
