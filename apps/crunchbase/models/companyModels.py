@@ -47,6 +47,17 @@ class Degree(Base):
 	school = Column(db.String)
 	type = db.Column(db.String)
 
+class Milestone(Base):
+	"""
+	Startup milestones
+	"""
+	__tablename__= "milestone"
+	year = db.Column(db.Integer)
+	month = db.Column(db.Integer)
+	day = db.Column(db.Integer)
+	url = db.Column(db.String)
+
+
 class Tag(Base):
 	"""
 	Company semantic tags
@@ -54,3 +65,11 @@ class Tag(Base):
 	__tablename__ = "tag"
 	id = db.Column(Integer, primary_key=True)
 	name = db.Column(db.String(80))
+
+class Role(Base):
+	"""
+	Role of a person in a company
+	"""
+	__tablename__ = "role"
+	id = Column(Integer primary_key=True)
+	person_id = Column(Integer, ForeignKey('person'))
