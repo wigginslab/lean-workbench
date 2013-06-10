@@ -1,4 +1,7 @@
-#from models.user import db 
-from apps.crunchbase.models.companyModels import Person, Degree, InvestmentRound, Milestone, Tag, Role, db
-db.create_all()
+from models.user import db as user_db
+from apps.crunchbase.models.companyModels import db as crunchbase_db
 
+# create user table
+user_db.create_all()
+# create crunchbase tables
+crunchbase_db.create_all()
