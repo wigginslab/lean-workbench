@@ -10,35 +10,39 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 Base = declarative_base()
 
-
-company_competitors_table = Table('association', Base.metadata,
+# many to many associations
+company_competitors_asssociation = Table('company_competitiors_assocation', Base.metadata,
 	db.Column('company_id', Integer, ForeignKey('company.id')),
 	db.Column('competitors_id', Integer, ForeignKey('company.id')))
 
-company_tags_table = Table('association', Base.metadata,
+company_tags_association = Table('company_tags_association', Base.metadata,
 	Column('company_id', Integer, ForeignKey('company.id')),
 	Column('tag_id', Integer, ForeignKey('tag.id')))
 
-company_employees_table =  Table('association', Base.metadata,
+company_employees_association =  Table('company_employees_association', Base.metadata,
 	db.Column('company_id', Integer, ForeignKey('company.id')),
 	db.Column('person_id', Integer, ForeignKey('person.id')))
 
-company_milestones_table =  Table('association', Base.metadata,
+company_investors_association = Table('company_investors_association', Base.metadata,
+	db.Column('company_id', Integer, ForeignKey('company.id')),
+	db.Column('person_id', Integer, ForeignKey('person.id')))
+
+company_milestones_association =  Table('company_milestone_association', Base.metadata,
 	db.Column('company_id', Integer, ForeignKey('company.id')),
 	db.Column('milestone_id', Integer, ForeignKey('milestone.id')))
 
 class Company(Base):
 	__tablename__ = "company"
 	id = db.Column(Integer, primary_key=True)
-	investors = db.relationship("Person", secondary=company_investor_table)
-	tags = db.relationship("tag", secondary=company_tag_table)
-	employees = db.relationship("Person", secondary=company_employees_table)
+	investors = db.relationship("Person", secondary=company_investors_association)
+	tags = db.relationship("Tag", secondary=company_tags_association)
+	employees = db.relationship("Person", secondary=company_employees_association)
 	number_of_employees = db.Column(Integer)
 	founded_year =  db.Column(Integer(4))
 	founded_month = db.Column(db.Integer)
 	founded_day = db.Column(db.Integer)
-	image= db.column(db.String)
-	milestones=Column("Milestone", secondary=company_milestone_table)
+	image= db.Column(db.String)
+	milestones=db.relationship("Milestone", secondary=company_milestones_association)
 
 class Person(Base):
 	"""
@@ -50,8 +54,7 @@ class Person(Base):
 	crunchbase_url=db.Column(db.String(100))
 	birthday= db.Column(db.String(10))
 	image = db.Column(db.String)
-	degree_id = Column(Integer, ForeignKey("degree_id"))
-	degree = relationship("Degree")
+	degree = relationship("Degree", backref="person")
 
 
 class Degree(Base):
@@ -61,7 +64,8 @@ class Degree(Base):
 	__tablename__= "degree"
 	id = db.Column(Integer, primary_key=True)
 	school = Column(db.String)
-	type = db.Column(db.String)
+	degree_type = db.Column(db.String)
+	person_id=Column(Integer, ForeignKey('person.id'))
 
 class InvestmentRound(Base):
 	__tablename__ = "investmentRound"
@@ -76,6 +80,7 @@ class Milestone(Base):
 	Startup milestones
 	"""
 	__tablename__= "milestone"
+	id = Column(Integer, primary_key=True)
 	year = db.Column(db.Integer)
 	month = db.Column(db.Integer)
 	day = db.Column(db.Integer)
@@ -83,12 +88,12 @@ class Milestone(Base):
 
 
 
-class Tag(Base):
+class Tag(db.Model):
 	"""
 	Company semantic tags
 	"""
 	__tablename__ = "tag"
-	id = db.Column(Integer, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(80))
 
 class Role(Base):
@@ -96,5 +101,5 @@ class Role(Base):
 	Role of a person in a company
 	"""
 	__tablename__ = "role"
-	id = Column(Integer, primary_key=True)
-	person_id = Column(Integer, ForeignKey('person'))
+	id = Column(db.Integer, primary_key=True)
+	person_id = Column(db.Integer, ForeignKey('person'))
