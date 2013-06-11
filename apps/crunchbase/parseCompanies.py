@@ -14,26 +14,25 @@ errors = []
 for company_index in range(0, len(companies)):
 	company_dict = companies[company_index]
 	company_name = company_dict['name']
+	error = False
 	try:
-		if company is list:
-			company = company[0]
-		# get people involved with company	
-		relationships = company['relationships']
-			
 		company = c.getCompanyData(company_name)
 	except:
 		errors.append[company]
-		
-	if company is list:
+		error = True
+	if not error:
+		if company is list:
 			company = company[0]
 
-
-		investors = store_investments(company)
-		tags = store_tags(company)
-		employees = store_employees(company)
-		number_of_employees = company['number_of_employees']
+		new_company = Company()
+		# get people involved with company	
+		new_company.relationships = store_relationships(company['relationships'])
+		new_company.investors = store_investments(company)
+		new_company.tags = store_tags(company)
+		new_company.employees = store_employees(company)
+		new_company.number_of_employees = company['number_of_employees']
 		founded_year = company['founded_year']+company['founded_month']+company['founded_day']
-
+		
 		
 
 	print errors
