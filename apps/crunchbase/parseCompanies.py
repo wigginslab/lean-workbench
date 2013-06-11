@@ -10,15 +10,19 @@ c = Crunchbase(os.getenv("crunchbase_key"))
 
 companies= c.listCompanies()
 
-for company in range(0, len(companies)):
-	print companies[company]
-#	investments = companies[company]['investments'] # dictionary of investments
-#	print investments
-#	company_name = dump['name']
-#	tags = dump['tag_list']
-#	store_investments(investments)
-#	store_tags(tags)
-
+errors = []
+for company_index in range(0, len(companies)):
+	company_dict = companies[company_index]
+	company_name = company_dict['name']
+	company = c.getCompanyData(company_name)
+	try:
+		if company is list:
+			pass
+		else:
+			pass
+	except:
+		errors.append[company]
+	print errors
 def store_investments(investments):
 	for investment in investments:
 		pass		
