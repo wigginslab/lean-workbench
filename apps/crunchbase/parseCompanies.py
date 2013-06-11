@@ -17,9 +17,10 @@ for company_index in range(0, len(companies)):
 	company = c.getCompanyData(company_name)
 	try:
 		if company is list:
-			pass
-		else:
-			pass
+			company = company[0]
+		# get people involved with company	
+		relationships = company['relationships']
+			
 	except:
 		errors.append[company]
 	print errors
