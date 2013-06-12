@@ -2,3 +2,5 @@ flask==0.9
 flask-sqlalchemy
 flask-security
 flask-mail
+simplejson
+psycopg2
