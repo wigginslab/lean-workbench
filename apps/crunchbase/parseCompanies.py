@@ -36,9 +36,20 @@ for company_index in range(0, len(companies)):
 		
 
 	print errors
-def store_investments(investments):
+def store_investments(company):
+	"""
+	Parse the investment information
+	"""
+	p = Person()
 	for investment in investments:
-		pass		
+		investors = []
+		for investor in investment:
+			investor = Person.query.filter_by(name=investor)
+			# if person already exists in the database
+			if investor:
+				investors.append(
+		new_round = InvestmentRound(round_code=investment['round_code'], funded_day=investment['funded_day'], funded_month=investment['funded_month'], funded_year=investment['funded_year'],)
+		new_round.
 
 def store__tags(tags):
 	for tag in tags:

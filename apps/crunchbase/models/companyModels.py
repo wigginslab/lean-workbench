@@ -35,6 +35,10 @@ company_competitors_association = db.Table('company_competitors_association',
     db.Column('company_id', db.Integer, db.ForeignKey('company.id'))
 )
 
+investments_investor_association = db.Table('investments_investor_association',
+    db.Column('investment_id', db.Integer, db.ForeignKey('investment.id')),
+    db.Column('person_id', db.Integer, db.ForeignKey('person.id'))
+)
 
 class Company(db.Model):
 	__tablename__ = "company"
@@ -98,12 +102,13 @@ class Degree(db.Model):
 	person_id= db.Column(db.Integer, ForeignKey('person.id'))
 
 class InvestmentRound(db.Model):
-	__tablename__ = "investmentRound"
+	__tablename__ = "investment_round"
 	id = db.Column(db.Integer, primary_key=True)
 	round_code = db.Column(db.String)
 	funded_day = db.Column(db.String)
 	funded_month = db.Column(db.String)
 	funded_year = db.Column(db.String)
+	investors = db.relationship("Person", secondary=investment_investor_association)
 
 class Milestone(db.Model):
 	"""
