@@ -40,12 +40,11 @@ investments_investor_association = db.Table('investments_investor_association',
     db.Column('person_id', db.Integer, db.ForeignKey('person.id'))
 )
 
+
 class Company(db.Model):
 	__tablename__ = "company"
 	id = db.Column(db.Integer, primary_key = True)
-	investors = db.relationship("Person", secondary = company_investors_association)
 	tags = db.relationship("Tag", secondary = company_tags_association)
-	employees = db.relationship("Person", secondary=company_employees_association)
 	number_of_employees = db.Column(Integer)
 	founded_year =  db.Column(Integer(4))
 	founded_month = db.Column(db.Integer)
@@ -63,13 +62,17 @@ class Person(db.Model):
 	crunchbase_url = db.Column(db.String(100))
 	birthday = db.Column(db.String(10))
 	image = db.Column(db.String(100))
-#	degree = relationship("Degree", backref="person")
+	#degree = relationship("Degree", backref="person")
+	roles =  db.relationship('Role', backref='person',
+			                                lazy='dynamic')
 
 	def __init__(self,name=None, crunchbase_url=None, birthday=None, image=None):
 		self.name = name
 		self.crunchbase_url = crunchbase_url
 		self.birthday = birthday
 		self.image = image
+		#self.degree = degree
+		#self.roles = roles
 
 class Tag(db.Model):
 	"""
@@ -90,6 +93,8 @@ class Role(db.Model):
 	id = Column(db.Integer, primary_key=True)
 	company_name = Column(db.String(100))
 	role_name = db.Column(db.String(20))
+	person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+	is_past= db.Column(db.Boolean)
 
 class Degree(db.Model):
 	"""
@@ -121,5 +126,3 @@ class Milestone(db.Model):
 	month = db.Column(db.Integer)
 	day = db.Column(db.Integer)
 	url = db.Column(db.String)
-
-
