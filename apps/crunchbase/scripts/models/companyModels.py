@@ -9,7 +9,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 
 # many to many associations
-
 company_investors_association = db.Table('company_investor_association',
     db.Column('company_id', db.Integer, db.ForeignKey('company.id')),
     db.Column('person_id', db.Integer, db.ForeignKey('person.id'))
@@ -40,7 +39,6 @@ investments_investor_association = db.Table('investments_investor_association',
     db.Column('person_id', db.Integer, db.ForeignKey('person.id'))
 )
 
-
 class Company(db.Model):
 	__tablename__ = "company"
 	id = db.Column(db.Integer, primary_key = True)
@@ -51,6 +49,8 @@ class Company(db.Model):
 	founded_day = db.Column(db.Integer)
 	image= db.Column(db.String)
 	milestones=db.relationship("Milestone", secondary=company_milestones_association)
+	# startup or finanical organization
+	company_type = db.Column(db.String)
 
 class Person(db.Model):	
 	"""
@@ -126,3 +126,12 @@ class Milestone(db.Model):
 	month = db.Column(db.Integer)
 	day = db.Column(db.Integer)
 	url = db.Column(db.String)
+
+class Financial_Organization(db.Model):
+	"""
+	Financial organization
+	"""
+	__tablename__= "finanical_organization"
+	id = db.Column(Integer, primary_key=True)
+	name = db.Column(db.String)
+	crunchbase_url = db.Column(db.String)
