@@ -77,27 +77,43 @@ class StoreCrunchbase:
 			company_list: a list of company dictionaries that have the company name as a key
 			company_type: type of company
 		"""
+		company_logs = open("company.logs", "w")
 		for company_index in range(0, len(company_list)):
 			company_info= company_list[company_index]
 			company_name = company_info['name']
 			company = self.client.getCompanyData(company_name)
 		
 			
-			
 			# if resorted to searching CB for best match, you get a list back
 			if company is list:
 				# choose the first result
-				company = company[0]
+				print 'company is list'
+				company_logs.write("company is list \n")
+				company = company[0][0]
 			
 			# make roles
+
+			company_logs.write("\n")
+			company_logs.write(str(company))
+
 			new_company = Company()
-			new_company.tags = self.store_tags(company)
-			# company data storing functions
+			if 'tag_list' in company.keys():
+				if company['tag_list']:
+					new_company.tags = self.store_tags(company['tag_list'])
+
+			else:
+				print 'fail whale'
+				#print company.keys()
+				#print company['permalink']
+				#print self.client.getCompanyData(company['permalink'])
 
 			self.store_relationships(company['relationships'],company_name)
 			new_company.number_of_employees = company['number_of_employees']
-			new_company.founded_year = company['founded_year']+company['founded_month']+company['founded_day']
+			new_company.founded_year = company['founded_year']
+			new_company.founded_month = company['founded_month']
+			new_company.founded_day = company['founded_day']
 			new_company.type = company_type
+			new_company.name = company_name
 
 			#add new company to database
 			db.session.add(new_company)
