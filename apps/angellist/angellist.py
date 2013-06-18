@@ -10,6 +10,7 @@
 import hashlib
 import urllib, urllib2
 import simplejson as json
+import os
 
 """
 Provides a Pure Python AngelList API Interface.
@@ -42,9 +43,9 @@ class AngelList(object):
         self.OAUTH_ENDPOINT    = "%s://angel.co/api" % self.URI_SCHEME
         self.ACCESS_TOKEN_URL  = "/oauth/token"
         self.AUTHORIZATION_URL = "/oauth/authorize"
-        self.client_id         = None
-        self.client_secret     = None
-        self.access_token      = None
+        self.client_id         = os.getenv("angellist_client_id")
+        self.client_secret     = os.getenv("angellist_client_secret")
+        self.access_token      = os.getenv("angellist_oauth_token")
 
     #############################
     # OAUTH SPECIFIC SECTION

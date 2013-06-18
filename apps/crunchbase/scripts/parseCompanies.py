@@ -18,14 +18,24 @@ class StoreCrunchbase:
 		# get Crunchbase API client
 		self.client = Crunchbase(os.getenv("crunchbase_key"))
 		self.errors = []
+		#self.get_people()
 		self.get_startups()
 		self.get_financial_orgs()
 		# open an error file to keep API errors in. Feel free to change this file.
-		error_file = open("crunchbase_errors.log", w)
+		error_file = open("crunchbase_errors.log", "w")
 		# track any errors parsing the API
 		for error in self.errors:
 			error_file.write(error)
 		error_file.close()
+
+	def store_tags(self,tags):
+		tags_list = []
+		for tag in tags:
+			t = Tag(name=tag)
+			db.session.add(t)
+			db.session.commit()
+			tags_list.append(t)	
+		return tags_list
 
 	def get_people(self):
 		people_list = self.client.listPeople()
@@ -48,7 +58,7 @@ class StoreCrunchbase:
 		Gets all startups from the Crunchbase API and adds them to our database as Company models
 		"""
 		# get a list of all the "companies" from the Crunchbase API
-		companies= self.client.listCompanies()
+		companies = self.client.listCompanies()
 		self.save_companies(companies, "startup")
 
 	def get_financial_orgs(self):
@@ -71,17 +81,20 @@ class StoreCrunchbase:
 			company_info= company_list[company_index]
 			company_name = company_info['name']
 			company = self.client.getCompanyData(company_name)
+		
+			
 			
 			# if resorted to searching CB for best match, you get a list back
 			if company is list:
 				# choose the first result
 				company = company[0]
 			
+			# make roles
 			new_company = Company()
-			# company data storing functions
-			new_company.relationships = self.store_relationships(company['relationships'],company_name)
 			new_company.tags = self.store_tags(company)
-			self.store_employees(company)
+			# company data storing functions
+
+			self.store_relationships(company['relationships'],company_name)
 			new_company.number_of_employees = company['number_of_employees']
 			new_company.founded_year = company['founded_year']+company['founded_month']+company['founded_day']
 			new_company.type = company_type
@@ -96,21 +109,23 @@ class StoreCrunchbase:
 		Store employees, their position, and whether or not they are still working for the company
 		"""
 		p = Person()
-		print 'relationships:'
+
+		print 'relationships'
 		print relationships
 		for person in relationships:
-			print 'person in relationships:'
+			print 'person'
 			print person
 			first_name = person['person']['first_name']
 			last_name = person['person']['last_name']
 			name = first_name + " " + last_name
-			p_object = p.query.filter_by(name=name)
+			p_object = p.query.filter_by(name=name).first()
+			print 'p_object'
+			print p_object
 			# if the person wasn't successfully mined previously
 		  	if not p_object:
 				self.errors.append(name)
 			else:
-				role = Role(role_name=person['title'], is_past=person['is_past'], company_name=company_name)
-				p_object.roles + role
+				role = Role(role_name=person['title'], is_past=person['is_past'], company_name=company_name, person_id=p_object)
 				db.session.add(p_object)
 			db.session.commit()
 			db.session.close()
@@ -141,10 +156,6 @@ class StoreCrunchbase:
 			db.session.commit()
 
 
-	def store__tags(self,tags):
-		tags_list = []
-		for tag in tags:
-			tags_list.append(tags)	
-		return tags_list
+
 
 StoreCrunchbase()

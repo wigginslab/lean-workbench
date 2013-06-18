@@ -33,6 +33,7 @@ class Crunchbase:
 
 	def __getJsonData(self, namespace, query=""):
 		url = API_URL + namespace + query + ".js?api_key="+ self.api_key
+		print url
 		response_dict = json.loads(self.__webRequest(url))
 		return response_dict
 
@@ -45,7 +46,7 @@ class Crunchbase:
 			# replace dots with dashes in accordance to crunchbase url format
 			result = self.__getJsonData("company", "/%s" % name)
 		except:
-			result = self.search(name.replace(" ","+"))
+			result = self.search(name.replace(" ","+"))['results']
 		return result
 
 	def search(self, query):
