@@ -85,6 +85,10 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
+@app.route('/leantracker', methods=['POST'])
+def leantrackerPost():
+	print request.form['arguments']
+
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 	'/': os.path.join(os.path.dirname(__file__), 'static')

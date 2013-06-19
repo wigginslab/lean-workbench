@@ -18,11 +18,11 @@ class StoreCrunchbase:
 		# get Crunchbase API client
 		self.client = Crunchbase(os.getenv("crunchbase_key"))
 		self.errors = []
-		#self.get_people()
+		self.get_people()
 		self.get_startups()
 		self.get_financial_orgs()
 		# open an error file to keep API errors in. Feel free to change this file.
-		error_file = open("crunchbase_errors.log", "w")
+		self.error_file = open("crunchbase_errors.log", "w")
 		# track any errors parsing the API
 		for error in self.errors:
 			error_file.write(error)
@@ -40,18 +40,16 @@ class StoreCrunchbase:
 	def get_people(self):
 		people_list = self.client.listPeople()
 		for person in people_list:
-			try:
-				p = Person()
-				person = c.getPersonData(person['permalink'])
-				p.crunchbase_url = person['permalink']
-				p.name = (person['first_name'] + " " + person['last_name']).encode('utf-8')
+			p = Person()
+			person = self.client.getPersonData(person['permalink'])
+			p.crunchbase_url = person['crunchbase_url']
+			p.name = (person['first_name'] + " " + person['last_name']).encode('utf-8')
+			p.born_year = person['born_year']
+			p.born_month = person['born_month']
+			p.born_day = person['born_day']
+			db.session.add(p)
+			db.session.commit()
 
-				print person
-				db.session.add(p)
-				db.session.commit()
-			except:
-				print 'except'
-				self.error.append(person.name)
 
 	def get_startups(self):
 		"""
@@ -82,46 +80,53 @@ class StoreCrunchbase:
 			company_info= company_list[company_index]
 			company_name = company_info['name']
 			company = self.client.getCompanyData(company_name)
+			if company != "error":
 		
-			
-			# if resorted to searching CB for best match, you get a list back
-			if company is list:
-				# choose the first result
-				print 'company is list'
-				company_logs.write("company is list \n")
-				company = company[0][0]
-			
-			# make roles
+				
+				# if resorted to searching CB for best match, you get a list back
+				if company is list:
+					# choose the first result
+					print 'company is list'
+					company_logs.write("company is list \n")
+					company = company[0][0]
+				
+				# make roles
 
-			company_logs.write("\n")
-			company_logs.write(str(company))
+				company_logs.write("\n")
+				company_logs.write(str(company))
 
-			new_company = Company()
-			if 'tag_list' in company.keys():
-				if company['tag_list']:
-					new_company.tags = self.store_tags(company['tag_list'])
+				new_company = Company()
+				if 'tag_list' in company.keys():
+					if company['tag_list']:
+						new_company.tags = self.store_tags(company['tag_list'])
 
-			else:
-				print 'fail whale'
-				#print company.keys()
-				#print company['permalink']
-				#print self.client.getCompanyData(company['permalink'])
+				else:
+					print 'fail whale'
 
-			self.store_relationships(company['relationships'],company_name)
-			new_company.number_of_employees = company['number_of_employees']
-			new_company.founded_year = company['founded_year']
-			new_company.founded_month = company['founded_month']
-			new_company.founded_day = company['founded_day']
-			new_company.type = company_type
-			new_company.name = company_name
+				self.store_relationships(company['relationships'],company_name)
+				new_company.number_of_employees = company['number_of_employees']
+				new_company.founded_year = company['founded_year']
+				new_company.founded_month = company['founded_month']
+				new_company.founded_day = company['founded_day']
+				new_company.type = company_type
+				new_company.name = company_name
+				new_company.crunchbase_url = company['crunchbase_url']
+				new_company.homepage_url = company['homepage_url']
+				print company
+				if  company['image']:
+					new_company.image = company['image']['available_sizes'][0][1]
+				#add new company to database
+				db.session.add(new_company)
+				db.session.commit()
+				db.session.close()
 
-			#add new company to database
-			db.session.add(new_company)
-			db.session.commit()
-			db.session.close()
+		# record error
+		else:
+			self.error_file.write(company_name)
 
 	def store_relationships(self,relationships, company_name):
 		"""
+		TODO
 		Store employees, their position, and whether or not they are still working for the company
 		"""
 		p = Person()
@@ -148,6 +153,7 @@ class StoreCrunchbase:
 
 	def store_funding(funding_rounds):
 		"""
+		TODO
 		Parse the fundraising information
 		"""
 		p = Person()

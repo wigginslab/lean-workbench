@@ -42,6 +42,7 @@ investments_investor_association = db.Table('investments_investor_association',
 class Company(db.Model):
 	__tablename__ = "company"
 	id = db.Column(db.Integer, primary_key = True)
+	name = db.Column(db.String)
 	tags = db.relationship("Tag", secondary = company_tags_association)
 	number_of_employees = db.Column(Integer)
 	founded_year =  db.Column(Integer(4))
@@ -49,6 +50,8 @@ class Company(db.Model):
 	founded_day = db.Column(db.Integer)
 	image= db.Column(db.String)
 	milestones=db.relationship("Milestone", secondary=company_milestones_association)
+	crunchbase_url = db.Column(db.String)
+	homepage_url = db.Column(db.String)
 	# startup or finanical organization
 	company_type = db.Column(db.String)
 

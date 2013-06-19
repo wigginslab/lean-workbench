@@ -46,14 +46,18 @@ class Crunchbase:
 			# replace dots with dashes in accordance to crunchbase url format
 			result = self.__getJsonData("company", "/%s" % name)
 		except:
-			permalink = self.search(name.replace(" ","+"))['results'][0]['permalink']
-			print 'permalink'
-			print permalink
-			result = self.getCompanyData(permalink)
+			#jank
+			try:
+				permalink = self.search(name.replace(" ","+").replace(")","").replace("(",""))['results'][0]['permalink']
+				result = self.getCompanyData(permalink)
+			except:
+				return "error"
 		return result
 
 	def search(self, query):
+		print 'search url:'
 		url = API_URL + "search.js?query="+query+"&api_key="+ self.api_key
+		print url
 		response_dict = json.loads(self.__webRequest(url))
 		return response_dict
 
