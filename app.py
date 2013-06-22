@@ -4,13 +4,9 @@ from flask import Flask, request, Response, render_template, make_response, sess
 import datetime
 import random
 import re
-import jinja2
-from socketio import socketio_manage
-from socketio.namespace import BaseNamespace
-import redis 
 from models.user import *
 from datetime import datetime
-from apps.crunchbase.crunchbase import Crunchbase
+from apps.crunchbase.scripts.crunchbase import Crunchbase
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')

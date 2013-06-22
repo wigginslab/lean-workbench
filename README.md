@@ -41,7 +41,8 @@ The following variables must be set on your machine:
 * mail_server - mail server (e.g. smtp.example.com)
 * mail_username - username for mail server
 * mail_password- password for mail server
-*	mail_port - port for mail server
+* mail_port - port for mail server
+* crunchbase_key - API key for crunchbase
 
 Running the Application
 ---------------------------

@@ -5,9 +5,13 @@
 *swp
 *swo
 
+# google analytics secrets
+apps/googleanalytics/client_secrets.json
+
 # C extensions
 *.so
 
+venv
 # Packages
 *.egg
 *.egg-info
