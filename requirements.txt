@@ -6,4 +6,3 @@ simplejson
 psycopg2
 flask-restful
 google-api-python-client
-
