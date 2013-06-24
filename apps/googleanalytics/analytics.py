@@ -66,7 +66,6 @@ def get_first_profile_id(service):
 
   return None
 
-
 def get_results(service, profile_id):
   # Use the Analytics Service Object to query the Core Reporting API
   return service.data().ga().get(

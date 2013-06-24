@@ -6,8 +6,6 @@ from oauth2client.client import flow_from_clientsecrets
 from oauth2client.file import Storage
 from oauth2client.tools import run
 
-
-
 import sys
 
 #import the Auth Helper class
@@ -59,7 +57,9 @@ class Google_Analytics_API:
 		"""
 		accounts = self.service.management().accounts().list().execute()
 		print accounts
-
-
+		print '\n'
+		accountId = accounts['items'][0]['id']
+		webproperties = self.service.management().webproperties().list(accountId=accountId).execute()
+		print webproperties	
 Google_Analytics_API()
 
