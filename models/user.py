@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask
+from flask import Flask, abort
 from flask.ext.sqlalchemy import *
 from werkzeug import generate_password_hash, check_password_hash
 import os
@@ -23,7 +23,7 @@ class User(db.Model):
 		
     def __init__(self, username, password, email):
         self.username = username
-        self.check_username()
+        error = self.check_username()
         self.pwdhash = generate_password_hash(password)
         self.email = email
         self.activate = True
@@ -36,11 +36,8 @@ class User(db.Model):
         sameUsername = User.query.filter_by(username=self.username).all()
         print 'sameUsername: '
         print sameUsername
-        if sameUsername: 				    
-            print 'user already exists'
-            raise RuntimeError("1")#user already exists
-
-	
+        if sameUsername: 
+				 abort(401)
     def __repr__(self):
       """
       Representation of the user object
