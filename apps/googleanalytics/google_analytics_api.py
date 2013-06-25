@@ -7,6 +7,7 @@ from oauth2client.file import Storage
 from oauth2client.tools import run
 
 import sys
+import json
 
 #import the Auth Helper class
 import analytics_auth
@@ -22,8 +23,10 @@ class Google_Analytics_API:
 		"""
 		self.prepare_credentials()
 		self.service = self.initialize_service()
-		self.get_all_profiles()
-
+		profile_id = self.get_a_profile()
+		print profile_id
+		print self.get_results(profile_id)
+		
 	def prepare_credentials(self):
 		
 		CLIENT_SECRETS = 'client_secrets.json'
@@ -51,15 +54,43 @@ class Google_Analytics_API:
 		return build('analytics', 'v3', http=http)
 
 
-	def get_all_profiles(self):
+	def get_a_profile(self):
 		"""
 		Get all of the users' google analytics profiles
 		"""
 		accounts = self.service.management().accounts().list().execute()
-		print accounts
-		print '\n'
-		accountId = accounts['items'][0]['id']
+		accountId = accounts['items'][4]['id']
+
 		webproperties = self.service.management().webproperties().list(accountId=accountId).execute()
-		print webproperties	
+		print 'webproperties'
+		print webproperties
+		print webproperties.keys()
+		if 'items' in webproperties.keys():
+			#get the first web property
+			firstWebpropertyId = webproperties['items'][0]['id']
+
+			profiles = self.service.management().profiles().list(
+					accountId=accountId,
+					webPropertyId=firstWebpropertyId).execute()
+			print profiles
+			#print 'profiles'
+			#print profiles
+			#print ''
+			if profiles.get('items'):
+				# return first profile ID
+				print profiles.get('items')[0].get('id')
+				return profiles.get('items')[0].get('id')
+
+	def get_results(self, profile_id):
+		"""
+		"""
+		print profile_id
+
+		return json.dumps( self.service.data().ga().get(
+				ids="ga:" + profile_id,
+				start_date='2013-06-03',
+				end_date='2013-06-20',
+				metrics='ga:visits').execute())
+		
 Google_Analytics_API()
 
