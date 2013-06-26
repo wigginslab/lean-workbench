@@ -10,12 +10,10 @@ import sys
 import json
 
 #import the Auth Helper class
-import analytics_auth
-
 from apiclient.errors import HttpError
 from oauth2client.client import AccessTokenRefreshError
 
-class Google_Analytics_API:
+class Google_analytics_API:
 
 	def __init__(self):
 		"""
@@ -53,7 +51,6 @@ class Google_Analytics_API:
 		# construct and return the authorized Analytics Service Object
 		return build('analytics', 'v3', http=http)
 
-
 	def get_a_profile(self):
 		"""
 		Get all of the users' google analytics profiles
@@ -72,10 +69,7 @@ class Google_Analytics_API:
 			profiles = self.service.management().profiles().list(
 					accountId=accountId,
 					webPropertyId=firstWebpropertyId).execute()
-			print profiles
-			#print 'profiles'
-			#print profiles
-			#print ''
+
 			if profiles.get('items'):
 				# return first profile ID
 				print profiles.get('items')[0].get('id')
@@ -86,11 +80,15 @@ class Google_Analytics_API:
 		"""
 		print profile_id
 
+		#return json.dumps( self.service.data().ga().get(
+		#		ids="ga:" + profile_id,
+		#		start_date='2013-06-03',
+		#		end_date='2013-06-20',
+		#		metrics='ga:visits').execute())
 		return json.dumps( self.service.data().ga().get(
 				ids="ga:" + profile_id,
 				start_date='2013-06-03',
 				end_date='2013-06-20',
-				metrics='ga:visits').execute())
-		
-Google_Analytics_API()
+				metrics='ga:percentNewVisits').execute())
 
+Google_analytics_API()
