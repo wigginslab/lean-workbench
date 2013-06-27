@@ -81,6 +81,7 @@ def logout():
 	return redirect(url_for('index'))
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 @app.route('/connect/google-analytics/callback'):
 	print request
@@ -101,6 +102,16 @@ app.add_url_rule('/login', 'login', login, methods=['POST'])
 
 app.add_url_rule('/logout', 'logout', logout, methods=['POST', 'GET'])
 
+=======
+"""
+app.add_url_rule('/', 'index', index)
+
+app.add_url_rule('/register', 'register', register, methods=['POST', 'GET'])
+app.add_url_rule('/login', 'login', login, methods=['POST'])
+
+app.add_url_rule('/logout', 'logout', logout, methods=['POST', 'GET'])
+
+>>>>>>> parent of be2380b... I just want to push from a convertible in Soho
 app.add_url_rule('/user/<user>', 'profile', profile)
 """
 # store static files on server for now
