@@ -1,8 +1,6 @@
 from werkzeug import SharedDataMiddleware
 import os
-from views.user import index, login, register, profile, logout
 from app import app
-#from resources.user import UserResource
 import os
 from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for, jsonify
 import datetime
@@ -83,9 +81,16 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
+
+@app.route('/connect/google-analytics/callback'):
+	print request
+	print request.form
+	print request.data
+
+
 @app.route('/connect/google-analytics')
 def google_analytics_oauth():
-	Google_analytics_API()
+	Google_analytics_oauth()
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
@@ -93,4 +98,4 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 })
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run(debug=True, port=8080)
