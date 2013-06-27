@@ -9,7 +9,6 @@ import re
 from models.user import User
 from datetime import datetime
 from app import db, app
-from apps.googleanalytics.google_analytics_oauth import google_analytics_API
 
 @app.route('/')
 def index():
@@ -81,6 +80,7 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
+<<<<<<< HEAD
 
 @app.route('/connect/google-analytics/callback'):
 	print request
@@ -91,7 +91,18 @@ def logout():
 @app.route('/connect/google-analytics')
 def google_analytics_oauth():
 	Google_analytics_oauth()
+=======
+"""
+app.add_url_rule('/', 'index', index)
+>>>>>>> parent of be2380b... I just want to push from a convertible in Soho
 
+app.add_url_rule('/register', 'register', register, methods=['POST', 'GET'])
+app.add_url_rule('/login', 'login', login, methods=['POST'])
+
+app.add_url_rule('/logout', 'logout', logout, methods=['POST', 'GET'])
+
+app.add_url_rule('/user/<user>', 'profile', profile)
+"""
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 	'/': os.path.join(os.path.dirname(__file__), 'static')
