@@ -44,4 +44,7 @@ nosetests.xml
 .project
 .pydevproject
 
+#google analytics credentials
+ga_client_secrets.json
+
 envs.sh

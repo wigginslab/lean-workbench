@@ -9,6 +9,8 @@ import re
 from models.user import User
 from datetime import datetime
 from app import db, app
+#from client import flow_from_clientsecrets
+from oauth2client.client import flow_from_clientsecrets
 
 @app.route('/')
 def index():
@@ -82,15 +84,22 @@ def logout():
 
 @app.route('/connect/google-analytics/callback/')
 def google_analytics_callback():
+	google_analytics_callback_url = os.getenv("google_analytics_callback_url")
 	ga_api_code = request.args.get("code")
-	print ga_api_code
+	client_secrets = 'ga_client_secrets.json'
+	flow = flow_from_clientsecrets(client_secrets,
+			    scope='https://www.googleapis.com/auth/analytics.readonly',
+					    message='%s is missing' % client_secrets, redirect_uri=google_analytics_callback_url)
+	print flow.redirect_uri
+	print flow.step2_exchange(code=str(ga_api_code)).to_json()
 	return url_for('index')
 
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():
 	google_analytics_callback_url = os.getenv("google_analytics_callback_url")
+	print google_analytics_callback_url
 	google_analytics_client_id = os.getenv("google_analytics_client_id") 
-	redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"/&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
+	redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
 	return	redirect(redirect_url)
 
 # store static files on server for now
