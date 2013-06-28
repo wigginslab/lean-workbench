@@ -1,7 +1,11 @@
-from models.user import db as user_db
-from apps.crunchbase.scripts.models.companyModels import db as crunchbase_db
+from models.user import db as user_tables
+from apps.crunchbase.scripts.models.companyModels import db as cb_tables
+from apps.googleanalytics.models.google_analytics_model import db as ga_tables
 
 # create user table
-user_db.create_all()
+user_tables.create_all()
 # create crunchbase tables
-crunchbase_db.create_all()
+cb_tables.create_all()
+# create google analytics tables
+ga_tables.create_all()
+

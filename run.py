@@ -1,3 +1,4 @@
+import json
 from werkzeug import SharedDataMiddleware
 import os
 from app import app
@@ -11,6 +12,9 @@ from datetime import datetime
 from app import db, app
 #from client import flow_from_clientsecrets
 from oauth2client.client import flow_from_clientsecrets
+import httplib2
+from apiclient.discovery import build
+from apps.googleanalytics.save_credentials import save_google_analytics_credentials
 
 @app.route('/')
 def index():
@@ -84,14 +88,26 @@ def logout():
 
 @app.route('/connect/google-analytics/callback/')
 def google_analytics_callback():
-	google_analytics_callback_url = os.getenv("google_analytics_callback_url")
-	ga_api_code = request.args.get("code")
-	client_secrets = 'ga_client_secrets.json'
-	flow = flow_from_clientsecrets(client_secrets,
-			    scope='https://www.googleapis.com/auth/analytics.readonly',
-					    message='%s is missing' % client_secrets, redirect_uri=google_analytics_callback_url)
-	print flow.redirect_uri
-	print flow.step2_exchange(code=str(ga_api_code)).to_json()
+	if 'username' in session:
+		username = escape(session['username'])
+		print username
+		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
+		ga_api_code = request.args.get("code")
+		client_secrets = 'ga_client_secrets.json'
+		flow = flow_from_clientsecrets(client_secrets,
+						scope='https://www.googleapis.com/auth/analytics.readonly',
+								message='%s is missing' % client_secrets, redirect_uri=google_analytics_callback_url)
+		print flow.redirect_uri
+		credentials = flow.step2_exchange(code=str(ga_api_code))
+		print credentials
+		credentials_json = json.loads(credentials.to_json())
+		credentials_json['username'] = username
+		http = httplib2.Http()
+
+		http = credentials.authorize(http)  # authorize the http object
+		save_google_analytics_credentials(credentials_json)
+		# 3. Build the Analytics Service Object with the authorized http object
+		print  build('analytics', 'v3', http=http)
 	return url_for('index')
 
 @app.route('/connect/google-analytics/')
