@@ -2,7 +2,7 @@ from werkzeug import SharedDataMiddleware
 import os
 from app import app
 import os
-from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for, jsonify
+from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for, jsonify, redirect
 import datetime
 import random
 import re
@@ -80,40 +80,19 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+@app.route('/connect/google-analytics/callback/')
+def google_analytics_callback():
+	ga_api_code = request.args.get("code")
+	print ga_api_code
+	return url_for('index')
 
-@app.route('/connect/google-analytics/callback'):
-	print request
-	print request.form
-	print request.data
-
-
-@app.route('/connect/google-analytics')
+@app.route('/connect/google-analytics/')
 def google_analytics_oauth():
-	Google_analytics_oauth()
-=======
-"""
-app.add_url_rule('/', 'index', index)
->>>>>>> parent of be2380b... I just want to push from a convertible in Soho
+	google_analytics_callback_url = os.getenv("google_analytics_callback_url")
+	google_analytics_client_id = os.getenv("google_analytics_client_id") 
+	redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"/&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
+	return	redirect(redirect_url)
 
-app.add_url_rule('/register', 'register', register, methods=['POST', 'GET'])
-app.add_url_rule('/login', 'login', login, methods=['POST'])
-
-app.add_url_rule('/logout', 'logout', logout, methods=['POST', 'GET'])
-
-=======
-"""
-app.add_url_rule('/', 'index', index)
-
-app.add_url_rule('/register', 'register', register, methods=['POST', 'GET'])
-app.add_url_rule('/login', 'login', login, methods=['POST'])
-
-app.add_url_rule('/logout', 'logout', logout, methods=['POST', 'GET'])
-
->>>>>>> parent of be2380b... I just want to push from a convertible in Soho
-app.add_url_rule('/user/<user>', 'profile', profile)
-"""
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 	'/': os.path.join(os.path.dirname(__file__), 'static')
