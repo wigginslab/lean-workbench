@@ -3,7 +3,6 @@ from flask import Flask
 from werkzeug import generate_password_hash, check_password_hash
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
-import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -34,4 +33,8 @@ class Google_Analytics_User_Model(db.Model):
 		self.token_expiry = credentials_dict.get("token_expiry")
 		self.token_uri = credentials_dict.get("token_uri")
 		self.user_agent = credentials_dict.get("user_agent")
+
+	def as_dict(self):
+		return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 

@@ -10,11 +10,12 @@ import re
 from models.user import User
 from datetime import datetime
 from app import db, app
-#from client import flow_from_clientsecrets
 from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 from apps.googleanalytics.save_credentials import save_google_analytics_credentials
+from apps.googleanalytics.google_analytics_client import Google_Analytics_API
+
 
 @app.route('/')
 def index():
@@ -88,35 +89,31 @@ def logout():
 
 @app.route('/connect/google-analytics/callback/')
 def google_analytics_callback():
+	
 	if 'username' in session:
 		username = escape(session['username'])
-		print username
-		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
-		ga_api_code = request.args.get("code")
-		client_secrets = 'ga_client_secrets.json'
-		flow = flow_from_clientsecrets(client_secrets,
-						scope='https://www.googleapis.com/auth/analytics.readonly',
-								message='%s is missing' % client_secrets, redirect_uri=google_analytics_callback_url)
-		print flow.redirect_uri
-		credentials = flow.step2_exchange(code=str(ga_api_code))
-		print credentials
-		credentials_json = json.loads(credentials.to_json())
-		credentials_json['username'] = username
-		http = httplib2.Http()
-
-		http = credentials.authorize(http)  # authorize the http object
-		save_google_analytics_credentials(credentials_json)
-		# 3. Build the Analytics Service Object with the authorized http object
-		print  build('analytics', 'v3', http=http)
+		GA_API = Google_Analytics_API('username')
+		ga_api_code= request.args.get("code")
+		client = GA_API.step_two(username, ga_api_code)
 	return url_for('index')
 
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():
-	google_analytics_callback_url = os.getenv("google_analytics_callback_url")
-	print google_analytics_callback_url
-	google_analytics_client_id = os.getenv("google_analytics_client_id") 
-	redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
-	return	redirect(redirect_url)
+	username = escape(session.get('username'))
+	if not username:
+		print 'not logged in'
+		return redirect(url_for('index'))
+	GA_API = Google_Analytics_API(username)
+	if GA_API.credentials:
+		print GA_API.credentials
+		# you shouldn't have hit this link
+		print "you have credentials for GA"
+		return url_for('index')
+	else:
+		print "start oauth process"
+		# start OAuth process
+		redirect_url = GA_API.step_one()
+		return redirect(redirect_url)
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
