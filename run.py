@@ -13,9 +13,7 @@ from app import db, app
 from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
-from apps.googleanalytics.save_credentials import save_google_analytics_credentials
 from apps.googleanalytics.google_analytics_client import Google_Analytics_API
-
 
 @app.route('/')
 def index():
@@ -94,8 +92,11 @@ def google_analytics_callback():
 		username = escape(session['username'])
 		GA_API = Google_Analytics_API('username')
 		ga_api_code= request.args.get("code")
+		print GA_API
 		client = GA_API.step_two(username, ga_api_code)
-	return url_for('index')
+	else:
+		print 'no user logged in'
+	return redirect(url_for('index'))
 
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():

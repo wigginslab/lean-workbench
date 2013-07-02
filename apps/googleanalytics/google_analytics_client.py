@@ -25,13 +25,14 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
-		print self.credentials
-		# if valid credentials are in the database
-		print self.credentials.as_dict()
-		expires_on = self.credentials.as_dict()['token_expiry']
-		current_time = datetime.now().isoformat()
-		if self.credentials and expires_on < current_time:
-			self.client = self.build_client(self.credentials)
+		if self.credentials:
+			expires_on = self.credentials.as_dict()['token_expiry']
+			current_time = datetime.now().isoformat()
+			# if valid credentials are in the database
+			print expires_on
+			print current_time
+			if expires_on > current_time:
+				self.client = self.build_client(self.credentials)
 		else:
 			print "no credentials"
 			return None
@@ -40,7 +41,7 @@ class Google_Analytics_API:
 		credential_dict = ga_user_credentials.as_dict()
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
-		credential_dict['token_uri'] = "https://accounts.g    oogle.com/o/oauth2/token"
+		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
@@ -48,8 +49,9 @@ class Google_Analytics_API:
 		http = httplib2.Http()
 		http = credentials.authorize(http)  
 		#  Build the Analytics Service Object with the authorized http object
-		self.client = build('analytics', 'v3', http=http)
-		print self.client
+		client = build('analytics', 'v3', http=http)
+		print client
+		return client
 
 	def step_one(self):
 		"""
@@ -58,8 +60,8 @@ class Google_Analytics_API:
 		Returns:
 			redirect url
 		"""
+		print 'step 1'
 		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
-		print google_analytics_callback_url
 		google_analytics_client_id = os.getenv("google_analytics_client_id") 
 		redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
 		return redirect_url
@@ -68,6 +70,7 @@ class Google_Analytics_API:
 		"""
 		Handle callback information
 		"""
+		print 'step 2'
 		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
 		client_secrets = 'ga_client_secrets.json'
 		flow = flow_from_clientsecrets(client_secrets,
@@ -87,9 +90,13 @@ class Google_Analytics_API:
 		"""
 		Save Google Analytics Credentials to model
 		"""
+		print 'saving credentials'
 		# store information necessary for building client
-		print credentials_dict
 		GAUM = Google_Analytics_User_Model(credentials_dict)
 		db.session.add(GAUM)
 		db.session.commit()
+
+	def get_user_accounts(self):
+		accounts = self.client.management().accounts().list().execute()
+		return accounts
 
