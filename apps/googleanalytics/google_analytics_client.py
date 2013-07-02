@@ -6,6 +6,8 @@ from apiclient.discovery import build
 from models.google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
+import json
+from datetime import datetime 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -16,10 +18,19 @@ app.debug = True
 class Google_Analytics_API:
 
 	def __init__(self, username):
-		print "username" + username
+		"""
+		Creates a Google Analytics API object with a username based on stored credentials or by retrieving credentials via OAuth2 if user has not yet stored credentials or they have expired.
+
+		args:
+			username: username on the Lean Workbench sites
+		"""
 		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
 		print self.credentials
-		if self.credentials:
+		# if valid credentials are in the database
+		print self.credentials.as_dict()
+		expires_on = self.credentials.as_dict()['token_expiry']
+		current_time = datetime.now().isoformat()
+		if self.credentials and expires_on < current_time:
 			self.client = self.build_client(self.credentials)
 		else:
 			print "no credentials"

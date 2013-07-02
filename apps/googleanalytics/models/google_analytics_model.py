@@ -3,7 +3,6 @@ from flask import Flask
 from werkzeug import generate_password_hash, check_password_hash
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
-import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -24,6 +23,11 @@ class Google_Analytics_User_Model(db.Model):
 	id_token = db.Column(db.String)
 	token_response = db.Column(db.String)
 	username = db.Column(db.String)
+	_module = db.Column(db.String)
+	_class = db.Column(db.String)
+	token_uri = db.Column(db.String)
+	user_agent = db.Column(db.String)
+	invalid = db.Column(db.String)
 
 	def __init__(self, credentials_dict):
 		self.username = credentials_dict.get("username")
@@ -34,4 +38,9 @@ class Google_Analytics_User_Model(db.Model):
 		self.token_expiry = credentials_dict.get("token_expiry")
 		self.token_uri = credentials_dict.get("token_uri")
 		self.user_agent = credentials_dict.get("user_agent")
+		self._module = "oauth2client.client"
+		self._class = "OAuth2Credentials"
+		self.token_uri = "https://accounts.google.com/o/oauth2/token"
+		self.user_agent = "null"
+		self.invalid = "false"
 
