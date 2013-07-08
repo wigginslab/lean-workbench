@@ -3,7 +3,7 @@ import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from models.google_analytics_models import *
 from apiclient.discovery import build
-from models.google_analytics_modelss import Google_Analytics_User_Model
+from models.google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
@@ -25,7 +25,7 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		# get latest credentials
-		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username)[-1]
+		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
 		if self.credentials:
 			expires_on = self.credentials.as_dict()['token_expiry']
 			current_time = datetime.now().isoformat()

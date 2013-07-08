@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 
 
-user_profiles_association = db.Table('user_profiles_association',
+ga_profiles_association = db.Table('user_profiles_association',
     db.Column('user_id', db.Integer, db.ForeignKey('google_analytics_oauth_credentials.id')),
     db.Column('profile_id', db.Integer, db.ForeignKey('google_analytics_profiles.id'))
 )
@@ -48,7 +48,7 @@ class Google_Analytics_Profiles(db.Model):
 	__tablename__ = "google_analytics_profiles"
 
 	id = db.Column(db.Integer, primary_key=True)
-	user =  db.relationship("Google_Analytics_User_Model", secondary = user_profiles_association)
+	user =  db.relationship("Google_Analytics_User_Model", secondary = ga_profiles_association)
 	profile_id = db.Column(db.String)
 
 	def __init__(self, user, profile_id):
