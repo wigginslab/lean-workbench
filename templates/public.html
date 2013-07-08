@@ -1,20 +1,24 @@
 {% extends 'base.html'%}
+{% from "_formhelpers.html" import render_field %}
 {%block content%}
 		<!-- Main hero unit for a primary marketing message or call to action -->
 			<div class="hero-unit" style="text-align:center">
 				<h1>Lean Workbench</h1>
+					{% with messages = get_flashed_messages() %}
+					  		{% if messages %}
+					    	<ul class="flashes">
+					    		{% for message in messages %}
+					      		<li>{{ message }}</li>
+					    		{% endfor %}
+					    	</ul>
+					  {% endif %}
+					{% endwith %}
 				<form id="registration-form" action="/register" method="POST">
-						<input type="text" name="username" placeholder="Username">
-						<p>
-						<input type="text" name="email" placeholder="Email">
-						<p>
-						<input type="password" name="password"  placeholder="Password">
-						<p>
-						<input name="device" value="web" style="display:none">
-						<button id="registration-button" type="submit" class="btn">Register</button>
+					{{ render_field(form.username) }}
+				   	{{ render_field(form.email) }}
+				    {{ render_field(form.password) }}
+				  	<button id="registration-button" type="submit" class="btn">Submit</button>
 					</form>
-			
-							</div>
-            <hr>
-
+				<a href="/password/reset/">Forgot your password?</a>
+			</div>
 {% endblock %}
