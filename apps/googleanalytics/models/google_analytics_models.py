@@ -8,11 +8,17 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 
+
+user_profiles_association = db.Table('user_profiles_association',
+    db.Column('user_id', db.Integer, db.ForeignKey('google_analytics_oauth_credentials.id')),
+    db.Column('profile_id', db.Integer, db.ForeignKey('google_analytics_profiles.id'))
+)
+
 class Google_Analytics_User_Model(db.Model):
 	
 	__tablename__ = "google_analytics_oauth_credentials"
 	
-	uid = db.Column(db.Integer, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
 	token_expiry = db.Column(db.String)
 	access_token = db.Column(db.String)
 	client_id = db.Column(db.String)
@@ -36,5 +42,19 @@ class Google_Analytics_User_Model(db.Model):
 
 	def as_dict(self):
 		return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+class Google_Analytics_Profiles(db.Model):
+	
+	__tablename__ = "google_analytics_profiles"
+
+	id = db.Column(db.Integer, primary_key=True)
+	user =  db.relationship("Google_Analytics_User_Model", secondary = user_profiles_association)
+	profile_id = db.Column(db.String)
+
+	def __init__(self, user, profile_id):
+		self.user = user
+		self.profile_id = profile_id
+
+
 
 

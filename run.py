@@ -88,19 +88,6 @@ def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
-@app.route('/connect/google-analytics/callback/')
-def google_analytics_callback():
-	
-	if 'username' in session:
-		username = escape(session['username'])
-		GA_API = Google_Analytics_API('username')
-		ga_api_code= request.args.get("code")
-		print GA_API
-		client = GA_API.step_two(username, ga_api_code)
-	else:
-		print 'no user logged in'
-	return redirect(url_for('index'))
-
 @app.route('/password/change/', methods=["POST"])
 def change_password():
 	form = ChangePasswordForm(request.form)
@@ -164,6 +151,8 @@ def reset_password_request():
 	else:
 		return render_template('reset_password.html')
 
+# google analytics routes
+
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():
 	username = escape(session.get('username'))
@@ -172,15 +161,37 @@ def google_analytics_oauth():
 		return redirect(url_for('index'))
 	GA_API = Google_Analytics_API(username)
 	if GA_API.credentials:
-		print GA_API.credentials
-		# you shouldn't have hit this link
-		print "you have credentials for GA"
-		return redirect(url_for('index'))
+		expires_on = GA_API.credentials.as_dict()['token_expiry']
+		current_time = datetime.now().isoformat()
+		# if credentials have not expired
+		if expires_on > current_time:
+			print GA_API.credentials.as_dict()
+			db.session.delete(GA_API.credentials)
+			# you shouldn't have hit this link
+			print "you have credentials for GA"
+			return redirect(url_for('index'))
+		else:
+			print "credentials expired, start oauth process"
+			# start OAuth process
+			redirect_url = GA_API.step_one()
+			return redirect(redirect_url)
 	else:
 		print "start oauth process"
 		# start OAuth process
 		redirect_url = GA_API.step_one()
 		return redirect(redirect_url)
+
+@app.route('/connect/google-analytics/callback/')
+def google_analytics_callback():
+	if 'username' in session:
+		username = escape(session['username'])
+		GA_API = Google_Analytics_API('username')
+		ga_api_code= request.args.get("code")
+		print GA_API
+		client = GA_API.step_two(username, ga_api_code)
+	else:
+		print 'no user logged in'
+	return redirect(url_for('index'))
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {

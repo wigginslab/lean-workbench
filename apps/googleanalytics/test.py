@@ -21,7 +21,7 @@ def test_get_last_month_visits():
 	one_week_ago = now - one_week_delta
 
 
-def test_get_all_visits():
+def test_get_month_visits():
 	"""
 	Currently disallowed
 	"""
@@ -45,14 +45,11 @@ def test_get_all_visits():
 						      end_date=current_date_string,
 							        metrics='ga:visits').execute()
 
-
 class Google_Time_String:
 	def __init__(time_tuple):
 		self.year = str(time_tuple[0])
 		month = time_tuple[1]
-		
-		
 
-test_get_user_accounts()
-test_get_user_profile()
-test_get_all_visits()
+print test_get_user_accounts()
+#test_get_user_profile()
+#test_get_month_visits()

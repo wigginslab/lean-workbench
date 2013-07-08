@@ -1,9 +1,9 @@
 from flask import Flask
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
-from models.google_analytics_model import *
+from models.google_analytics_models import *
 from apiclient.discovery import build
-from models.google_analytics_models import Google_Analytics_User_Model
+from models.google_analytics_modelss import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
@@ -24,20 +24,26 @@ class Google_Analytics_API:
 		args:
 			username: username on the Lean Workbench sites
 		"""
-		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
+		# get latest credentials
+		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username)[-1]
 		if self.credentials:
 			expires_on = self.credentials.as_dict()['token_expiry']
 			current_time = datetime.now().isoformat()
+			print 'expires_on ' + str(expires_on)
+			print 'current_time ' + str(current_time)
 			# if valid credentials are in the database
-			print expires_on
-			print current_time
 			if expires_on > current_time:
+				print 'expires on is greater than the current time'
 				self.client = self.build_client(self.credentials)
+			else:
+				print 'crdentials expired'
+				return None
 		else:
 			print "no credentials"
 			return None
 
 	def build_client(self, ga_user_credentials):
+		print 'build client'
 		credential_dict = ga_user_credentials.as_dict()
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
