@@ -1,19 +1,19 @@
 import json
 from werkzeug import SharedDataMiddleware
 import os
-from app import app
-import os
 from flask import Flask, request, Response, render_template, make_response, session, escape,redirect, url_for, jsonify, redirect
 import datetime
 import random
 import re
 from models.user import User
 from datetime import datetime
-from app import db, app
+from app import db, app, mail, Message
+# google analytics imports
 from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 from apps.googleanalytics.google_analytics_client import Google_Analytics_API
+ form validation imports
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 

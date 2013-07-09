@@ -6,7 +6,8 @@ from apiclient.discovery import build
 from models.google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
-import json
+
+
 from datetime import datetime 
 
 app = Flask(__name__)
@@ -25,7 +26,7 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		# get latest credentials
-		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
+		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).all()[-1]
 		if self.credentials:
 			expires_on = self.credentials.as_dict()['token_expiry']
 			current_time = datetime.now().isoformat()
