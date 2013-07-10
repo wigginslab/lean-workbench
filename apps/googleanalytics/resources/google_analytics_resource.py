@@ -38,25 +38,28 @@ class Google_Analytics_DAO(object):
 		profile_id: id of specific GA profile to query
 	"""
 	def __init__(self, username, profile_id=None):
-		if not profile_id:
-			return get_user_profiles(username)
+		self.username = username
+		self.profile_id = profile_id
 	
-	def get_user_profiles(username):
+	def get_user_profiles(self):
 		"""
 		Retrieve all userprofiles of a user
 		"""
-		g = Google_Analytics_API(username)
+		g = Google_Analytics_API(self.username)
+		print g.credentials
 		user_accounts = g.get_user_accounts()
 		return user_accounts.get('items')
-
 
 class Google_Analytics_Resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""
-	method_decorators = [authenticate_api]
+	#method_decorators = [authenticate_api]
 	#@marshal_with(resource_fields)
 	def get(self, **kwargs):
+		print kwargs
 		username = kwargs.get('username')
+		print username
 		profile_id = kwargs.get('profile_id')
-		return Google_Analytics_Dao(username = username, profile_id = profile_id)
+		GA = Google_Analytics_DAO(username = username, profile_id = profile_id)
+		return GA.get_user_profiles()

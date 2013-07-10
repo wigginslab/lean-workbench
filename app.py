@@ -14,5 +14,5 @@ mail = Mail(app)
 
 #APIs
 api = restful.Api(app)
-api.add_resource(Google_Analytics_Resource, '/api/v1/google-analytics/')
+api.add_resource(Google_Analytics_Resource, '/api/v1/google-analytics/<string:username>')
 
