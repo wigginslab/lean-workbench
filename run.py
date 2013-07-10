@@ -13,9 +13,21 @@ from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 from apps.googleanalytics.google_analytics_client import Google_Analytics_API
- form validation imports
+#form validation imports
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
+
+def authenticate_page(func):
+	@wraps(func)
+	def wrapper(*args, **kwargs):
+		if not getattr(func, 'authenticated', True):
+			return func(*args, **kwargs)
+		acct = check_authentication(kwargs.get('username'))  # custom account lookup function
+		if acct:
+ 			return func(*args, **kwargs)
+		return redirect(url_for('index'))
+	return wrapper
+
 
 @app.route('/')
 def index():
