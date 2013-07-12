@@ -207,6 +207,10 @@ def google_analytics_callback():
 		print 'no user logged in'
 	return redirect(url_for('index'))
 
+@app.route('/google-analytics/profile/<int:profile_id>')
+def get_profile_data(profile_id):
+	pass
+
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 	'/': os.path.join(os.path.dirname(__file__), 'static')

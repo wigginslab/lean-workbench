@@ -11,17 +11,17 @@
 	{{alert}}
 	You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
 	<p>
-	<a href="/connect/google-analytics">Connect to Google Analytics</a>
+	<a href="/connect/google-analytics">Google Analytics</a>
 
 	<div class="ga-accounts"></div>
 	<script id='ga-tmpl' type='text/template'>
-  <ul>
-    <% for (var i = 0; i < profiles.length; i++) { %>
-      <% var profile = profiles[i]; %>
-      <li>
-        <em>name:<%= profile.name%></em> id: <%= profile.id %>
-      </li>
-    <% } %>
-  </ul>
-</script>
+ 	 	<ul>
+    		<% for (var i = 0; i < profiles.length; i++) { %>
+      		<% var profile = profiles[i]; %>
+	      		<li>
+	        		<a href="/google-analytics/profile/<%= profile.id %>"><%= profile.name%></a>
+	      		</li>
+	   		 <% } %>
+	  		</ul>
+	</script>
  	{%endblock%}

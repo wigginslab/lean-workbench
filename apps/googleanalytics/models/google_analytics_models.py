@@ -56,6 +56,17 @@ class Google_Analytics_Profiles(db.Model):
 		self.user = user
 		self.profile_id = profile_id
 
+class Google_Analytics_Visitors(db.Model):
+	"""
+	Google Analytics Site Visitor Metrics
+	"""
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String)
+	profile_id = db.Column(db.Integer)
+	date = db.Column(db.String)
+	visitors = db.Column(db.Integer)
+	new_visits = db.Column(db.Integer)
+	percent_new_visits = db.Column(db.Integer)
 
 
 
