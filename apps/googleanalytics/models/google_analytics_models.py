@@ -31,6 +31,7 @@ class Google_Analytics_User_Model(db.Model):
 	username = db.Column(db.String)
 
 	def __init__(self, credentials_dict):
+		print credentials_dict
 		self.username = credentials_dict.get("username")
 		self.access_token = credentials_dict.get("access_token")
 		self.client_id = credentials_dict.get("client_id"),

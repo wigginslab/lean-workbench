@@ -1,4 +1,6 @@
 from flask import Flask
+import urllib
+import urllib2
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
 from models.google_analytics_models import *
@@ -7,7 +9,7 @@ from models.google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
-from datetime import datetime 
+from datetime import datetime, timedelta 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -41,10 +43,35 @@ class Google_Analytics_API:
 				self.client = self.build_client(self.credentials)
 			else:
 				print 'crdentials expired'
-				return None
+				print self.credentials
+				credentials_dict = self.credentials.as_dict()
+				self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+				self.client = self.build_client(self.credentials)
 		else:
 			print "no credentials"
 			return None
+
+	def refresh_token(self,refresh_token,client_id, client_secret):
+		"""
+		Refresh the access token if expired
+		"""
+
+		url = 'https://accounts.google.com/o/oauth2/token'
+		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
+		# encode data
+		data = urllib.urlencode(values)
+		# post request for refresh token
+		req = urllib2.Request(url, data)
+		print req
+		response = urllib2.urlopen(req)
+		print 'refresh response'
+		print response
+		response_json = json.loads(response.read())
+		print response_json
+		new_access_token = response_json["access_token"]
+		new_expiration_date = str(datetime.now() + timedelta(1))
+		self.credentials.token_expiry = new_expiration_date
+		db.session.commit()
 
 	def build_client(self, ga_user_credentials):
 		print 'build client'
@@ -74,6 +101,7 @@ class Google_Analytics_API:
 		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
 		google_analytics_client_id = os.getenv("google_analytics_client_id") 
 		redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
+		print redirect_url	
 		return redirect_url
 
 	def step_two(self,username, ga_api_code):
@@ -105,7 +133,7 @@ class Google_Analytics_API:
 		GAUM = Google_Analytics_User_Model(credentials_dict)
 		db.session.add(GAUM)
 		db.session.commit()
-
+		db.session.close()
 	def get_user_accounts(self):
 		accounts = self.client.management().accounts().list().execute()
 		return accounts

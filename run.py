@@ -158,6 +158,7 @@ def reset_password_request():
 			
 		db.session.add(reset_password)
 		db.session.commit()
+		db.session.close()
 		flash('An email has been sent to you with a link to reset your password.')
 		return render_template('reset_password.html')
 	else:
@@ -178,7 +179,6 @@ def google_analytics_oauth():
 		# if credentials have not expired
 		if expires_on > current_time:
 			print GA_API.credentials.as_dict()
-			db.session.delete(GA_API.credentials)
 			# you shouldn't have hit this link
 			print "you have credentials for GA"
 			return redirect(url_for('index'))
@@ -199,6 +199,8 @@ def google_analytics_callback():
 		username = escape(session['username'])
 		GA_API = Google_Analytics_API('username')
 		ga_api_code= request.args.get("code")
+		print 'ga callback args'
+		print request.args
 		print GA_API
 		client = GA_API.step_two(username, ga_api_code)
 	else:
