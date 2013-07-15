@@ -42,11 +42,16 @@ The following variables must be set on your machine:
 * mail_username - username for mail server
 * mail_password- password for mail server
 * mail_port - port for mail server
+
+For each of these APIs you want to use
+
 * crunchbase_key - API key for crunchbase
 * path - path to application on server (so it can be added to python path within application)
 *mixpanel_api_key - if using mixpanel
 * mixpanel_api_secret- ...
 * mixpanel_token - ..
+* wufoo_api_token 
+* wufoo_account
 Running the Application
 ---------------------------
 Set the environment variables then:
