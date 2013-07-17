@@ -52,6 +52,9 @@ For each of these APIs you want to use
 * mixpanel_token - ..
 * wufoo_api_token 
 * wufoo_account
+* angellist_client_id
+* angellist_client_secret
+* angellist_callback_url
 Running the Application
 ---------------------------
 Set the environment variables then:

@@ -2,4 +2,4 @@ import angellist
 import os
 
 al = angellist.AngelList()
-print al.getFeed()
+print al.getAuthorizeURL()

@@ -7,6 +7,7 @@
 #                                                                                     #
 #######################################################################################
 
+from models.angellist_models import *
 import hashlib
 import urllib, urllib2
 import simplejson as json
@@ -80,10 +81,16 @@ class AngelList(object):
       except:
         # access token failed to fetch (for any reason); so we'll just return blank
         access_token = ''
-
+        print 'failure to get access token'
       self.access_token = access_token
 
       return access_token
+
+    def save(self, code=None, username=None):
+        model = Angellist_User_Model(username=username, code=code)
+        db.session.add(model)
+        db.session.commit()
+        db.session.close()
 
     #############################
     # GENERAL HELPER FUNCTIONS

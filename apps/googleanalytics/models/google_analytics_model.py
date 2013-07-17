@@ -1,6 +1,5 @@
 from datetime import datetime
 from flask import Flask
-from werkzeug import generate_password_hash, check_password_hash
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
 

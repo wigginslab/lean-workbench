@@ -16,6 +16,7 @@ from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 #form validation imports
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
+from apps.angellist.angellist import AngelList
 
 def authenticate_page(func):
 	@wraps(func)
@@ -210,6 +211,27 @@ def google_analytics_callback():
 @app.route('/google-analytics/profile/<int:profile_id>')
 def get_profile_data(profile_id):
 	pass
+
+@app.route('/connect/angellist/')
+def connect_angellist():
+	"""
+	Step 1 of connection to angellist api
+	"""
+	redirect_url = AngelList().getAuthorizeURL()
+	return redirect(redirect_url)
+
+@app.route('/connect/angellist/callback')
+def angellist_callback():
+	if 'username' in session:
+		username = escape(session['username'])
+	else:
+		username = None
+	code = request.args.get("code")
+	al = AngelList()
+	code = al.getAccessToken(code=code)
+	al.save(code=code, username=username)
+	return redirect(url_for('index'))
+
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
