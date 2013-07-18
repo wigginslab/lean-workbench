@@ -3,6 +3,7 @@
 		<script src="/static/js/underscore.js"></script>
 	    <script src="/static/js/socket.io.min.js"></script>
 		<script src="/static/js/app.js"></script>
+		<script src="/static/js/masonry.pkgd.js"></script>
 	{% endblock %}
 	{% block topform %}
 	{% endblock %}
@@ -11,10 +12,18 @@
 	{{alert}}
 	You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
 	<p>
+	<div class="masonry-container">
+		<div id="ga" class="item">
+			<img src="/static/img/google-analytics.png"></img>
+		</div>
+		<div id ="al" class="item">
+			<img src="/static/img/angellist.jpg"></img>
+		</div>
+	</div>
+	<div class="ga-accounts"></div>
 	<a href="/connect/google-analytics">Google Analytics</a>
 	<p><a href="/connect/angellist">Angellist</a>
-	<div class="ga-accounts"></div>
-	<script id='ga-tmpl' type='text/template'>
+		<script id='ga-tmpl' type='text/template'>
  	 	<ul>
     		<% for (var i = 0; i < profiles.length; i++) { %>
       		<% var profile = profiles[i]; %>

@@ -2,7 +2,6 @@ $('registration-button').click(function(){
 	var serialized = $('#registration-form')
 });
 
-
 var getAPIs = {
 	init: function(){
 		this.get_google_analytics();
@@ -30,4 +29,9 @@ $('.ga-accounts').html(compiledTmpl);
 $(document).ready(function() {
 	username = $("#username").text();
 	getAPIs.init(username);
+	var container = document.querySelector('.container');
+	var msnry = new Masonry( container, {
+		columnWidth: 200,
+		itemSelector: '.item'
+	 });
 });
