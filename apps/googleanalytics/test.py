@@ -1,6 +1,6 @@
+import re
 from google_analytics_client import Google_Analytics_API
-from datetime import datetime
-
+from datetime import datetime, timedelta
 
 def test_get_user_accounts():
 	g = Google_Analytics_API("jen")
@@ -30,26 +30,56 @@ def test_get_month_visits():
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
 	# convert date from isoformat to GA query format
-	date_created = profile.get('created').split('T')[0]
-	current_date = datetime.now().timetuple()
-	print current_date
-	current_year = str(current_date[0])
-	current_month = str(current_date[1])
-	if len(current_month) < 2: current_month = '0'+current_month
-	current_day = str(current_date[2])
-	if len(current_day) < 2: current_day = '0'+current_day
-	current_date_string = current_year + '-' +  current_month + '-' + current_day
+	current_date = Google_Time_String(str(datetime.now()-timedelta(days=1))) 
+	last_week = Google_Time_String(str(datetime.now() - timedelta(weeks=1)))	
 	g.client.data().ga().get(
 			      ids='ga:' + profile_id,
-				        start_date=date_created,
-						      end_date=current_date_string,
+				        start_date=last_week,
+						      end_date=current_date,
 							        metrics='ga:visits').execute()
+def test_get_funnels():
+	g = Google_Analytics_API("jen")
+	profile_id = g.get_user_accounts().get('items')[0].get('id')
+	#print user_profiles
+	#profile = user_profiles[-1]
+	#print profile
+	#profile_id = profile.get('id')
+	
+	current_date = Google_Time_String(str(datetime.now()-timedelta(days=1))) 
+	last_week = Google_Time_String(str(datetime.now() - timedelta(weeks=1)))
+	print last_week
+	print current_date
+	profile_id = g.get_profile_id()
 
+	apiQuery = g.client.data().ga().get(
+		ids="ga:" + profile_id,
+		start_date= last_week,
+		end_date = current_date,
+		metrics="ga:visits").execute() 
+	print apiQuery
+
+def test_hello():
+	g = Google_Analytics_API("jen")
+	profile_id = g.get_profile_id()
+	query = g.client.data().ga().get(
+			ids='ga:' + profile_id,
+			start_date='2013-07-03',
+			end_date='2013-07-05',
+			metrics='ga:visits').execute()
+	print query
 class Google_Time_String:
-	def __init__(time_tuple):
-		self.year = str(time_tuple[0])
-		month = time_tuple[1]
+	def __init__(self,time):
+		# regular expression that separates all "words"
+		time_list = re.findall(r"[\w']+", time)
+		self.year = str(time_list[0])
+		self.month = str(time_list[1])
+		self.day = str(time_list[2])
 
-print test_get_user_accounts()
+	def __repr__(self):
+		return self.year+"-"+self.month+"-"+self.day
+
+#print test_get_user_accounts()
 #test_get_user_profile()
 #test_get_month_visits()
+#test_get_funnels()
+test_hello()
