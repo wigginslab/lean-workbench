@@ -7,4 +7,5 @@ psycopg2
 flask-restful
 google-api-python-client
 flask-WTF
+gunicorn
 tornado

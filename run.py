@@ -234,6 +234,18 @@ def angellist_callback():
 	al.save(code=code, username=username)
 	return redirect(url_for('index'))
 
+@app.route('/goals')
+def goals():
+	if 'username' in session:
+		print 'logged in'
+		username = escape(session['username'])
+	else:
+		return redirect(url_for('index'))
+	return render_template('goals.html', username=username)
+		
+@app.route('/wufoo', methods=['GET', 'POST'])
+def wufoo():
+	print request.args
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
