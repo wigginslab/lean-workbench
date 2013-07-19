@@ -1,4 +1,3 @@
-define([] , function () {
   var Funnel = Backbone.View.extend({
     className: 'funnel',
 
@@ -298,5 +297,3 @@ define([] , function () {
       return Backbone.View.prototype.remove.apply(this , arguments);
     }
   });
-  return Funnel;
-});

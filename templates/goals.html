@@ -1,4 +1,7 @@
-{% extends 'base.html'%} {% block morehead %} <link href="/static/nvd3/src/nv.d3.css" rel="stylesheet" type="text/css"> <link href="/static/css/funnel.css" type="text/css">
+{% extends 'base.html'%} 
+{% block morehead %} 
+<link href="/static/nvd3/src/nv.d3.css" rel="stylesheet" type="text/css"> 
+<link href="/static/css/funnel.css" type="text/css" rel="stylesheet">
 <style>
 
 body {
@@ -14,8 +17,8 @@ body {
 	display:none;
 }
 </style>
-{% block topform %}
 {% endblock %}
+{% block topform %}
 {% endblock %}
 {% block content %}
 <h1> Hypothesis:</h1>
@@ -34,13 +37,16 @@ body {
 	<div id="chart">
 		<svg></svg>
 	</div>
-	
-<script src="http://backbonejs.org/backbone.js"></script>
+
+<script src="/static/js/underscore.js"></script>	
+<script src="/static/js/backbone.js"></script>
 <script src="/static/js/d3.js"></script>
 <script src="/static/nvd3/nv.d3.js"></script>
 <script src="/static/nvd3/src/models/legend.js"></script>
 <script src="/static/nvd3/src/models/line.js"></script>
 <script src="/static/js/goals.js"></script>
 <script src="/static/js/pie.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.2.1/lodash.compat.js"></script>
+<script src="/static/js/funnel.js"><script>
 {% endblock %}
+
+
