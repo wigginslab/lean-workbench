@@ -1,44 +1,36 @@
- nv.addGraph(function() {  
-   var chart = nv.models.lineChart();
-  
-    chart.xAxis
-        .axisLabel('Time (Days)')
-        .tickFormat(d3.format(',r'));
-  
-    chart.yAxis
-       .axisLabel('Views')
-       .tickFormat(d3.format('.02f'));
+
+gaData = [
+
  
-   d3.select('#chart svg')
-       .datum(sinAndCos())
-     .transition().duration(500)
-       .call(chart);
- 
-   nv.utils.windowResize(function() { d3.select('#chart svg').call(chart) });
- 
-   return chart;
- });
- 
- function sinAndCos() {
-   var sin = [],
-       cos = [];
- 
-   for (var i = 0; i < 100; i++) {
-     sin.push({x: i, y: Math.sin(i/10)});
-     cos.push({x: i, y: .5 * Math.cos(i/10)});
-   }
- 
-   return [
-     {
-       values: sin,
-       key: 'New Visitors',
-       color: '#ff7f0e'
-     },
-     {
-       values: cos,
-      key: 'Returning Visitors',
-       color: '#2ca02c'
-     }
-   ];
- }
+  {
+	      "key": "Site visitors (total)",
+		      "values": [ [ 1374256623694 , 30], [ 1376798400000 , 500] ] },
+			    {
+					    "key": "Hypothesis visitors",
+						    "values": [  [ 1374256623694 , 20], [ 1376798400000 , 100]]
+								  }
+];
+nv.addGraph(function() {
+	  var chart = nv.models.cumulativeLineChart()
+	                .x(function(d) { return d[0] })
+	                .y(function(d) { return d[1] }) //adjusting, 100% is 1.00, not 100 as it is in the data
+	                .color(d3.scale.category10().range());
+
+  chart.xAxis
+	      .tickFormat(function(d) {
+					          return d3.time.format('%x')(new Date(d))
+			        });
+
+  chart.yAxis
+	      .tickFormat(d3.format(',.1'));
+
+  d3.select('#char svg')
+	      .datum(gaData)
+	    .transition().duration(500)
+	      .call(chart);
+
+  nv.utils.windowResize(chart.update);
+chart.height = "600px";
+    return chart;
+});
 

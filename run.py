@@ -48,7 +48,11 @@ def index():
 @app.route('/hypothesis/<int:hyp_id>')
 def get_hypothesis(hyp_id):
 	#TODO
-	return render_template('goals.html')
+	hypothesis = Hypothesis_Model.query.filter_by(id=hyp_id).first()
+	title = hypothesis.goal
+	if not title:
+		title=""
+	return render_template('goals.html', hypothesis = title)
 
 @app.route('/hypotheses', methods=['POST', 'GET'])
 def hypotheses():

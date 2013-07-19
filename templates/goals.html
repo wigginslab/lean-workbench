@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
+{% extends 'base.html'%}
+{% block morehead %}
 <link href="/static/nvd3/src/nv.d3.css" rel="stylesheet" type="text/css">
 <style>
 
@@ -7,16 +7,31 @@ body {
   overflow-y:scroll;
 }
 
+#char svg {
+	  width: 700px;
+	    height: 300px;;
+	}
+
+.nv-axisMaxMin{
+	display:none;
+}
 </style>
-<body>
-	<div id="chart">
+{% block topform %}
+{% endblock %}
+{% endblock %}
+{% block content %}
+<h1> Hypothesis:</h1>
+<h2>{{hypothesis}}</h2>
+	<div id="char">
 		<svg ></svg>
+	</div>
+	<div id="chart">
+		<svg></svg>
 	</div>
 <script src="/static/js/d3.js"></script>
 <script src="/static/nvd3/nv.d3.js"></script>
 <script src="/static/nvd3/src/models/legend.js"></script>
 <script src="/static/nvd3/src/models/line.js"></script>
 <script src="/static/js/goals.js"></script>
-</body>
-
-
+<script src="/static/js/pie.js"></script>
+{% endblock %}
