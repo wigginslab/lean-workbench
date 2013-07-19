@@ -17,26 +17,20 @@ class Wufoo_Survey_Model(db.Model):
 	fields = db.relationship("Wufoo_Field_Model", backref='wufoo_survey', lazy='dynamic')
 	url = db.Column(db.String)
 
+	def __init__(self, name=None, fields=None, url=None):
+		self.name = name
+		self.fields = fields
+		self.url = none
+
 class Wufoo_Field_Model(db.Model):
 	__tablename__ = "wufoo_field"
 
 	id = db.Column(db.Integer, primary_key=True)
 	survey_id = db.Column(db.Integer, db.ForeignKey('wufoo_survey.id'))
-#	choices = db.relationship('Wufoo_Choice_model', backref='wufoo_field',lazy='dynamic')
-	# if text response and not choice
-	value = db.Column(db.String, primary_key=True)
-"""
-class Wufoo_Choice_Model(db.Model):
-	__tablename__ = "wufoo_choice"
-
-	id = db.Column(db.Integer, primary_key=True)
-	# name of choice
+	value = db.Column(db.String)
 	label = db.Column(db.String)
-	field_id = db.Column(db.Integer, db.ForeignKey('wufoo_field.id'))
 
-class Wufoo_IP_Model(db.Model):
-	__tablename__ = "wufoo_ip"
-
-	id = db.Column(db.Integer, primary_key=True)
-	ip = db.Column(db.String)
-"""
+	def __init__(self, survey_id=None, value=None, label=None):
+		self.survey_id = survey_id
+		self.value = value
+		self.label = label

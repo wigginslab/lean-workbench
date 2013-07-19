@@ -17,6 +17,7 @@ from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
+from apps.wufoo.wufoo_models import *
 
 port = int(os.getenv('port'))
 
@@ -30,7 +31,6 @@ def authenticate_page(func):
  			return func(*args, **kwargs)
 		return redirect(url_for('index'))
 	return wrapper
-
 
 @app.route('/')
 def index():
@@ -242,10 +242,30 @@ def hypotheses():
 	else:
 		return redirect(url_for('index'))
 	return render_template('hypotheses.html', username=username)
-		
+
 @app.route('/wufoo', methods=['GET', 'POST'])
 def wufoo():
-	print request.args
+	data = request.args
+	field_titles = {}
+	field_values = {} 
+	field_structure = data['FieldStructure']
+	fields = field_structure['Fields']
+
+	# get field titles
+	for field in fields:
+		field_title = field['Title']
+		field_id = field['Id']
+		field_titles[field_id] = field_title
+		field_values[field_id]= data[field_title]
+
+	# get field values
+	for field in field_titles:
+		field_model = Wufoo_Field_Model()
+	form_structure = data['FormStructure']
+	url = form_structure['Url']
+	survey = Wufoo_Survey_Model.query.filter_by(url=url)
+	if not survey:
+		survey = Wufoo_Survey_Model()
 
 # store static files on server for now
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
