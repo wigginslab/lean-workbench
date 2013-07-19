@@ -18,6 +18,8 @@ from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
 
+port = int(os.getenv('port'))
+
 def authenticate_page(func):
 	@wraps(func)
 	def wrapper(*args, **kwargs):
@@ -239,4 +241,4 @@ app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 })
 
 if __name__ == '__main__':
-	app.run(debug=True, port=8080)
+	app.run(debug=True, port=port)
