@@ -17,6 +17,8 @@ from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
+from apps.hypotheses.hypotheses_model import Hypothesis_Model
+from forms.hypothesis_form import HypothesisForm
 
 port = int(os.getenv('port'))
 
@@ -37,10 +39,34 @@ def index():
 	print 'in index'
 	if 'username' in session:
 		username = escape(session['username'])
-		return render_template('index.html', username=username)
+		hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		return redirect(url_for('hypotheses'))
 	else:
 		reg_form = RegistrationForm(request.form)
 		return render_template('public.html', form=reg_form)
+
+@app.route('/hypothesis/<int:hyp_id>')
+def get_hypothesis(hyp_id):
+	#TODO
+	return render_template('goals.html')
+
+@app.route('/hypotheses', methods=['POST', 'GET'])
+def hypotheses():
+	if 'username' in session:
+		username = escape(session['username'])
+		if request.method == "POST":
+			hypothesis = Hypothesis_Model(request.form, username)
+			print hypothesis
+			db.session.add(hypothesis)
+			db.session.commit()
+			db.session.close()
+			return  redirect(url_for('hypotheses'))
+		hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		form = HypothesisForm()
+		return render_template('hypotheses.html', username=username, hypotheses=hypotheses, form=form)
+	else:
+		return redirect(url_for('index'))
+
 
 @app.errorhandler(401)
 def user_already_exists(error):

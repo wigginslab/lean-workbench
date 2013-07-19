@@ -1,0 +1,31 @@
+{% extends 'base.html'%}
+{% from "_formhelpers.html" import render_field %}
+
+	{% block morehead %}
+		<script src="/static/js/underscore.js"></script>
+	    <script src="/static/js/socket.io.min.js"></script>
+		<script src="/static/js/app.js"></script>
+		<script src="/static/js/masonry.pkgd.js"></script>
+	{% endblock %}
+	{% block topform %}
+	{% endblock %}
+
+	{%block content%}
+	{{alert}}
+	Welcome <div id="username" style="display:inline">{{username}}</div>
+ 	{% for hypothesis in hypotheses %}
+         <li><a href="/hypothesis/{{ hypothesis.id }}">{{ hypothesis.goal }}</a></li>
+	{% endfor %}
+	{% if not hypothesis in hypotheses %}
+	<p>You have no hypotheses yet.
+	{% endif %}
+
+				<form id="hypothesis.form" action="/hypotheses" method="POST">
+					{{ render_field(form.title) }}
+				   	{{ render_field(form.google_analytics) }}
+					{{ render_field(form.wufoo) }}
+					{{ render_field(form.event) }}
+				  	<button id="registration-button" type="submit" class="btn">Submit</button>
+					</form>
+	
+	{%endblock%}
