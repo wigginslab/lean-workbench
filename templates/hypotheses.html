@@ -13,10 +13,11 @@
 	{%block content%}
 	{{alert}}
 	Welcome <div id="username" style="display:inline">{{username}}</div>
+	<h2> Hypotheses </h2>
  	{% for hypothesis in hypotheses %}
          <li><a href="/hypothesis/{{ hypothesis.id }}">{{ hypothesis.goal }}</a></li>
 	{% endfor %}
-	{% if not hypothesis in hypotheses %}
+	{% if not  hypotheses %}
 	<p>You have no hypotheses yet.
 	{% endif %}
 
