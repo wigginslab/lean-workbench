@@ -1,0 +1,22 @@
+{% extends 'base.html'%}
+{% from "_formhelpers.html" import render_field %}
+{% block morehead %}
+<script type="text/javascript" src="/static/js/heatmap/gmaps.js"></script>
+<script type="text/javascript" src="/static/js/heatmap/heatmap.js"></script>
+<script type="text/javascript" src="/static/js/heatmap/heatmap-gmaps.js"></script>
+<script type="text/javascript" src="/static/js/heatmap.js"></script>
+{% endblock %}
+{%block content%}
+				<h1>Heatmap</h1>
+					{% with messages = get_flashed_messages() %}
+					  		{% if messages %}
+					    	<ul class="flashes">
+					    		{% for message in messages %}
+					      		<li>{{ message }}</li>
+					    		{% endfor %}
+					    	</ul>
+					  {% endif %}
+					{% endwith %}
+<div id="heatmapArea"></div>
+
+					{% endblock %}

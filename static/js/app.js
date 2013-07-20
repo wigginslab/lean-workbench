@@ -29,9 +29,5 @@ $('.ga-accounts').html(compiledTmpl);
 $(document).ready(function() {
 	username = $("#username").text();
 	getAPIs.init(username);
-	var container = document.querySelector('.container');
-	var msnry = new Masonry( container, {
-		columnWidth: 200,
-		itemSelector: '.item'
-	 });
+	var router = new Router_View({el:'.api-sidebar'});
 });

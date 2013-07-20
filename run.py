@@ -95,7 +95,7 @@ def register():
 	username = request.form['username']
 	print username
 	password = request.form['password']
-	company = request.form['email']
+	company = request.form['company']
 	user = User(username=username, password=password,company=company)
 	if user == "Error":
 		return render_template("error.html", error="Error: user already exists")
@@ -105,7 +105,7 @@ def register():
 	db.session.commit()
 	db.session.close()
 	print 'registration success!'
-	session['username'] = request.form['email']
+	session['username'] = request.form['username']
 	
 	return redirect(url_for('connect_to_apis'))
 
@@ -117,14 +117,14 @@ def connect_to_apis():
 		username = escape(session['username'])
 		# TODO: refactor
 		api_connected, api_urls = {}, {}
-		api_urls = {"Google Analytics":"/connect/google-analytics",
-					"Angellist":"/connect/angellist",
-					"Wufoo":"/connect/wufoo",
-					"Event Tracking": "/connect/fnord"
+		api_urls = {"Google Analytics":"google-analytics",
+					"Angellist":"angellist",
+					"Wufoo":"wufoo",
+					"Event Tracking": "fnord"
 					}
 		if Google_Analytics_User_Model.query.filter_by(username=username).first():
-			api_connected["Google_Analytics"] = True
-		else: api_connected["Google_Analytics"] = False
+			api_connected["Google Analytics"] = True
+		else: api_connected["Google Analytics"] = False
 
 		if Fnord_User_Model.query.filter_by(username=username).first():
 			api_connected["Event Tracking"] = True
@@ -229,7 +229,7 @@ def reset_password_request():
 		reset_code = reset_password.reset_code
 		reset_msg = Message("Resetting Your Chatover Password",
                   sender="jen@example.com",
-                  recipients=[user.email])
+                  recipients=[user.username])
 		reset_msg.html = "Go to "+ host + "/password/reset/?reset_code="+reset_code+"/ to reset your Chatover password.<p> Thanks, <p> Jen@Chatover"
 		mail.send(reset_msg)
 			
@@ -288,15 +288,38 @@ def google_analytics_callback():
 def get_profile_data(profile_id):
 	pass
 
-@app.route('/connect/angellist/')
+
+@app.route('/api/connect/angellist')
+def al_partial():
+	return render_template('partials/fnord.html')
+
+@app.route('/api/connect/google-analytics')
+def ga_partial():
+	return render_template('partials/google-analytics.html')
+
+@app.route('/api/connect/fnord')
+def fnord_partial():
+	return render_template('partials/fnord.html')
+
+@app.route('/api/connect/wufoo')
+def fnord_partial():
+	return render_template('partials/wufoo.html')
+
+@app.route('/view/google_analytics')
+def view_ga():
+	return render_template('partials/view_google_analytics.html')
+
+@app.route('/connect/angellist/', methods=['GET'])
 def connect_angellist():
 	"""
 	Step 1 of connection to angellist api
 	"""
+	if request.method =='GET':
+		return render_template('partials/angellist.html')
 	redirect_url = AngelList().getAuthorizeURL()
 	return redirect(redirect_url)
 
-@app.route('/connect/angellist/callback')
+@app.route('/connect/angellist/callback',methods=['GET'])
 def angellist_callback():
 	if 'username' in session:
 		username = escape(session['username'])

@@ -1,50 +1,38 @@
 {% extends 'base.html'%}
 	{% block morehead %}
 		<script src="/static/js/underscore.js"></script>
-	    <script src="/static/js/socket.io.min.js"></script>
+		<script src="/static/js/backbone.js"></script>
 		<script src="/static/js/app.js"></script>
+		<script src="/static/js/route_view.js"></script>
 		<script src="/static/js/masonry.pkgd.js"></script>
 	{% endblock %}
 	{% block topform %}
 	{% endblock %}
 
 	{%block content%}
-	{{alert}}
-	<div class="row">
-	<div class="well api-sidebar" style="max-width: 340px">
+		{{alert}}
+		<div class="row">
+			<div class="well api-sidebar" style="max-width: 340px">
+				<ul class="nav nav-list">
+					<li class="nav-header">Connected APIs</li>
+					{% for api in api_connected %}
+						{% if api_connected[api] %}
+						<li class="view" id="{{api_urls[api]}}" data-url="{{api_urls[api]}}"><a>{{api}}</a></li>
+							<li class="nav-header">APIs to Connect</li>
+						{% else %}
+						<li class="connect" id={{api_urls[api]}} data-url="{{api_urls[api]}}"><a>{{ api	}}</a></li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		<div id="body-content">
+			You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
+			<p>
+					<div class="ga-accounts"></div>
 
-	<ul class="nav nav-list">
-		<li class="nav-header">Connected APIs</li>
-		{% for api in api_connected %}
-			{% if api_connected[api] %}
-				<li href="{{api_urls[api]}}"><a>{{api}}</a></li>
-				<li class="nav-header">APIs to Connect</li>
-			{% else %}
-			<li href="{{api_urls[api]}}"><a>{{ api	}}</a></li>
-			{% endif %}
-		{% endfor %}
-	</ul>
-</div>
-	You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
-	<p>
-	<div class="masonry-container">
-		<div id="ga" class="item">
-			<a href="/connect/google-analytics">
-				<img src="/static/img/google-analytics.png"></img>
-			</a>
-			<div class="ga-accounts"></div>
-
+			<a href="/connect/google-analytics">Google Analytics</a>
+			<p><a href="/connect/angellist">Angellist</a>
 		</div>
-
-		<div id ="al" class="item">
-			<a href="/connect/angellist">
-				<img src="/static/img/angellist.jpg"></img>
-			</a>
-		</div>
-	</div>
-	<a href="/connect/google-analytics">Google Analytics</a>
-	<p><a href="/connect/angellist">Angellist</a>
-</div>
 		<script id='ga-tmpl' type='text/template'>
  	 	<ul>
     		<% for (var i = 0; i < profiles.length; i++) { %>
