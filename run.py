@@ -85,12 +85,11 @@ def register():
 	"""
 	user registration endpoint
 	"""
-	print 'in register'
 	username = request.form['username']
 	print username
 	password = request.form['password']
-	email = request.form['email']
-	user = User(username, password, email)
+	company = request.form['email']
+	user = User(username=username, password=password,company=company)
 	if user == "Error":
 		return render_template("error.html", error="Error: user already exists")
 	print user
