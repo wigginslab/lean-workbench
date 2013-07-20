@@ -4,8 +4,31 @@
 		<script src="/static/js/backbone.js"></script>
 		<script src="/static/js/app.js"></script>
 		<script src="/static/js/route_view.js"></script>
-		<script src="/static/js/masonry.pkgd.js"></script>
-	{% endblock %}
+		<script src="/static/js/d3.js"></script>
+	<script src="/static/nvd3/nv.d3.js"></script>
+	<script src="/static/nvd3/src/models/legend.js"></script>
+	<script src="/static/nvd3/src/models/line.js"></script>
+	<script src="/static/js/goals.js"></script>
+	<script src="/static/js/pie.js"></script>
+	<script src="/static/js/funnel.js"></script>
+		<link href="/static/nvd3/src/nv.d3.css" rel="stylesheet" type="text/css"> 
+	<link href="/static/css/funnel.css" type="text/css" rel="stylesheet">
+	<style>
+
+	body {
+	  overflow-y:scroll;
+	}
+
+	#char svg {
+		  width: 700px;
+			height: 300px;;
+		}
+
+	.nv-axisMaxMin{
+		display:none;
+	}
+	</style>
+		{% endblock %}
 	{% block topform %}
 	{% endblock %}
 

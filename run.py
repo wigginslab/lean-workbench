@@ -305,7 +305,7 @@ def fnord_partial():
 def fnord_partial():
 	return render_template('partials/wufoo.html')
 
-@app.route('/view/google_analytics')
+@app.route('/view/google-analytics')
 def view_ga():
 	return render_template('partials/view_google_analytics.html')
 
