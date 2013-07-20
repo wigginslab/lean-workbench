@@ -45,6 +45,10 @@ def index():
 		reg_form = RegistrationForm(request.form)
 		return render_template('public.html', form=reg_form)
 
+@app.route('/heatmap')
+def heat_map():
+	return render_template('heatmap.html')
+
 @app.route('/hypothesis/<int:hyp_id>')
 def get_hypothesis(hyp_id):
 	#TODO
@@ -95,9 +99,17 @@ def register():
 	db.session.commit()
 	db.session.close()
 	print 'registration success!'
-	session['username'] = request.form['username']
-	return render_template('index.html', username=username)
+	session['username'] = request.form['email']
+	return render_template('connect_to_apis.html', username=username)
+	#return render_template('index.html', username=username)
+
+@app.route('/connect-to-apis')
+def connect_to_apis():
+	if 'username' in session:
+		username = escape(session['username'])
 	
+	return render_template('connect_to_apis.html', username=username)
+
 @app.route('/login', methods=['POST','GET'])
 def login():
 	username = request.form['username']
