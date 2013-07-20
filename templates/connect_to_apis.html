@@ -10,6 +10,21 @@
 
 	{%block content%}
 	{{alert}}
+	<div class="row">
+	<div class="well api-sidebar" style="max-width: 340px">
+
+	<ul class="nav nav-list">
+		<li class="nav-header">Connected APIs</li>
+		{% for api in api_connected %}
+			{% if api_connected[api] %}
+				<li href="{{api_urls[api]}}"><a>{{api}}</a></li>
+				<li class="nav-header">APIs to Connect</li>
+			{% else %}
+			<li href="{{api_urls[api]}}"><a>{{ api	}}</a></li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+</div>
 	You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
 	<p>
 	<div class="masonry-container">
@@ -22,11 +37,14 @@
 		</div>
 
 		<div id ="al" class="item">
-			<img src="/static/img/angellist.jpg"></img>
+			<a href="/connect/angellist">
+				<img src="/static/img/angellist.jpg"></img>
+			</a>
 		</div>
 	</div>
 	<a href="/connect/google-analytics">Google Analytics</a>
 	<p><a href="/connect/angellist">Angellist</a>
+</div>
 		<script id='ga-tmpl' type='text/template'>
  	 	<ul>
     		<% for (var i = 0; i < profiles.length; i++) { %>
@@ -35,6 +53,6 @@
 	        		<a href="/google-analytics/profile/<%= profile.id %>"><%= profile.name%></a>
 	      		</li>
 	   		 <% } %>
-	  		</ul>
+	 </ul>
 	</script>
  	{%endblock%}

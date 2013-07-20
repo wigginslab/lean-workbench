@@ -1,3 +1,8 @@
 .item { display:inline; }
 #ga{ width: 25%; }
 #al{ width: 30%; }
+.api-sidebar{
+	width:16%;
+	margin-right:6%;
+	float:left;
+}

@@ -19,6 +19,13 @@ from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
 from apps.hypotheses.hypotheses_model import Hypothesis_Model
 from forms.hypothesis_form import HypothesisForm
+from apps.googleanalytics.models.google_analytics_models import Google_Analytics_User_Model
+from apps.fnordmetric.fnord_model import Fnord_User_Model
+from apps.angellist.models.angellist_models import Angellist_User_Model
+from apps.wufoo.wufoo_model import Wufoo_User_Model 
+
+
+print app.name
 
 port = int(os.getenv('port'))
 
@@ -99,16 +106,42 @@ def register():
 	db.session.close()
 	print 'registration success!'
 	session['username'] = request.form['email']
-	return render_template('connect_to_apis.html', username=username)
+	
+	return redirect(url_for('connect_to_apis'))
+
 	#return render_template('index.html', username=username)
 
 @app.route('/connect-to-apis')
 def connect_to_apis():
 	if 'username' in session:
 		username = escape(session['username'])
-	
-	return render_template('connect_to_apis.html', username=username)
+		# TODO: refactor
+		api_connected, api_urls = {}, {}
+		api_urls = {"Google Analytics":"/connect/google-analytics",
+					"Angellist":"/connect/angellist",
+					"Wufoo":"/connect/wufoo",
+					"Event Tracking": "/connect/fnord"
+					}
+		if Google_Analytics_User_Model.query.filter_by(username=username).first():
+			api_connected["Google_Analytics"] = True
+		else: api_connected["Google_Analytics"] = False
 
+		if Fnord_User_Model.query.filter_by(username=username).first():
+			api_connected["Event Tracking"] = True
+		else: api_connected["Event Tracking"] = False
+
+		if Wufoo_User_Model.query.filter_by(username=username).first():
+			api_connected["Wufoo"] = True
+		else: api_connected["Wufoo"] = False
+
+		if Angellist_User_Model.query.filter_by(username=username).first():
+			api_connected["Angellist"] = True
+		else: api_connected["Angellist"] = False
+
+		return render_template('connect_to_apis.html', username=username, api_connected=api_connected, api_urls=api_urls)
+
+	else:
+		return redirect(url_for('index'))
 @app.route('/login', methods=['POST','GET'])
 def login():
 	username = request.form['username']
