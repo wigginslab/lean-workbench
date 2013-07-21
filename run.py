@@ -326,7 +326,8 @@ def view_wufoo():
 
 @app.route('/search/crunchbase',methods=['POST'])
 def search_crunchbase():
-	pass
+	crunchbase = Crunchbase(os.getenv('crunchbase_key'))
+	query = request.form["company"]
 
 
 @app.route('/connect/angellist/', methods=['GET'])
