@@ -1,3 +1,4 @@
+{% from "_formhelpers.html" import render_field %}
 {% extends 'base.html'%}
 	{% block morehead %}
 		<script src="/static/js/underscore.js"></script>
@@ -5,15 +6,15 @@
 		<script src="/static/js/app.js"></script>
 		<script src="/static/js/route_view.js"></script>
 		<script src="/static/js/d3.js"></script>
-	<script src="/static/nvd3/nv.d3.js"></script>
-	<script src="/static/nvd3/src/models/legend.js"></script>
-	<script src="/static/nvd3/src/models/line.js"></script>
-	<script src="/static/js/goals.js"></script>
-	<script src="/static/js/pie.js"></script>
-	<script src="/static/js/funnel.js"></script>
+		<script src="/static/nvd3/nv.d3.js"></script>
+		<script src="/static/nvd3/src/models/legend.js"></script>
+		<script src="/static/nvd3/src/models/line.js"></script>
+		<script src="/static/js/goals.js"></script>
+		<script src="/static/js/pie.js"></script>
+		<script src="/static/js/funnel.js"></script>
 		<link href="/static/nvd3/src/nv.d3.css" rel="stylesheet" type="text/css"> 
-	<link href="/static/css/funnel.css" type="text/css" rel="stylesheet">
-	<style>
+		<link href="/static/css/funnel.css" type="text/css" rel="stylesheet">
+		<style>
 
 	body {
 	  overflow-y:scroll;
@@ -37,11 +38,10 @@
 		<div class="row">
 			<div class="well api-sidebar" style="max-width: 340px">
 				<ul class="nav nav-list">
-					<li class="nav-header">Connected APIs</li>
+					<li class="nav-header">APIs</li>
 					{% for api in api_connected %}
 						{% if api_connected[api] %}
 						<li class="view" id="{{api_urls[api]}}" data-url="{{api_urls[api]}}"><a>{{api}}</a></li>
-							<li class="nav-header">APIs to Connect</li>
 						{% else %}
 						<li class="connect" id={{api_urls[api]}} data-url="{{api_urls[api]}}"><a>{{ api	}}</a></li>
 						{% endif %}
@@ -50,11 +50,25 @@
 			</div>
 		<div id="body-content">
 			You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
+			<h2> Hypotheses </h2>
+		 	{% for hypothesis in hypotheses %}
+		         <li><a href="/hypothesis/{{ hypothesis.id }}">{{ hypothesis.goal }}</a></li>
+			{% endfor %}
+			{% if not  hypotheses %}
+			<p>You have no hypotheses yet.
+			{% endif %}
+
+						<form id="hypothesis.form" action="/hypotheses" method="POST">
+							{{ render_field(form.title) }}
+						   	{{ render_field(form.google_analytics) }}
+							{{ render_field(form.wufoo) }}
+							{{ render_field(form.event) }}
+						  	<button id="registration-button" type="submit" class="btn">Submit</button>
+							</form>
 			<p>
 					<div class="ga-accounts"></div>
 
-			<a href="/connect/google-analytics">Google Analytics</a>
-			<p><a href="/connect/angellist">Angellist</a>
+			
 		</div>
 		<script id='ga-tmpl' type='text/template'>
  	 	<ul>

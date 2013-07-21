@@ -23,6 +23,7 @@ from apps.googleanalytics.models.google_analytics_models import Google_Analytics
 from apps.fnordmetric.fnord_model import Fnord_User_Model
 from apps.angellist.models.angellist_models import Angellist_User_Model
 from apps.wufoo.wufoo_model import Wufoo_User_Model 
+from apps.crunchbase.crunchbase_model import Crunchbase_User_Model 
 
 
 print app.name
@@ -46,8 +47,9 @@ def index():
 	print 'in index'
 	if 'username' in session:
 		username = escape(session['username'])
-		hypotheses = Hypothesis_Model.query.filter_by(username=username)
-		return redirect(url_for('hypotheses'))
+		#hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		#return redirect(url_for('hypotheses'))
+		return redirect(url_for('connect_to_apis'))
 	else:
 		reg_form = RegistrationForm(request.form)
 		return render_template('public.html', form=reg_form)
@@ -75,7 +77,7 @@ def hypotheses():
 			db.session.add(hypothesis)
 			db.session.commit()
 			db.session.close()
-			return  redirect(url_for('hypotheses'))
+			return  redirect(url_for('index'))
 		hypotheses = Hypothesis_Model.query.filter_by(username=username)
 		form = HypothesisForm()
 		return render_template('hypotheses.html', username=username, hypotheses=hypotheses, form=form)
@@ -118,7 +120,7 @@ def connect_to_apis():
 		# TODO: refactor
 		api_connected, api_urls = {}, {}
 		api_urls = {"Google Analytics":"google-analytics",
-					"Angellist":"angellist",
+					"Crunchbase":"crunchbase",
 					"Wufoo":"wufoo",
 					"Event Tracking": "fnord"
 					}
@@ -134,11 +136,15 @@ def connect_to_apis():
 			api_connected["Wufoo"] = True
 		else: api_connected["Wufoo"] = False
 
-		if Angellist_User_Model.query.filter_by(username=username).first():
-			api_connected["Angellist"] = True
-		else: api_connected["Angellist"] = False
+		if Crunchbase_User_Model.query.filter_by(username=username).first():
+			api_connected["Crunchbase"] = True
+		else: api_connected["Crunchbase"] = False
 
-		return render_template('connect_to_apis.html', username=username, api_connected=api_connected, api_urls=api_urls)
+		hypotheses = Hypothesis_Model.query.filter_by(username=username).all()
+		form = HypothesisForm()
+		print hypotheses
+
+		return render_template('connect_to_apis.html', username=username,hypotheses=hypotheses, form=form, api_connected=api_connected, api_urls=api_urls)
 
 	else:
 		return redirect(url_for('index'))
@@ -291,7 +297,11 @@ def get_profile_data(profile_id):
 
 @app.route('/api/connect/angellist')
 def al_partial():
-	return render_template('partials/fnord.html')
+	return render_template('partials/angellist.html')
+
+@app.route('/view/angellist')
+def al_partial():
+	return render_template('partials/angellist.html')
 
 @app.route('/api/connect/google-analytics')
 def ga_partial():
@@ -302,25 +312,37 @@ def fnord_partial():
 	return render_template('partials/fnord.html')
 
 @app.route('/api/connect/wufoo')
-def fnord_partial():
-	return render_template('partials/wufoo.html')
+def wufoo_partial():
+	return render_template('partials/view_wufoo.html')
+
 
 @app.route('/view/google-analytics')
 def view_ga():
 	return render_template('partials/view_google_analytics.html')
+
+@app.route('/view/wufoo')
+def view_wufoo():
+	return render_template('partials/view_wufoo.html')
+
+@app.route('/search/crunchbase',methods=['POST'])
+def search_crunchbase():
+	pass
+
 
 @app.route('/connect/angellist/', methods=['GET'])
 def connect_angellist():
 	"""
 	Step 1 of connection to angellist api
 	"""
-	if request.method =='GET':
-		return render_template('partials/angellist.html')
+	#if request.method =='GET':
+	#	return render_template('partials/angellist.html')
 	redirect_url = AngelList().getAuthorizeURL()
+	print redirect_url
 	return redirect(redirect_url)
 
 @app.route('/connect/angellist/callback',methods=['GET'])
 def angellist_callback():
+	print 'in callback'
 	if 'username' in session:
 		username = escape(session['username'])
 	else:

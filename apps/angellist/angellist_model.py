@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 
 class Angellist_User_Model(db.Model):
-	__tablename__ = "fnord_user"
+	__tablename__ = "angellist_user"
 
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String)

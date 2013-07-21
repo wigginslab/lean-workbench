@@ -7,7 +7,7 @@ var getAPIs = {
 		this.get_google_analytics();
 	},
 	get_google_analytics: function(){
-		$.ajax({
+		/*$.ajax({
   			type: "GET",
 			  url: "/api/v1/google-analytics/?username="+username,
 			  success: function(data){
@@ -21,7 +21,7 @@ $('.ga-accounts').html(compiledTmpl);
 			  error: function(error){
 			  	console.log(error);
 			  }
-		});
+		});*/
 
 	}
 }
