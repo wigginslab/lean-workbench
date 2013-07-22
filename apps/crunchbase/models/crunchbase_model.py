@@ -10,21 +10,20 @@ db = SQLAlchemy(app)
 
 
 company_tags_association = db.Table('company_tags_association',
-    db.Column('company_id', db.Integer, db.ForeignKey('company.id')),
+    db.Column('company_id', db.Integer, db.ForeignKey('crunchbase_company.id')),
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
 )
 
-class Crunchbase_Company(db.Model):
+class Crunchbase_Company_Model(db.Model):
 	__tablename__ = "crunchbase_company"
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String)
 	tags = db.relationship("Tag", secondary = company_tags_association)
-	number_of_employees = db.Column(Integer)
-	founded_year =  db.Column(Integer(4))
+	number_of_employees = db.Column(db.Integer)
+	founded_year =  db.Column(db.Integer(4))
 	founded_month = db.Column(db.Integer)
 	founded_day = db.Column(db.Integer)
 	image= db.Column(db.String)
-	milestones=db.relationship("Tags", secondary=company_tags_association)
 	crunchbase_url = db.Column(db.String)
 	homepage_url = db.Column(db.String)
 	# startup or finanical organization

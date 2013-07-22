@@ -23,7 +23,7 @@ from apps.googleanalytics.models.google_analytics_models import Google_Analytics
 from apps.fnordmetric.fnord_model import Fnord_User_Model
 from apps.angellist.models.angellist_models import Angellist_User_Model
 from apps.wufoo.wufoo_model import Wufoo_User_Model 
-from apps.crunchbase.crunchbase_model import Crunchbase_User_Model 
+from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
 
 
 print app.name
@@ -136,7 +136,7 @@ def connect_to_apis():
 			api_connected["Wufoo"] = True
 		else: api_connected["Wufoo"] = False
 
-		if Crunchbase_User_Model.query.filter_by(username=username).first():
+		if Crunchbase_Company_Model.query.filter_by(username=username).first():
 			api_connected["Crunchbase"] = True
 		else: api_connected["Crunchbase"] = False
 
@@ -297,6 +297,10 @@ def get_profile_data(profile_id):
 
 @app.route('/api/connect/angellist')
 def al_partial():
+	return render_template('partials/angellist.html')
+
+@app.route('/api/connect/crunchbase')
+def cb_partial():
 	return render_template('partials/angellist.html')
 
 @app.route('/view/angellist')
