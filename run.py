@@ -24,7 +24,7 @@ from apps.fnordmetric.fnord_model import Fnord_User_Model
 from apps.angellist.models.angellist_models import Angellist_User_Model
 from apps.wufoo.wufoo_model import Wufoo_User_Model 
 from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model 
-
+from apps.crunchbase.crunchbase import Crunchbase
 
 print app.name
 
@@ -303,6 +303,18 @@ def al_partial():
 def al_partial():
 	return render_template('partials/angellist.html')
 
+
+@app.route('/api/connect/crunchbase')
+def cb_connect():
+	return render_template('partials/crunchbase.html')
+
+
+
+@app.route('/view/crunchbase')
+def cb_partial():
+	return render_template('partials/crunchbase.html')
+
+
 @app.route('/api/connect/google-analytics')
 def ga_partial():
 	return render_template('partials/google-analytics.html')
@@ -324,10 +336,12 @@ def view_ga():
 def view_wufoo():
 	return render_template('partials/view_wufoo.html')
 
-@app.route('/search/crunchbase',methods=['POST'])
+@app.route('/search/crunchbase',methods=['GET','POST'])
 def search_crunchbase():
+	print 'inside search crunchbase'
 	crunchbase = Crunchbase(os.getenv('crunchbase_key'))
 	query = request.form["company"]
+	return js.dumps(crunchbase.search_crunchbase(query))
 
 
 @app.route('/connect/angellist/', methods=['GET'])
