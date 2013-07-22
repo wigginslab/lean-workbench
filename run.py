@@ -121,16 +121,16 @@ def connect_to_apis():
 		api_connected, api_urls = {}, {}
 		api_urls = {"Google Analytics":"google-analytics",
 					"Crunchbase":"crunchbase",
-					"Wufoo":"wufoo",
-					"Event Tracking": "fnord"
+					"Wufoo":"wufoo"#,
+			#		"Event Tracking": "fnord"
 					}
 		if Google_Analytics_User_Model.query.filter_by(username=username).first():
 			api_connected["Google Analytics"] = True
 		else: api_connected["Google Analytics"] = False
 
-		if Fnord_User_Model.query.filter_by(username=username).first():
-			api_connected["Event Tracking"] = True
-		else: api_connected["Event Tracking"] = False
+		#if Fnord_User_Model.query.filter_by(username=username).first():
+		#	api_connected["Event Tracking"] = True
+		#else: api_connected["Event Tracking"] = False
 
 		if Wufoo_User_Model.query.filter_by(username=username).first():
 			api_connected["Wufoo"] = True
@@ -177,6 +177,10 @@ def profile(user):
 		return render_template('profile.html',username=profileUser)
 	else:
 		return render_template('error.html', error="User does not exist")
+
+@app.route('/profile/hackny')
+def lwb_profile():
+	return render_template("leanworkbench_prof.html")
 
 @app.route('/logout', methods=["GET","POST"])
 def logout():
@@ -340,12 +344,17 @@ def view_ga():
 def view_wufoo():
 	return render_template('partials/view_wufoo.html')
 
-@app.route('/search/crunchbase',methods=['GET','POST'])
+@app.route('/search/crunchbase/',methods=['GET','POST'])
 def search_crunchbase():
 	print 'inside search crunchbase'
 	crunchbase = Crunchbase(os.getenv('crunchbase_key'))
-	query = request.form["company"]
-	return js.dumps(crunchbase.search_crunchbase(query))
+	print crunchbase
+	print request.args
+	query = request.args["company"]
+	print query
+	search = crunchbase.search(query)
+	print search
+	return json.dumps(search["results"])
 
 
 @app.route('/connect/angellist/', methods=['GET'])

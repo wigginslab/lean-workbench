@@ -29,6 +29,7 @@ class Crunchbase:
 		except urllib2.HTTPError as e:
 			#raise CrunchBaseError(e)
 			return "error"
+
 	def __getJsonData(self, namespace, query=""):
 		url = API_URL + namespace + query + ".js?api_key="+ self.api_key
 		print url
