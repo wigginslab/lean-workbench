@@ -1,6 +1,35 @@
 <h1>Crunchbase</h1>
-Find your Crunchbase profile and connect it to Lean Workbench.
-<input id="crunchbase-search" name="company" placeholder="Your company name on Crunchbase"></input>
-<a class="btn btn-inverse btn-large">
+Find your Crunchbase profile and connect it to Lean Workbench. If you have not made a Crunchbase account yet, sign up <a href="http://www.crunchbase.com/account/signup">here</a>.
+<p><p><input type="text" id="crunchbase-search" name="company" placeholder="Company Name"></input>
+<p><a id="submit-cb-search"  class="btn btn-inverse btn-medium">
 	Search
 </a>
+<div class="cb-company-list"></div>
+<script type="text/template" class="cb-search-results-tmp">
+	<ul>
+		<% _.each( companies, function(company){
+			<li class="select-company" data-companyId="<%company.id%"> 
+				<%company.name%> 
+			</li>
+		<%});>
+	</ul>
+</script>
+<script>
+	// handle search of crunchbase
+	$('#submit-cb-search').click(function(){
+		$.ajax({
+			"url":"/search/crunchbase/",
+			"method":"GET",
+			"data":{"company":$("#crunchbase-search").val()},
+			success: function(data){
+				console.log(data);
+				var template = $("script.cb-search-results-tmp").html();
+				companies = data["results"];
+				$(".cb-company-list").html(template(companies));
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	});
+</script>
