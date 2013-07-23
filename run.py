@@ -178,7 +178,7 @@ def profile(user):
 	else:
 		return render_template('error.html', error="User does not exist")
 
-@app.route('/profile/hackny')
+@app.route('/profile/lean-workbench')
 def lwb_profile():
 	return render_template("leanworkbench_prof.html")
 

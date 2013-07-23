@@ -88,11 +88,11 @@ function funnel(){
             horizontalOrientation: true,
             axisSize: 40,
             data: [
-              {amount: 9909 , title: 'Vistors' , color: '#FF0000'},
-              {amount: 8999 , title: 'Unique Vistors' , color: '#FFFF00'},
-              {amount: 3040 , title: 'Signups' , color: '#FF00FF'},
-              {amount: 2903 , title: 'Confirmed Users'},
-              {amount: 1333 , title: 'Active Users'},
+              {amount: 100 , title: 'Vistors' , color: '#FF0000'},
+              {amount: 50 , title: 'Unique Vistors' , color: '#FFFF00'},
+              {amount: 20 , title: 'Signups' , color: '#FF00FF'},
+              {amount: 15 , title: 'Confirmed Users'},
+              {amount: 10 , title: 'Active Users'},
             ],
             axisTemplate: _.template('<div class="title"><%= title %></div><div class="amount"><%= amount %></div>')
           });
