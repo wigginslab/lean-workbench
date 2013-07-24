@@ -1,0 +1,36 @@
+<h1>Crunchbase</h1>
+Find your Crunchbase profile and connect it to Lean Workbench. If you have not made a Crunchbase account yet, sign up <a href="http://www.crunchbase.com/account/signup">here</a>.
+<p><p><input type="text" id="crunchbase-search" name="company" placeholder="Company Name"></input>
+<p><a id="submit-cb-search"  class="btn btn-inverse btn-medium">
+	Search
+</a>
+<div class="cb-company-list"></div>
+<script type="text/template" class="cb-search-results-tmp">
+	<ul>
+				<li class="select-company" data-companyId="<%id%"> 
+				<%name%> 
+			</li>
+	</ul>
+</script>
+<script>
+	// handle search of crunchbase
+	$('#submit-cb-search').click(function(){
+		/*$.ajax({
+			"url":"/search/crunchbase/",
+			"method":"GET",
+			"data":{"company":$("#crunchbase-search").val()},
+			success: function(data){
+				var template = $("script.cb-search-results-tmp").html();
+				companies = data;
+				console.log(companies);
+				for (i=0; i < companies.length; i++){
+					$(".cb-company-list").html(template(companies[i]));
+				}
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});*/
+		$(".cb-company-list").append("<h3>Results</h3><p><div id='hackny'href='http://www.crunchbase.com/search?query=hackny'>HackNY <a href='/profile/lean-workbench' class ='btn btn-small'>Connect data to your startup</a></div>");
+	});
+</script>

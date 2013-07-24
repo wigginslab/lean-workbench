@@ -1,3 +1,20 @@
 .item { display:inline; }
 #ga{ width: 25%; }
 #al{ width: 30%; }
+.api-sidebar{
+	width:16%;
+	margin-right:6%;
+	float:left;
+	padding-bottom:100%;
+}
+.funnel{
+	margin-left:20%;
+}
+
+#chart{
+	width:500px;
+}
+
+#body-content{
+	padding-left:26%;
+}

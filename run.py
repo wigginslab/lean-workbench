@@ -18,6 +18,14 @@ from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
 from apps.wufoo.wufoo_models import *
+from apps.hypotheses.hypotheses_model import Hypothesis_Model
+from forms.hypothesis_form import HypothesisForm
+from apps.googleanalytics.models.google_analytics_models import Google_Analytics_User_Model
+from apps.fnordmetric.fnord_model import Fnord_User_Model
+from apps.angellist.models.angellist_models import Angellist_User_Model
+from apps.wufoo.wufoo_model import Wufoo_User_Model 
+from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
+from apps.crunchbase.crunchbase import Crunchbase
 
 port = int(os.getenv('port'))
 
@@ -37,10 +45,43 @@ def index():
 	print 'in index'
 	if 'username' in session:
 		username = escape(session['username'])
-		return render_template('index.html', username=username)
+		#hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		#return redirect(url_for('hypotheses'))
+		return redirect(url_for('connect_to_apis'))
 	else:
 		reg_form = RegistrationForm(request.form)
 		return render_template('public.html', form=reg_form)
+
+@app.route('/heatmap')
+def heat_map():
+	return render_template('heatmap.html')
+
+@app.route('/hypothesis/<int:hyp_id>')
+def get_hypothesis(hyp_id):
+	#TODO
+	hypothesis = Hypothesis_Model.query.filter_by(id=hyp_id).first()
+	title = hypothesis.goal
+	if not title:
+		title=""
+	return render_template('goals.html', hypothesis = title)
+
+@app.route('/hypotheses', methods=['POST', 'GET'])
+def hypotheses():
+	if 'username' in session:
+		username = escape(session['username'])
+		if request.method == "POST":
+			hypothesis = Hypothesis_Model(request.form, username)
+			print hypothesis
+			db.session.add(hypothesis)
+			db.session.commit()
+			db.session.close()
+			return  redirect(url_for('index'))
+		hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		form = HypothesisForm()
+		return render_template('hypotheses.html', username=username, hypotheses=hypotheses, form=form)
+	else:
+		return redirect(url_for('index'))
+
 
 @app.errorhandler(401)
 def user_already_exists(error):
@@ -51,12 +92,11 @@ def register():
 	"""
 	user registration endpoint
 	"""
-	print 'in register'
 	username = request.form['username']
 	print username
 	password = request.form['password']
-	email = request.form['email']
-	user = User(username, password, email)
+	company = request.form['company']
+	user = User(username=username, password=password,company=company)
 	if user == "Error":
 		return render_template("error.html", error="Error: user already exists")
 	print user
@@ -66,8 +106,46 @@ def register():
 	db.session.close()
 	print 'registration success!'
 	session['username'] = request.form['username']
-	return render_template('index.html', username=username)
 	
+	return redirect(url_for('connect_to_apis'))
+
+	#return render_template('index.html', username=username)
+
+@app.route('/connect-to-apis')
+def connect_to_apis():
+	if 'username' in session:
+		username = escape(session['username'])
+		# TODO: refactor
+		api_connected, api_urls = {}, {}
+		api_urls = {"Google Analytics":"google-analytics",
+					"Crunchbase":"crunchbase",
+					"Wufoo":"wufoo"#,
+			#		"Event Tracking": "fnord"
+					}
+		if Google_Analytics_User_Model.query.filter_by(username=username).first():
+			api_connected["Google Analytics"] = True
+		else: api_connected["Google Analytics"] = False
+
+		#if Fnord_User_Model.query.filter_by(username=username).first():
+		#	api_connected["Event Tracking"] = True
+		#else: api_connected["Event Tracking"] = False
+
+		if Wufoo_User_Model.query.filter_by(username=username).first():
+			api_connected["Wufoo"] = True
+		else: api_connected["Wufoo"] = False
+
+		if Crunchbase_Company_Model.query.filter_by(username=username).first():
+			api_connected["Crunchbase"] = True
+		else: api_connected["Crunchbase"] = False
+
+		hypotheses = Hypothesis_Model.query.filter_by(username=username).all()
+		form = HypothesisForm()
+		print hypotheses
+
+		return render_template('connect_to_apis.html', username=username,hypotheses=hypotheses, form=form, api_connected=api_connected, api_urls=api_urls)
+
+	else:
+		return redirect(url_for('index'))
 @app.route('/login', methods=['POST','GET'])
 def login():
 	username = request.form['username']
@@ -97,6 +175,10 @@ def profile(user):
 		return render_template('profile.html',username=profileUser)
 	else:
 		return render_template('error.html', error="User does not exist")
+
+@app.route('/profile/lean-workbench')
+def lwb_profile():
+	return render_template("leanworkbench_prof.html")
 
 @app.route('/logout', methods=["GET","POST"])
 def logout():
@@ -155,7 +237,7 @@ def reset_password_request():
 		reset_code = reset_password.reset_code
 		reset_msg = Message("Resetting Your Chatover Password",
                   sender="jen@example.com",
-                  recipients=[user.email])
+                  recipients=[user.username])
 		reset_msg.html = "Go to "+ host + "/password/reset/?reset_code="+reset_code+"/ to reset your Chatover password.<p> Thanks, <p> Jen@Chatover"
 		mail.send(reset_msg)
 			
@@ -214,16 +296,79 @@ def google_analytics_callback():
 def get_profile_data(profile_id):
 	pass
 
-@app.route('/connect/angellist/')
+
+@app.route('/api/connect/angellist')
+def al_partial():
+	return render_template('partials/angellist.html')
+
+@app.route('/api/connect/crunchbase')
+def cb_partial():
+	return render_template('partials/angellist.html')
+
+@app.route('/view/angellist')
+def al_partial():
+	return render_template('partials/angellist.html')
+
+
+@app.route('/api/connect/crunchbase')
+def cb_connect():
+	return render_template('partials/crunchbase.html')
+
+
+
+@app.route('/view/crunchbase')
+def cb_partial():
+	return render_template('partials/crunchbase.html')
+
+
+@app.route('/api/connect/google-analytics')
+def ga_partial():
+	return render_template('partials/google-analytics.html')
+
+@app.route('/api/connect/fnord')
+def fnord_partial():
+	return render_template('partials/fnord.html')
+
+@app.route('/api/connect/wufoo')
+def wufoo_partial():
+	return render_template('partials/view_wufoo.html')
+
+
+@app.route('/view/google-analytics')
+def view_ga():
+	return render_template('partials/view_google_analytics.html')
+
+@app.route('/view/wufoo')
+def view_wufoo():
+	return render_template('partials/view_wufoo.html')
+
+@app.route('/search/crunchbase/',methods=['GET','POST'])
+def search_crunchbase():
+	print 'inside search crunchbase'
+	crunchbase = Crunchbase(os.getenv('crunchbase_key'))
+	print crunchbase
+	print request.args
+	query = request.args["company"]
+	print query
+	search = crunchbase.search(query)
+	print search
+	return json.dumps(search["results"])
+
+
+@app.route('/connect/angellist/', methods=['GET'])
 def connect_angellist():
 	"""
 	Step 1 of connection to angellist api
 	"""
+	#if request.method =='GET':
+	#	return render_template('partials/angellist.html')
 	redirect_url = AngelList().getAuthorizeURL()
+	print redirect_url
 	return redirect(redirect_url)
 
-@app.route('/connect/angellist/callback')
+@app.route('/connect/angellist/callback',methods=['GET'])
 def angellist_callback():
+	print 'in callback'
 	if 'username' in session:
 		username = escape(session['username'])
 	else:
