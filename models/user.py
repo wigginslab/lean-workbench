@@ -26,7 +26,7 @@ class User(db.Model):
 	company = db.Column(db.String)
 	apis = db.relationship('API', secondary=apis,backref=db.backref('apis', lazy='dynamic'))
 
-	def __init__(self, username, password, company, apis=None):
+	def __init__(self, username, password, company, apis=[]):
 		self.username = username
 		error = self.check_username()
 		self.pwdhash = generate_password_hash(password)
