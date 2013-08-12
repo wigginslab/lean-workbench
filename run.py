@@ -17,7 +17,7 @@ from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
-from apps.wufoo.wufoo_models import *
+from apps.wufoo.wufoo_model import Wufoo_User_Model
 from apps.hypotheses.hypotheses_model import Hypothesis_Model
 from forms.hypothesis_form import HypothesisForm
 from apps.googleanalytics.models.google_analytics_models import Google_Analytics_User_Model
@@ -28,17 +28,7 @@ from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
 from apps.crunchbase.crunchbase import Crunchbase
 
 port = int(os.getenv('port'))
-
-def authenticate_page(func):
-	@wraps(func)
-	def wrapper(*args, **kwargs):
-		if not getattr(func, 'authenticated', True):
-			return func(*args, **kwargs)
-		acct = check_authentication(kwargs.get('username'))  # custom account lookup function
-		if acct:
- 			return func(*args, **kwargs)
-		return redirect(url_for('index'))
-	return wrapper
+print app.name
 
 @app.route('/')
 def index():

@@ -1,4 +1,4 @@
-from models.user import db as user_tables
+from models.user import db as user_tables, API 
 from apps.crunchbase.scripts.models.companyModels import db as cb_tables
 from apps.googleanalytics.models.google_analytics_models import db as ga_tables
 from apps.angellist.models.angellist_models import db as al_tables
@@ -7,6 +7,7 @@ from apps.hypotheses.hypotheses_model import db as h_tables
 from apps.wufoo.wufoo_model import db as wf_tables 
 from apps.fnordmetric.fnord_model import db as fm_tables 
 from apps.crunchbase.models.crunchbase_model import db as cb_model_table
+from run import db
 
 # create user table
 user_tables.create_all()
@@ -26,3 +27,11 @@ wf_tables.create_all()
 fm_tables.create_all()
 # crunchbase user model table
 cb_model_table.create_all()
+
+# add APIs to database
+GA = API("Google_Analytics", "/connect/google-analytics")
+db.session.add(GA)
+wufoo = API("Wufoo", "/connect/wufoo")
+db.session.add(wufoo)
+db.session.commit()
+db.session.close()

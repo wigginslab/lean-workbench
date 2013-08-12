@@ -11,7 +11,7 @@ var Router_View = Backbone.View.extend({
 	redirect_connect: function(e){
 		console.log(e);
 		elementId = e.currentTarget.id;	
-		$('#body-content').load('/api/connect/'+elementId);
+		$('#body-content').load('/connect/'+elementId);
 	},
 
 	redirect_view: function(e){
