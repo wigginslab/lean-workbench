@@ -42,6 +42,7 @@ The following variables must be set on your machine:
 * mail_username - username for mail server
 * mail_password- password for mail server
 * mail_port - port for mail server
+* secret - secret for hashing
 
 For each of these APIs you want to use
 
