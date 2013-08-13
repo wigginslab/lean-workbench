@@ -27,11 +27,3 @@ wf_tables.create_all()
 fm_tables.create_all()
 # crunchbase user model table
 cb_model_table.create_all()
-
-# add APIs to database
-GA = API("Google_Analytics", "/connect/google-analytics")
-db.session.add(GA)
-wufoo = API("Wufoo", "/connect/wufoo")
-db.session.add(wufoo)
-db.session.commit()
-db.session.close()
