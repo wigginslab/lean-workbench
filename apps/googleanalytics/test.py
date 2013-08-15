@@ -3,16 +3,16 @@ from google_analytics_client import Google_Analytics_API
 from datetime import datetime, timedelta
 
 def test_get_user_accounts():
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	return g.get_user_accounts()
 
 def test_get_user_profile():
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	user_accounts = g.get_user_accounts()
 	return user_accounts.get('items')
 
 def test_get_last_month_visits():
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
@@ -25,7 +25,7 @@ def test_get_month_visits():
 	"""
 	Currently disallowed
 	"""
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
@@ -38,7 +38,7 @@ def test_get_month_visits():
 						      end_date=current_date,
 							        metrics='ga:visits').execute()
 def test_get_funnels():
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	profile_id = g.get_user_accounts().get('items')[0].get('id')
 	#print user_profiles
 	#profile = user_profiles[-1]
@@ -59,7 +59,7 @@ def test_get_funnels():
 	print apiQuery
 
 def test_hello():
-	g = Google_Analytics_API("jen")
+	g = Google_Analytics_API("j@rubinovitz.com")
 	profile_id = g.get_profile_id()
 	query = g.client.data().ga().get(
 			ids='ga:' + profile_id,

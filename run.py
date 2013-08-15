@@ -256,7 +256,7 @@ def google_analytics_oauth():
 			print GA_API.credentials.as_dict()
 			# you shouldn't have hit this link
 			print "you have credentials for GA"
-			return redirect(url_for('index'))
+			return redirect(url_for('view_ga'))
 		else:
 			print "credentials expired, start oauth process"
 			# start OAuth process
@@ -326,7 +326,7 @@ def wufoo_partial():
 
 @app.route('/view/google-analytics')
 def view_ga():
-	return render_template('partials/view_google_analytics.html')
+	return render_template('view_google_analytics.html')
 
 @app.route('/view/wufoo')
 def view_wufoo():

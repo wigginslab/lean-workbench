@@ -40,13 +40,9 @@
 				<ul class="nav nav-list">
 					<li class="nav-header">APIs</li>
 					{% for api in api_connected %}
-						{% if api_connected[api] %}
-						<li class="view" id="{{api_urls[api]}}" data-url="{{api_urls[api]}}"><a>{{api}}</a></li>
-						{% else %}
-						<li class="connect" id={{api_urls[api]}} data-url="{{api_urls[api]}}"><a>{{ api	}}</a></li>
-						{% endif %}
-						{% endfor %}
-						<li class="view"><a href="http://0.0.0.0:4242/">Event Tracking</a></li>
+					<li class="connect" id={{api_urls[api]}}><a href="/connect/{{api_urls[api]}}">{{api}}</a></li>
+					{% endfor %}
+					<li class="view"><a href="http://0.0.0.0:4242/">Event Tracking</a></li>
 				</ul>
 			</div>
 		<div id="body-content">
