@@ -58,10 +58,12 @@ class Google_Analytics_API:
 		url = 'https://accounts.google.com/o/oauth2/token'
 		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
 		# encode data
+		print values
 		data = urllib.urlencode(values)
 		# post request for refresh token
 		req = urllib2.Request(url, data)
 		response = urllib2.urlopen(req)
+		print response
 		response_json = json.loads(response.read())
 		new_access_token = response_json["access_token"]
 		new_expiration_date = str(datetime.now() + timedelta(1))

@@ -1,18 +1,19 @@
 import re
 from google_analytics_client import Google_Analytics_API
 from datetime import datetime, timedelta
-
+import json
+from get_visits import Google_Analytics_User_Querier
 def test_get_user_accounts():
-	g = Google_Analytics_API("j@rubinovitz.com")
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	return g.get_user_accounts()
 
 def test_get_user_profile():
-	g = Google_Analytics_API("j@rubinovitz.com")
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	user_accounts = g.get_user_accounts()
 	return user_accounts.get('items')
 
 def test_get_last_month_visits():
-	g = Google_Analytics_API("j@rubinovitz.com")
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
@@ -25,7 +26,7 @@ def test_get_month_visits():
 	"""
 	Currently disallowed
 	"""
-	g = Google_Analytics_API("j@rubinovitz.com")
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
@@ -37,8 +38,10 @@ def test_get_month_visits():
 				        start_date=last_week,
 						      end_date=current_date,
 							        metrics='ga:visits').execute()
-def test_get_funnels():
-	g = Google_Analytics_API("j@rubinovitz.com")
+	assert True
+
+def test_multichannel_funnel():
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	profile_id = g.get_user_accounts().get('items')[0].get('id')
 	#print user_profiles
 	#profile = user_profiles[-1]
@@ -51,22 +54,23 @@ def test_get_funnels():
 	print current_date
 	profile_id = g.get_profile_id()
 
-	apiQuery = g.client.data().ga().get(
+	apiQuery = g.client.data().mcf().get(
 		ids="ga:" + profile_id,
-		start_date= last_week,
-		end_date = current_date,
-		metrics="ga:visits").execute() 
-	print apiQuery
+		start_date= str(last_week),
+		end_date = str(current_date),
+		metrics="mcf:totalConversions,mcf:totalConversionValue").execute() 
+	print json.dumps(apiQuery)
 
-def test_hello():
-	g = Google_Analytics_API("j@rubinovitz.com")
+def test_visitor_count():
+	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	profile_id = g.get_profile_id()
 	query = g.client.data().ga().get(
 			ids='ga:' + profile_id,
-			start_date='2013-07-03',
-			end_date='2013-07-05',
+			start_date='2012-08-14',
+			end_date='2013-08-14',
 			metrics='ga:visits').execute()
-	print query
+	print json.dumps(query)
+
 class Google_Time_String:
 	def __init__(self,time):
 		# regular expression that separates all "words"
@@ -81,5 +85,9 @@ class Google_Time_String:
 #print test_get_user_accounts()
 #test_get_user_profile()
 #test_get_month_visits()
-#test_get_funnels()
-test_hello()
+#test_multichannel_funnel()
+#print test_multichannel_funnel()
+#print test_visitor_counts()
+
+g = Google_Analytics_User_Querier("jrubinovitz@gmail.com")
+g.get_new_user_visit_data()

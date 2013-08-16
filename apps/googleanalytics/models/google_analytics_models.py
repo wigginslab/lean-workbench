@@ -67,6 +67,3 @@ class Google_Analytics_Visitors(db.Model):
 	visitors = db.Column(db.Integer)
 	new_visits = db.Column(db.Integer)
 	percent_new_visits = db.Column(db.Integer)
-
-
-
