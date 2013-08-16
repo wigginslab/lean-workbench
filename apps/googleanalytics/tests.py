@@ -91,3 +91,4 @@ class Google_Time_String:
 
 g = Google_Analytics_User_Querier("jrubinovitz@gmail.com")
 g.get_new_user_visit_data()
+#g.get_new_user_funnel_data()
