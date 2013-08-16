@@ -2,7 +2,7 @@ import re
 from google_analytics_client import Google_Analytics_API
 from datetime import datetime, timedelta
 import json
-from get_visits import Google_Analytics_User_Querier
+from mine_user_ga_data import Google_Analytics_User_Querier
 def test_get_user_accounts():
 	g = Google_Analytics_API("jrubinovitz@gmail.com")
 	return g.get_user_accounts()

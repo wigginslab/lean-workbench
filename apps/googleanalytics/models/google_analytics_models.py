@@ -67,3 +67,11 @@ class Google_Analytics_Visitors(db.Model):
 	visitors = db.Column(db.Integer)
 	new_visits = db.Column(db.Integer)
 	percent_new_visits = db.Column(db.Integer)
+
+	def __init__(self, username, profile_id, date, visitors, new_visits, percent_new_visits):
+		self.username= username
+		self.profile_id=profile_id
+		self.date=date
+		self.visitors=visitors
+		self.new_visits = new_visits
+		self.percent_new_visits = percent_new_visits
