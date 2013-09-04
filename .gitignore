@@ -11,6 +11,8 @@ apps/googleanalytics/client_secrets.json
 # C extensions
 *.so
 
+vctree/
+
 venv
 # Packages
 *.egg
