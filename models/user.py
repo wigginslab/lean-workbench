@@ -5,6 +5,7 @@ from werkzeug import generate_password_hash, check_password_hash
 import os
 import sys
 import uuid
+from flask.ext.security import UserMixin, RoleMixin
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
@@ -13,19 +14,29 @@ db = SQLAlchemy(app)
 
 apis = db.Table('apis',
 		db.Column('api_id', db.Integer, db.ForeignKey('api.id')),
-		db.Column('user_id', db.Integer, db.ForeignKey('users.uid'))
+		db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
 
+roles_users = db.Table('roles_users',
+        db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+        db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
 class User(db.Model):
-	__tablename__ = 'users'
-	uid = db.Column(db.Integer, primary_key=True)
+	__tablename__ = 'user'
+	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(60))
 	pwdhash = db.Column(db.String())
 	activate = db.Column(db.Boolean)
 	created = db.Column(db.DateTime)
 	company = db.Column(db.String)
 	apis = db.relationship('API', secondary=apis,backref=db.backref('apis', lazy='dynamic'))
-
+	active = db.Column(db.Boolean())
+    	confirmed_at = db.Column(db.DateTime())
 	def __init__(self, username, password, company, apis=[]):
 		self.username = username
 		error = self.check_username()

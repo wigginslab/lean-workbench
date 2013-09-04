@@ -26,6 +26,7 @@ from apps.angellist.models.angellist_models import Angellist_User_Model
 from apps.wufoo.wufoo_model import Wufoo_User_Model 
 from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
 from apps.crunchbase.crunchbase import Crunchbase
+from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 
 port = int(os.getenv('port'))
 print app.name
