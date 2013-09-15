@@ -7,14 +7,13 @@ import random
 import re
 from models.user import User
 from datetime import datetime
-from app import db, app, mail, Message
+from app import db, app
 # google analytics imports
 from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 #form validation imports
-from forms.registration_form import RegistrationForm
 from forms.change_password_form import ChangePasswordForm
 from apps.angellist.angellist import AngelList
 from apps.wufoo.wufoo_model import Wufoo_User_Model
@@ -26,15 +25,25 @@ from apps.angellist.models.angellist_models import Angellist_User_Model
 from apps.wufoo.wufoo_model import Wufoo_User_Model 
 from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
 from apps.crunchbase.crunchbase import Crunchbase
-from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
+from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, current_user
 from models.user import User, Role
-
+from forms.registration_form import ExtendedRegisterForm
+from flask.ext.mail import Mail, Message
+"""
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = os.getenv("email_username")
+app.config['MAIL_PASSWORD'] = os.getenv("email_password")
+app.config['SECURITY_EMAIL_SENDER'] = os.getenv("email_username")
+"""
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+security = Security(app, user_datastore, register_form= ExtendedRegisterForm)
+mail = Mail(app)
+app.config["DEBUG"] = True
 
-
-
+"""
 @app.route('/')
 def index():
 	print 'in index'
@@ -46,6 +55,19 @@ def index():
 	else:
 		reg_form = RegistrationForm(request.form)
 		return render_template('public.html', form=reg_form)
+"""
+
+@app.route('/')
+def index():
+	if  current_user.is_authenticated():
+		return redirect(url_for('dashboard'))
+	else:
+		return render_template('public.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+	return render_template("index.html")
 
 @app.route('/heatmap')
 def heat_map():

@@ -1,7 +1,7 @@
-from wtforms import Form, BooleanField, TextField, PasswordField, validators
-
-class RegistrationForm(Form):
-    company = TextField('Company Name', [validators.Length(min=4, max=25)])
-    username = TextField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('Password', [validators.Length(min=6, max=35)
-    ])
+from flask_security.forms import RegisterForm, Required
+from wtforms import TextField
+class ExtendedRegisterForm(RegisterForm):
+	"""
+	Extend flask-security registration form to include company name
+	"""
+	company = TextField('Company name', [Required()])
