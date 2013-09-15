@@ -27,9 +27,13 @@ from apps.wufoo.wufoo_model import Wufoo_User_Model
 from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
 from apps.crunchbase.crunchbase import Crunchbase
 from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
+from models.user import User, Role
 
 port = int(os.getenv('port'))
-print app.name
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
+
 
 @app.route('/')
 def index():
@@ -77,12 +81,9 @@ def hypotheses():
 @app.errorhandler(401)
 def user_already_exists(error):
 	return render_template("error.html", error = "This user already exists.")
-
+"""
 @app.route('/register', methods=['POST','GET'])
 def register():
-	"""
-	user registration endpoint
-	"""
 	username = request.form['username']
 	print username
 	password = request.form['password']
@@ -101,6 +102,7 @@ def register():
 	return redirect(url_for('connect_to_apis'))
 
 	#return render_template('index.html', username=username)
+"""
 
 @app.route('/connect-to-apis')
 def connect_to_apis():
@@ -137,6 +139,8 @@ def connect_to_apis():
 
 	else:
 		return redirect(url_for('index'))
+
+"""
 @app.route('/login', methods=['POST','GET'])
 def login():
 	username = request.form['username']
@@ -153,6 +157,7 @@ def login():
 	else:
 		print 'password is incorrect'
 		return render_template("error.html", error="Invalid Password")
+"""
 
 @app.route('/user/<user>')
 def profile(user):

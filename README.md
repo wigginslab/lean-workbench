@@ -39,8 +39,8 @@ The following variables must be set on your machine:
 * db_url- url to a sqlalchemy compatible database
 * port- port from which you wish the serve the app
 * mail_server - mail server (e.g. smtp.example.com)
-* mail_username - username for mail server
-* mail_password- password for mail server
+* email_username - username for mail server
+* email_password- password for mail server
 * mail_port - port for mail server
 * secret - secret for hashing
 

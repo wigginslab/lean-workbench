@@ -17,8 +17,8 @@ app.config["DEBUG"] = True
 # Setup Flask-Security users
 app.config["SECURITY_PASSWORD_HASH"]="bcrypt"
 app.config["SECURITY_EMAIL_SENDER"]="noreply@leanworkbench.com"
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+app.config['SECURITY_REGISTERABLE'] = True
+
 
 # Setup Flask-Security email
 app.config['MAIL_SERVER'] = 'smtp.google.com'
