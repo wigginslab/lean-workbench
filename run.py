@@ -29,14 +29,7 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 from models.user import User, Role
 from forms.registration_form import ExtendedRegisterForm
 from flask.ext.mail import Mail, Message
-"""
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = os.getenv("email_username")
-app.config['MAIL_PASSWORD'] = os.getenv("email_password")
-app.config['SECURITY_EMAIL_SENDER'] = os.getenv("email_username")
-"""
+
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore, register_form= ExtendedRegisterForm)
