@@ -4,4 +4,4 @@ class ExtendedRegisterForm(RegisterForm):
 	"""
 	Extend flask-security registration form to include company name
 	"""
-	company = TextField('Company name', [Required()])
+	company = TextField('Company Name', [Required()])

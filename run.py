@@ -32,7 +32,7 @@ from flask.ext.mail import Mail, Message
 
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore, register_form= ExtendedRegisterForm)
+security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 mail = Mail(app)
 app.config["DEBUG"] = True
 

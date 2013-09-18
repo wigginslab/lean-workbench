@@ -21,9 +21,8 @@ app.config['SECURITY_REGISTERABLE'] = True
 app.config['SECURITY_PASSWORD_SALT'] = os.getenv("secret_key")
 app.config["SECURITY_EMAIL_SENDER"] = "noreply@leanworkbench.com"
 app.config["SECURITY_TRACKABLE"] = True
-
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+app.config["SECURITY_CONFIRMABLE"] = True
+app.config["SECURITY_RECOVERABLE"] = True
 
 # Setup Flask-Security email
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
