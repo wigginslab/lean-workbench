@@ -57,6 +57,24 @@ def index():
 	else:
 		return render_template('public.html')
 
+@app.route('/vcs')
+def vcs():
+	return render_template("which-vc.html")
+
+@app.route('/vcs/match')
+def vc_match():
+	return render_template("vcs-match.html")
+
+@app.route('/mentors/')
+def mentors():
+	return render_template("mentors.html")
+
+
+@app.route('/mentors/match')
+def mentors_match():
+	return render_template("mentors-matches.html")
+
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
