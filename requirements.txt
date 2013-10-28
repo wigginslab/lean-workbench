@@ -10,3 +10,4 @@ flask-WTF
 gunicorn
 tornado
 py-bcrypt
+nltk

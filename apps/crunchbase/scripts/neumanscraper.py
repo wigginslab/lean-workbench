@@ -24,7 +24,6 @@ badvcs=[]
 for vc in vcs:
 	name = vc['name']
 	pl = vc['permalink']
-	print pl
 	try:
 		entry = getCBinfo('financial-organization',pl)
 	except:
@@ -47,7 +46,6 @@ for vc in vcs:
 				invests.append((co,round,date))
 	if len(invpls) > 19:
 		topvcs.append((pl,name,invests))
-	print topvcs
 with open("vctree/opvcs.p","w") as f:
 	pickle.dump(topvcs,f)
 				
@@ -77,7 +75,7 @@ for pl in costoget:
 		continue
 		
 	j=j+1
-	if j%10==0: print j
+	if j%10==0: pass#print j
 	
 	tl = entry.get('tag_list')
 	grams = set([x.strip() for x in tl.replace('-',' ').split(',')]) if tl else set()
