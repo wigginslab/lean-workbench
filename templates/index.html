@@ -1,40 +1,184 @@
-{% extends 'base.html'%}
-	{% block morehead %}
-		<script src="/static/js/underscore.js"></script>
-	    <script src="/static/js/socket.io.min.js"></script>
-		<script src="/static/js/app.js"></script>
-		<script src="/static/js/masonry.pkgd.js"></script>
-	{% endblock %}
-	{% block topform %}
-	{% endblock %}
+<!DOCTYPE html>
+<html class="no-js">
+    
+    <head>
+        <title>Lean Workbench - Dashboard</title>
+        <!-- Bootstrap -->
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/static/vendors/easypiechart/jquery.easy-pie-chart.css" rel="stylesheet" media="screen">
+        <link href="/static/css/styles.css" rel="stylesheet" media="screen">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="vendors/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    </head>
+    
+    <body>
+               <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Lean Workbench</a>
+                                   
+                    <div class="navbar navbar-inverse navbar-fixed-top">
+                      <div class="navbar-inner">
+                        <div class="container-fluid">
+                          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                          </button>
+                          <a class="brand" href="http://getbootstrap.com/2.3.2/examples/fluid.html#">Lean Workbench</a>
+                          <div class="nav-collapse collapse">
+                            <p class="navbar-text pull-right">
+                              Logged in as <a href="http://getbootstrap.com/2.3.2/examples/fluid.html#" class="navbar-link">Jennifer Rubinovitz</a>
+                            </p>
+                            <ul class="nav">
+                              <li class="active"><a href="http://getbootstrap.com/2.3.2/examples/fluid.html#">Home</a></li>
+                              <li><a href="http://getbootstrap.com/2.3.2/examples/fluid.html#about">Features</a></li>
+                              <li><a href="http://getbootstrap.com/2.3.2/examples/fluid.html#contact">Github</a></li>
+                              <li><a href="http://getbootstrap.com/2.3.2/examples/fluid.html#contact">F.A.Q.</a></li>
+                              <li><a href="http://getbootstrap.com/2.3.2/examples/fluid.html#contact">Contact Us</a></li>
+                            </ul>
+                          </div><!--/.nav-collapse -->
+                        </div>
+                      </div>
+                    </div>
+               
+                    <!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span3" id="sidebar">
+                    <ul class="nav nav-list bs-docs-sidenav nav-collapse collapse">
+                        <li class="active">
+                            <a href="index.html"><i class="icon-chevron-right"></i>Hypotheses</a>
+                        </li>
+                        <li>
+                            <a href="/stats"><i class="icon-chevron-right"></i>Measurements</a>
+                        </li>
+                        <li>
+                            <a href="stats.html"><i class="icon-chevron-right"></i>Results</a>
+                        </li>
+                        <li>
+                            <a href="form.html"><i class="icon-chevron-right"></i>Decisions</a>
+                        </li>
+                        <li>
+                            <a href="form.html"><i class="icon-chevron-right"></i>APIS</a>
+                        </li>
+                        <li>
+                            <a href="tables.html"><i class="icon-chevron-right"></i>Export Data</a>
+                        </li>
+                     
+                    </ul>
+                </div>
+                
+                <!--/span-->
+                <div class="span9" id="content">
+                   
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <h1>Ongoing Hypotheses</h1>
+                            <!-- block -->
+                            <div class="block">
+                                <div class="navbar navbar-inner block-header navbar-inverse">
+                                    <div class="muted pull-left">Hypotheses</div>
+                                    <div class="pull-right"><span class="badge badge-info">3</span>
 
-	{%block content%}
-	{{alert}}
-	You, <div id="username" style="display:inline">{{username}}</div>,  are logged in!
-	<p>
-	<div class="masonry-container">
-		<div id="ga" class="item">
-			<a href="/connect/google-analytics">
-				<img src="/static/img/google-analytics.png"></img>
-			</a>
-			<div class="ga-accounts"></div>
+                                    </div>
+                                </div>
+                                <div class="block-content collapse in">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Feature Endpoint</th>
+                                                <th>Engine</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td><a href="#">Revamped Dashboard-Stickiness</a></td>
+                                                <td>/dashboard</td>
+                                                <td>Stick</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td><a href="#">Revamped Dashboard-Virality</a></td>
+                                                <td>/dashboard</td>
+                                                <td>Virality</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td><a href="#">VC-Matcher</a></td>
+                                                <td>/vcmatch</td>
+                                                <td>Paid</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- /block -->
+                        </div>
+                    <div class="row-fluid">
+                        <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">Percent Completed</div>
 
-		</div>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span3">
+                                    <div class="chart" data-percent="73">73%</div>
+                                    <div class="chart-bottom-heading"><span class="label label-info">Revamped Dashboard-Stickiness</span>
 
-		<div id ="al" class="item">
-			<img src="/static/img/angellist.jpg"></img>
-		</div>
-	</div>
-	<a href="/connect/google-analytics">Google Analytics</a>
-	<p><a href="/connect/angellist">Angellist</a>
-		<script id='ga-tmpl' type='text/template'>
- 	 	<ul>
-    		<% for (var i = 0; i < profiles.length; i++) { %>
-      		<% var profile = profiles[i]; %>
-	      		<li>
-	        		<a href="/google-analytics/profile/<%= profile.id %>"><%= profile.name%></a>
-	      		</li>
-	   		 <% } %>
-	  		</ul>
-	</script>
- 	{%endblock%}
+                                    </div>
+                                </div>
+                                <div class="span3">
+                                    <div class="chart" data-percent="53">73%</div>
+                                    <div class="chart-bottom-heading"><span class="label label-info">Revamped Dashboard-Virality</span>
+
+                                    </div>
+                                </div>
+                                <div class="span3">
+                                    <div class="chart" data-percent="83">83%</div>
+                                    <div class="chart-bottom-heading"><span class="label label-info">VC-Matcher</span>
+
+                                    </div>
+                                </div>
+                             
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <footer>
+                <p>&copy; Lean Workbench 2013</p>
+            </footer>
+        </div>
+        <!--/.fluid-container-->
+        <script src="/static/vendors/jquery-1.9.1.min.js"></script>
+        <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/vendors/easypiechart/jquery.easy-pie-chart.js"></script>
+        <script src="assets/scripts.js"></script>
+        <script>
+        $(function() {
+            // Easy pie charts
+            $('.chart').easyPieChart({animate: 1000});
+        });
+        </script>
+    </body>
+
+</html>

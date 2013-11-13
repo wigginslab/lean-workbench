@@ -80,6 +80,16 @@ def mentors_match():
 def dashboard():
 	return render_template("index.html")
 
+@app.route('/stats')
+@login_required
+def stats():
+	return render_template("stats.html")
+
+@app.route('/results')
+@login_required
+def results():
+	return render_template("results.html")
+
 @app.route('/heatmap')
 def heat_map():
 	return render_template('heatmap.html')
