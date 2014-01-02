@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 
 # Standard Databases
-class Hypothesis_Model(db.Model):
+class Hypothesis_model(db.Model):
 
 	__tablename__ = 'hypotheses'
 	id = db.Column(db.Integer, primary_key=True)

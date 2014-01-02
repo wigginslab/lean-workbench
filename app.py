@@ -1,14 +1,17 @@
 import os
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-
 from flask.ext import restful
-#from apps.googleanalytics.resources.google_analytics_resource import Google_Analytics_Resource
-#from apps.hypotheses.hypotheses_resource import Hypothesis_Resource
 from flask.ext.security import Security, SQLAlchemyUserDatastore 
-from models.user import User, Role
+from flask_wtf.csrf import CsrfProtect
+from apps.hypotheses.hypotheses_resource import Hypothesis_resource
+from apps.facebook.facebook_resource import Facebook_resource
+from apps.twitter.twitter_resource import Twitter_resource
+from apps.wufoo.wufoo_resource import Wufoo_resource
+from app.google_analytics.google_analytics_resource import Google_analytics_resource
 
 app = Flask(__name__)
+CsrfProtect(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
 app.config["SECRET_KEY"] = os.environ.get('secret_key')
@@ -31,7 +34,12 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = os.getenv("email_username")
 app.config['MAIL_PASSWORD'] = os.getenv("email_password")
 app.config['SECURITY_EMAIL_SENDER'] = os.getenv("email_username")
+
 #APIs
 api = restful.Api(app)
-#api.add_resource(Google_Analytics_Resource, '/api/v1/google-analytics/')
-#api.add_resource(Hypothesis_Resource, '/api/v4/hypotheses/')
+
+api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
+api.add_resource(Facebook_resource, '/api/v1/facebook')
+api.add_resource(Twitter_resource, '/api/v1/twitter')
+api.add_resource(Wufoo_resource, 'api/v1/wufoo')
+api.add_resource(Google_analytics_resource, 'api/v1/ga')

@@ -16,7 +16,6 @@ def check_authentication(username):
 	else:
 		return False
 
-
 def authenticate_api(func):
 	def wrapper(*args, **kwargs):
 		print 'in wrapper'

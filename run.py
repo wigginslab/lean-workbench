@@ -14,41 +14,20 @@ import httplib2
 from apiclient.discovery import build
 from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 #form validation imports
-from forms.change_password_form import ChangePasswordForm
-from apps.angellist.angellist import AngelList
-from apps.wufoo.wufoo_model import Wufoo_User_Model
-from apps.hypotheses.hypotheses_model import Hypothesis_Model
-from forms.hypothesis_form import HypothesisForm
-from apps.googleanalytics.models.google_analytics_models import Google_Analytics_User_Model
-from apps.fnordmetric.fnord_model import Fnord_User_Model
-from apps.angellist.models.angellist_models import Angellist_User_Model
-from apps.wufoo.wufoo_model import Wufoo_User_Model 
-from apps.crunchbase.models.crunchbase_model import Crunchbase_Company_Model
-from apps.crunchbase.crunchbase import Crunchbase
-from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, current_user
+from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, current_user, UserMixin
 from models.user import User, Role
 from forms.registration_form import ExtendedRegisterForm
 from flask.ext.mail import Mail, Message
 
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
+security = Security(app, user_datastore)
 mail = Mail(app)
 app.config["DEBUG"] = True
 
-"""
-@app.route('/')
-def index():
-	print 'in index'
-	if 'username' in session:
-		username = escape(session['username'])
-		#hypotheses = Hypothesis_Model.query.filter_by(username=username)
-		#return redirect(url_for('hypotheses'))
-		return redirect(url_for('connect_to_apis'))
-	else:
-		reg_form = RegistrationForm(request.form)
-		return render_template('public.html', form=reg_form)
-"""
+@app.route('/api/login',methods=["GET","POST"])
+def login():
+	return User.get_auth_token()
 
 @app.route('/')
 def index():
@@ -56,151 +35,6 @@ def index():
 		return redirect(url_for('dashboard'))
 	else:
 		return render_template('public.html')
-
-@app.route('/vcs')
-def vcs():
-	return render_template("which-vc.html")
-
-@app.route('/vcs/match')
-def vc_match():
-	return render_template("vcs-match.html")
-
-@app.route('/mentors/')
-def mentors():
-	return render_template("mentors.html")
-
-
-@app.route('/mentors/match')
-def mentors_match():
-	return render_template("mentors-matches.html")
-
-
-@app.route('/dashboard')
-@login_required
-def dashboard():
-	return render_template("index.html")
-
-@app.route('/stats')
-@login_required
-def stats():
-	return render_template("stats.html")
-
-@app.route('/results')
-@login_required
-def results():
-	return render_template("results.html")
-
-@app.route('/heatmap')
-def heat_map():
-	return render_template('heatmap.html')
-
-@app.route('/hypothesis/<int:hyp_id>')
-def get_hypothesis(hyp_id):
-	#TODO
-	hypothesis = Hypothesis_Model.query.filter_by(id=hyp_id).first()
-	title = hypothesis.goal
-	if not title:
-		title=""
-	return render_template('goals.html', hypothesis = title)
-
-@app.route('/hypotheses', methods=['POST', 'GET'])
-def hypotheses():
-	if 'username' in session:
-		username = escape(session['username'])
-		if request.method == "POST":
-			hypothesis = Hypothesis_Model(request.form, username)
-			print hypothesis
-			db.session.add(hypothesis)
-			db.session.commit()
-			db.session.close()
-			return  redirect(url_for('index'))
-		hypotheses = Hypothesis_Model.query.filter_by(username=username)
-		form = HypothesisForm()
-		return render_template('hypotheses.html', username=username, hypotheses=hypotheses, form=form)
-	else:
-		return redirect(url_for('index'))
-
-
-@app.errorhandler(401)
-def user_already_exists(error):
-	return render_template("error.html", error = "This user already exists.")
-"""
-@app.route('/register', methods=['POST','GET'])
-def register():
-	username = request.form['username']
-	print username
-	password = request.form['password']
-	company = request.form['company']
-	user = User(username=username, password=password,company=company)
-	if user == "Error":
-		return render_template("error.html", error="Error: user already exists")
-	print user
-	print db
-	db.session.add(user)
-	db.session.commit()
-	db.session.close()
-	print 'registration success!'
-	session['username'] = request.form['username']
-	
-	return redirect(url_for('connect_to_apis'))
-
-	#return render_template('index.html', username=username)
-"""
-
-@app.route('/connect-to-apis')
-def connect_to_apis():
-	if 'username' in session:
-		username = escape(session['username'])
-		# TODO: refactor
-		api_connected, api_urls = {}, {}
-		api_urls = {"Google Analytics":"google-analytics",
-					"Crunchbase":"crunchbase",
-					"Wufoo":"wufoo"#,
-			#		"Event Tracking": "fnord"
-					}
-		if Google_Analytics_User_Model.query.filter_by(username=username).first():
-			api_connected["Google Analytics"] = True
-		else: api_connected["Google Analytics"] = False
-
-		#if Fnord_User_Model.query.filter_by(username=username).first():
-		#	api_connected["Event Tracking"] = True
-		#else: api_connected["Event Tracking"] = False
-
-		if Wufoo_User_Model.query.filter_by(username=username).first():
-			api_connected["Wufoo"] = True
-		else: api_connected["Wufoo"] = False
-
-		if Crunchbase_Company_Model.query.filter_by(username=username).first():
-			api_connected["Crunchbase"] = True
-		else: api_connected["Crunchbase"] = False
-
-		hypotheses = Hypothesis_Model.query.filter_by(username=username).all()
-		form = HypothesisForm()
-		print hypotheses
-
-		return render_template('connect_to_apis.html', username=username,hypotheses=hypotheses, form=form, api_connected=api_connected, api_urls=api_urls)
-
-	else:
-		return redirect(url_for('index'))
-
-"""
-@app.route('/login', methods=['POST','GET'])
-def login():
-	username = request.form['username']
-	password = request.form['password']
-	user = User.query.filter_by(username=username).first()
-	# if no users by that username
-	if not user: 		
-		return render_template("error.html", error="This user does not exist yet")
-	# if user and password correct
-	if user.check_password(password):
-		session['username'] = request.form['username']
-		return redirect(url_for('index'))
-	# password incorrect
-	else:
-		print 'password is incorrect'
-		return render_template("error.html", error="Invalid Password")
-"""
 
 @app.route('/user/<user>')
 def profile(user):
@@ -215,81 +49,12 @@ def profile(user):
 	else:
 		return render_template('error.html', error="User does not exist")
 
-@app.route('/profile/lean-workbench')
-def lwb_profile():
-	return render_template("leanworkbench_prof.html")
-
 @app.route('/logout', methods=["GET","POST"])
 def logout():
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
-@app.route('/password/change/', methods=["POST"])
-def change_password():
-	form = ChangePasswordForm(request.form)
-	if form.validate():
-		print request.data
-		print request.form['password']
-		password = request.form['password']
-		reset_code = request.form['reset_code']
-		print "reset_code = " + reset_code
-		change_password_form = ChangePasswordForm()
-		reset_password = Password_Reset().query.filter_by(reset_code=reset_code).first()
-		registration_form = RegistrationForm()
-		if not reset_password:
-			flash("This is not a valid password reset page.")
-			return render_template("change_password.html", form=change_password_form)
-		else:
-			username = reset_password.username 
-			user = User.query.filter_by(username=username).first()
-			user.change_password(username,password)
-			flash("Your password has been reset")
-			return render_template("index.html", form=registration_form)
-	else:
-		print 'form did not validate'
-
-@app.route('/password/reset/', methods=['POST', 'GET'])
-def reset_password_request():
-	"""
-	Request a password change, which results in an email sent to the user whose endpoint allows the user to change their password.
-	"""
-	print 'hi'
-	print request.data
-	if request.args.get('reset_code'):
-		reset_code = request.args['reset_code']
-		reset_password = Password_Reset.query.filter_by(reset_code=reset_code).first()
-		if not reset_password:
-			flash("This password reset link is invalid. Try again here.")
-			return render_template("reset_password.html")
-		else:
-			form = ChangePasswordForm()
-			return render_template("change_password.html", form=form, reset_code=reset_code)
-	if request.method == "POST":
-		username = request.form['username']
-		print username
-		user = User.query.filter_by(username=username).first()
-		if not user:
-			flash("User does not exist")
-			return render_template('reset_password.html')
-		reset_password = Password_Reset(user.username)
-		user_email = user.email
-		reset_code = reset_password.reset_code
-		reset_msg = Message("Resetting Your Chatover Password",
-                  sender="jen@example.com",
-                  recipients=[user.username])
-		reset_msg.html = "Go to "+ host + "/password/reset/?reset_code="+reset_code+"/ to reset your Chatover password.<p> Thanks, <p> Jen@Chatover"
-		mail.send(reset_msg)
-			
-		db.session.add(reset_password)
-		db.session.commit()
-		db.session.close()
-		flash('An email has been sent to you with a link to reset your password.')
-		return render_template('reset_password.html')
-	else:
-		return render_template('reset_password.html')
-
 # google analytics routes
-
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():
 	username = escape(session.get('username'))
@@ -334,31 +99,6 @@ def google_analytics_callback():
 @app.route('/google-analytics/profile/<int:profile_id>')
 def get_profile_data(profile_id):
 	pass
-
-
-@app.route('/api/connect/angellist')
-def al_partial():
-	return render_template('partials/angellist.html')
-
-@app.route('/api/connect/crunchbase')
-def cb_partial():
-	return render_template('partials/angellist.html')
-
-@app.route('/view/angellist')
-def al_partial():
-	return render_template('partials/angellist.html')
-
-
-@app.route('/api/connect/crunchbase')
-def cb_connect():
-	return render_template('partials/crunchbase.html')
-
-
-
-@app.route('/view/crunchbase')
-def cb_partial():
-	return render_template('partials/crunchbase.html')
-
 
 @app.route('/api/connect/google-analytics')
 def ga_partial():
