@@ -17,18 +17,19 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required
 from models.user import User, Role
 from forms.registration_form import ExtendedRegisterForm
 from flask.ext.mail import Mail, Message
+from flask_wtf.csrf import CsrfProtect
 
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 mail = Mail(app)
 app.config["DEBUG"] = True
+CsrfProtect(app)
 
 @app.route('/api/login',methods=["GET","POST"])
 def login():
 	return User.get_auth_token()
 
-@app.route('/register')
 @app.route('/')
 def index():
 	if  current_user.is_authenticated():

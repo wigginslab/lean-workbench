@@ -59,7 +59,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div><!-- /.carousel -->
     <!-- Marketing messaging and featurettes
@@ -68,20 +67,28 @@
     <div class="container marketing">
       <!-- Three columns of text below the carousel -->
       <div id="registration" class="input-group" ng-controller="RegistrationController">
-        <form novalidate role="form simple-form" ng-submit="processRegistration()">
+        <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
           <div class="form-group">
-            <label for="exampleInputEmail1">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+            <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
           </div>
           <div class="form-group">
-            <label for="exampleInputPassword1">Company Name</label>
-            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Company Name">
+            <span class="help-block" ng-show="email_error">[[ company_error ]]</span>
+            <label>Company Name</label>
+            <input type="text" class="form-control" ng-model="company" placeholder="Company Name">
           </div>
           <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+            <label>Password</label>
+            <input type="password" class="form-control" ng-model="password" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-default">Submit</button>
+          <div class="form-group">
+            <span>[[ confirm_password_error ]]</span>
+            <label>Confirm Password</label>
+            <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
+          </div>
+          <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
         </form>
        </div>
       <div class="row">
@@ -112,8 +119,18 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/lib/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="/static/js/lib/jquery.cookie.js"></script>
+    <script src="/static/js/lib/angular-cookies.js"></script>
+    <script src="/static/js/lib/http-auth-interceptor.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/services.js"></script>
+    <script src="/static/js/controllers.js"></script>
+    <script src="/static/js/filters.js"></script>
+    <script src="/static/js/directives.js"></script>
     <script>
       !function ($) {
         $(function(){
@@ -121,8 +138,7 @@
           $('#myCarousel').carousel()
         })
       }(window.jQuery)
+      csrf_token = "{{csrf_token()}}";
     </script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
-      <script src="/static/lwb-app/app/scripts/controllers/controllers.js"></script>
   </body>
 </html>

@@ -28,7 +28,7 @@ class Role(db.Model, RoleMixin):
 	name = db.Column(db.String(80), unique=True)
 	description = db.Column(db.String(255))
 
-class User(UserMixin):
+class User(db.Model, UserMixin):
 	"""
 	User model building off of flask-registration
 	"""
