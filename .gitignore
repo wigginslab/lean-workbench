@@ -9,6 +9,9 @@ venv
 *swo
 *swp
 
+#assets
+static/node_modules
+
 # credentials
  ga_client_secrets.json
 
