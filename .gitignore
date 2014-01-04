@@ -9,6 +9,9 @@ venv
 *swo
 *swp
 
+# credentials
+ ga_client_secrets.json
+
 # Packages
 *.egg
 *.egg-info

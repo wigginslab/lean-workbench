@@ -1,8 +1,8 @@
 from flask.ext.restful import fields, marshal_with, abort
 import sys
 import os
-from apps.googleanalytics.models.google_analytics_models import *
-from apps.googleanalytics.google_analytics_client import Google_Analytics_API
+from google_analytics_models import *
+from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
 from flask import session, escape
 
@@ -80,7 +80,7 @@ class Google_Analytics_DAO(object):
 										metrics='ga:visits').execute()
 
 
-class Google_Analytics_Resource(Resource):
+class Google_analytics_resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""

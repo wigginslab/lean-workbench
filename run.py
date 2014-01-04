@@ -12,7 +12,6 @@ from app import db, app
 from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
-from apps.googleanalytics.google_analytics_client import Google_Analytics_API
 #form validation imports
 from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, current_user, UserMixin
 from models.user import User, Role
@@ -21,7 +20,7 @@ from flask.ext.mail import Mail, Message
 
 port = int(os.getenv('port'))
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 mail = Mail(app)
 app.config["DEBUG"] = True
 
@@ -29,6 +28,7 @@ app.config["DEBUG"] = True
 def login():
 	return User.get_auth_token()
 
+@app.route('/register')
 @app.route('/')
 def index():
 	if  current_user.is_authenticated():

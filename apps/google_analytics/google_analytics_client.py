@@ -3,9 +3,8 @@ import urllib
 import urllib2
 import os
 from flask.ext.sqlalchemy import SQLAlchemy
-from models.google_analytics_models import *
 from apiclient.discovery import build
-from models.google_analytics_models import Google_Analytics_User_Model
+from google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
