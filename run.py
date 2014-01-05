@@ -13,7 +13,7 @@ from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 #form validation imports
-from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, current_user, UserMixin
+from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, auth_token_required, current_user, UserMixin
 from models.user import User, Role
 from forms.registration_form import ExtendedRegisterForm
 from flask.ext.mail import Mail, Message
@@ -26,34 +26,17 @@ mail = Mail(app)
 app.config["DEBUG"] = True
 CsrfProtect(app)
 
-@app.route('/api/login',methods=["GET","POST"])
-def login():
-	return User.get_auth_token()
-
 @app.route('/')
 def index():
-	if  current_user.is_authenticated():
-		return redirect(url_for('dashboard'))
-	else:
-		return render_template('public.html')
+	return render_template('public.html')
 
-@app.route('/user/<user>')
-def profile(user):
-	# check if user logged in
-	if 'username' not in session:
-		return redirect(url_for('index'))
-	#check is user exists
-	user = User.query.filter_by(username=user).first()
-	profileUser = user.username
-	if user:
-		return render_template('profile.html',username=profileUser)
-	else:
-		return render_template('error.html', error="User does not exist")
-
-@app.route('/logout', methods=["GET","POST"])
-def logout():
-	session.pop('username', None)
-	return redirect(url_for('index'))
+@auth_token_required
+@app.route('/dashboard', methods=['POST'])
+def dashboard():
+	"""
+	"""
+	print 'test'
+	return render_template('index.html')
 
 # google analytics routes
 @app.route('/connect/google-analytics/')

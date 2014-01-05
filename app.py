@@ -35,6 +35,7 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = os.getenv("email_username")
 app.config['MAIL_PASSWORD'] = os.getenv("email_password")
 app.config['SECURITY_EMAIL_SENDER'] = os.getenv("email_username")
+app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
 #APIs
 api = restful.Api(app)

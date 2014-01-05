@@ -9,6 +9,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
   RegistrationController: function($scope, $http, authService){
     $scope.submit = function(){
       $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
+      $http.defaults.headers.post['Content-Type'] = 'application/json'
+      $http.defaults.headers.post['Accept'] = 'application/json'
 
       $http.post(
         '/registration',
@@ -16,15 +18,42 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
         JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
         ).success(
         function(data){
-          if data['user']{
-            $scope.success = "Success! Check your email to confirm your registration."
+          // if success
+          if (data['response']['user']){
+            // login
+             $http.post('/logout').success(
+               $http.post(
+                  '/login',
+                  JSON.stringify({ email: $scope.email, password: $scope.password })
+                ).success(
+                  function(data) {
+                    alert('LoginController submit success');
+                    alert(data);
+                    //debugger;
+                    $.cookie('email', data.email, { expires: 7 });
+                    $.cookie('auth_token', data.auth_token, { expires: 7 });
+                    $http.defaults.headers.common['Authentication-Token'] = data.auth_token;
+                    authService.loginConfirmed();
+                }
+              )
+            )
           }
+
           else{
+            // TODO: brevity
             var errors = data['response']['errors'];
-            $scope.email_error = errors['email'][0];
-            $scope.company_error = errors['company'][0];
-            $scope.password_error = errors['password'][0];
-            $scope.password_confirm_error = errors['password_confirm'][0];
+            if (errors.hasOwnProperty('email')){
+              $scope.email_error = errors['email'][0];
+            }
+            if (errors.hasOwnProperty('company')){
+              $scope.company_error = errors['company'][0];
+            }
+            if (errors.hasOwnProperty('password')){
+              $scope.password_error = errors['password'][0];
+            }            
+            if (errors.hasOwnProperty('password_confirm')){
+              $scope.password_confirm_error = errors['password_confirm'][0];
+            }
           }
         }
       ).error(
@@ -41,21 +70,31 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
   LoginController: function ($scope, $http, authService) {
     $scope.submit = function() {
       alert('LoginController inside 3');
+      $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
+      $http.defaults.headers.common['Content-Type'] = 'application/json'
       //debugger;
       $http.post(
-        '/login/',
-        JSON.stringify({ username: $scope.username, password: $scope.password })
+        '/login',
+          JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          alert('LoginController submit success');
           //debugger;
-          $.cookie('username', data.username, { expires: 7 });
-          $.cookie('key', data.key, { expires: 7 });
-          $http.defaults.headers.common['Authorization'] = 'ApiKey ' +
-            data.username + ':' + data.key;
+          $.cookie('email', $scope.email, { expires: 7 });
+          $.cookie('auth_token', data.authentication_token, { expires: 7 });
+          $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
           authService.loginConfirmed();
+
+          // test
+          $http.post(
+            '/dashboard',
+           JSON.stringify({authentication_token: $.cookie('auth_token')})
+          ).success(
+            function(data) {
+              console.log(data);
+            }
+          )
         }
-      ).error(
+        ).error(
         function(data) {
           alert('LoginController submit error');
           $scope.errorMsg = data.reason;
@@ -106,13 +145,13 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
     };
 
     $scope.logout = function() {
-      $http.post('/logout/').success(function() {
+      $http.post('/logout').success(function() {
         $scope.restrictedContent = [];
-        $.cookie('key', null);
+        $.cookie('auth_token', null);
         $http.defaults.headers.common['Authorization'] = null;
       }).error(function() {
         // This should happen after the .post call either way.
-        $.cookie('key', null);
+        $.cookie('auth_token', null);
         $http.defaults.headers.common['Authorization'] = null;
       });
     };
