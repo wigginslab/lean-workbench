@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="LWBApp">
+<html lang="en" id="ng-app" ng-app="LWBApp">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <meta charset="utf-8">
@@ -45,7 +45,7 @@
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
-    <ng-view>
+    <div ng-view>
     <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="carousel slide">
@@ -125,8 +125,8 @@
           </div><!-- /.span4 -->
         </div><!-- /.row -->
         <hr class="featurette-divider">
-        <!-- /END THE FEATURETTES -->
-      </ng-view>
+        <!-- END NG-VIEW -->
+      </div>
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="/#">Back to top</a></p>
@@ -136,6 +136,19 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+      <!--[if lte IE 8]>
+      <script src="/static/js/lib/json2.js"></script>
+       <script>
+        document.createElement('ng-include');
+        document.createElement('ng-pluralize');
+        document.createElement('ng-view');
+ 
+        // Optionally these for CSS
+        document.createElement('ng:include');
+        document.createElement('ng:pluralize');
+        document.createElement('ng:view');
+      </script>
+    <![endif]-->
     <script src="/static/js/lib/jquery.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
@@ -148,6 +161,7 @@
     <script src="/static/js/controllers.js"></script>
     <script src="/static/js/filters.js"></script>
     <script src="/static/js/directives.js"></script>
+
     <script>
       !function ($) {
         $(function(){

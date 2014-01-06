@@ -103,6 +103,15 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
           ).success(
             function(data) {
               console.log(data);
+                 // TODO: brevity
+              var errors = data['response']['errors'];
+              if (errors.hasOwnProperty('email')){
+                $scope.email_error = errors['email'][0];
+              }
+              if (errors.hasOwnProperty('password')){
+                $scope.password_error = errors['password'][0];
+              }            
+          }
             }
           )
         }
