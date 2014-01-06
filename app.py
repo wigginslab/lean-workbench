@@ -1,8 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, abort, redirect
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext import restful
-from flask.ext.security import Security, SQLAlchemyUserDatastore 
+from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user
 from flask_wtf.csrf import CsrfProtect
 from apps.hypotheses.hypotheses_resource import Hypothesis_resource
 from apps.facebook.facebook_resource import Facebook_resource
@@ -10,7 +10,15 @@ from apps.twitter.twitter_resource import Twitter_resource
 from apps.wufoo.wufoo_resource import Wufoo_resource
 from apps.google_analytics.google_analytics_resource import Google_analytics_resource
 
-app = Flask(__name__)
+class SecuredStaticFlask(Flask):
+    def send_static_file(self, filename):
+        # Get user from session
+        if current_user.is_authenticated() or 'partials' not in filename:
+            return super(SecuredStaticFlask, self).send_static_file(filename)
+        else:
+            return redirect('/public')
+
+app = SecuredStaticFlask(__name__,static_folder="static", static_path="/static")
 CsrfProtect(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)

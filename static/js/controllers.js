@@ -13,7 +13,8 @@ MyCtrl2.$inject = [];
 function ErrorPageController(){
 }
 
-var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'], 
+
+var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
   function($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
@@ -193,10 +194,11 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
   }
 })
 .controller({
-  HypothesesListController: function ($scope, $http) {
+  HypothesesListController: function ($scope, $http, Hypotheses) {
     var hypothesesQuery = Hypotheses.get({}, function(hypotheses) {
-    $scope.hypotheses = hypotheses.objects;
-  });
+      $scope.hypotheses = hypotheses.objects;
+    });
+  }
 })
 .directive('authApplication', function() {
     return {

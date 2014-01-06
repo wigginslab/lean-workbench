@@ -26,10 +26,14 @@ mail = Mail(app)
 app.config["DEBUG"] = True
 CsrfProtect(app)
 
+@app.route('/public')
+def login():
+	return render_template('login.html')
 @app.route('/')
 def index():
 	print current_user
-	if current_user:
+	if current_user.is_authenticated():
+		print current_user
 		logged_in = True
 		return redirect(url_for('dashboard'))
 	else:
@@ -186,9 +190,10 @@ def wufoo():
 		survey = Wufoo_Survey_Model()
 
 # store static files on server for now
-app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-	'/': os.path.join(os.path.dirname(__file__), 'static')
-})
+#app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+#	'/': os.path.join(os.path.dirname(__file__), 'static')
+#})
+
 
 if __name__ == '__main__':
 	app.run(debug=True, port=port)

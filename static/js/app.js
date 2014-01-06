@@ -2,7 +2,7 @@ console.log('hi')
 // Declare app level module which depends on filters, and services
 angular.module(
     'LWBApp', [
-        'LWBApp.filters', 'LWBApp.services', 'LWBApp.directives',
+         'LWBAppServices',
         'http-auth-interceptor', 'ngCookies', 'ngRoute'
     ]
 )
