@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" ng-app="LWBApp">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -23,8 +22,8 @@
       <link rel="shortcut icon" href="http://getbootstrap.com/2.3.2/assets/ico/favicon.png">
     <style type="text/css"></style><style id="holderjs-style" type="text/css">.holderjs-fluid {font-size:16px;font-weight:bold;text-align:center;font-family:sans-serif;margin:0}</style><style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; }[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; }[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; }[touch-action="scroll"],[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }</style>
   </head>
-  <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation">
+  <body class="auth-application waiting-for-angular">
+    <nav class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation" ng-controller="NavController">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -42,9 +41,11 @@
             <li><a href="/features">Features</a></li>
             <li><a href="https://github.com/wigginslab/lean-workbench">Github</a></li>
             <li><a href="mailto:jen@leanworkbench.com">Contact Us</a></li>
+            <li><a ng-click="click_login()">Login</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
+    <ng-view>
     <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="carousel slide">
@@ -64,67 +65,68 @@
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
-    <div class="container marketing">
-      <!-- Three columns of text below the carousel -->
-      <div id="registration" class="input-group" ng-controller="RegistrationController">
-        <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
-          <div class="form-group">
-            <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
-          </div>
-          <div class="form-group">
-            <span class="help-block" ng-show="email_error">[[ company_error ]]</span>
-            <label>Company Name</label>
-            <input type="text" class="form-control" ng-model="company" placeholder="Company Name">
-          </div>
-          <div class="form-group">
-            <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-            <label>Password</label>
-            <input type="password" class="form-control" ng-model="password" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <span>[[ confirm_password_error ]]</span>
-            <label>Confirm Password</label>
-            <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
-          </div>
-          <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-        </form>
-       </div>
-         <div id="login" class="input-group" ng-controller="LoginController">
-        <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
-          <div class="form-group">
-            <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
-          </div>
-          <div class="form-group">
-            <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-            <label>Password</label>
-            <input type="password" class="form-control" ng-model="password" placeholder="Password">
-          </div>
-          <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-        </form>
-       </div>
-      <div class="row">
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/hyp1-thumb.png">
-          <h2>Hypothesize</h2>
-          <p>Test your intuition and ideas you have received during interviews empirically by creating a Lean Workbench hypothesis.</p>
-        </div><!-- /.span4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/hyp-thumb.png">
-          <h2>Measure</h2>
-          <p>Automate the measurement of your key performance indicators for your experiment. </p>
-        </div><!-- /.span4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/measurement-thumb.png">
-          <h2>Pivot or Persevere</h2>
-          <p>Take a look at your data and the data of your cohort and decide how to proceed with your product.</p>
-        </div><!-- /.span4 -->
-      </div><!-- /.row -->
-      <hr class="featurette-divider">
-      <!-- /END THE FEATURETTES -->
+    <div id="content" class="container marketing">
+        <!-- Three columns of text below the carousel -->
+        <div id="registration" class="input-group" ng-controller="RegistrationController">
+          <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
+            <div class="form-group">
+              <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+              <label for="email">Email address</label>
+              <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <span class="help-block" ng-show="email_error">[[ company_error ]]</span>
+              <label>Company Name</label>
+              <input type="text" class="form-control" ng-model="company" placeholder="Company Name">
+            </div>
+            <div class="form-group">
+              <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+              <label>Password</label>
+              <input type="password" class="form-control" ng-model="password" placeholder="Password">
+            </div>
+            <div class="form-group">
+              <span>[[ confirm_password_error ]]</span>
+              <label>Confirm Password</label>
+              <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
+            </div>
+            <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
+          </form>
+         </div>
+           <div id="login-holder" class="input-group" ng-controller="LoginController">
+            <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
+              <div class="form-group">
+                <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
+              </div>
+              <div class="form-group">
+                <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+                <label>Password</label>
+                <input type="password" class="form-control" ng-model="password" placeholder="Password">
+              </div>
+              <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
+            </form>
+         </div>
+        <div class="row">
+          <div class="col-lg-4">
+            <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/hyp1-thumb.png">
+            <h2>Hypothesize</h2>
+            <p>Test your intuition and ideas you have received during interviews empirically by creating a Lean Workbench hypothesis.</p>
+          </div><!-- /.span4 -->
+          <div class="col-lg-4">
+            <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/hyp-thumb.png">
+            <h2>Measure</h2>
+            <p>Automate the measurement of your key performance indicators for your experiment. </p>
+          </div><!-- /.span4 -->
+          <div class="col-lg-4">
+            <img class="img-circle" data-src="holder.js/140x140" alt="140x140" style="width: 140px; height: 140px;" src="/static/img/measurement-thumb.png">
+            <h2>Pivot or Persevere</h2>
+            <p>Take a look at your data and the data of your cohort and decide how to proceed with your product.</p>
+          </div><!-- /.span4 -->
+        </div><!-- /.row -->
+        <hr class="featurette-divider">
+        <!-- /END THE FEATURETTES -->
+      </ng-view>
       <!-- FOOTER -->
       <footer>
         <p class="pull-right"><a href="/#">Back to top</a></p>

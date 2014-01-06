@@ -1,6 +1,18 @@
 /* Controllers */
 
 
+function MyCtrl1() {}
+MyCtrl1.$inject = [];
+
+
+function MyCtrl2() {
+
+}
+MyCtrl2.$inject = [];
+
+function ErrorPageController(){
+}
+
 var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'], 
   function($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
@@ -104,7 +116,22 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
     };
   }
 
-}).controller({
+})
+.controller({
+  NavController: function ($scope, $http, authService) {
+        $scope.click_login = function(){
+        alert('inside click login')
+        var main = $('#content');
+        var login = $('#login-holder');
+          login.slideDown('slow', function() {
+          main.hide();
+      });
+    }
+  }
+
+})
+
+.controller({
   ContentController: function ($scope, $http) {
 
     $scope.publicContent = [];
@@ -144,6 +171,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
       );
     };
 
+
+
     $scope.logout = function() {
       $http.post('/logout').success(function() {
         $scope.restrictedContent = [];
@@ -157,4 +186,40 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
     };
   }
 
-});
+})
+.directive('authApplication', function() {
+    return {
+      restrict: 'C',
+
+      link: function(scope, elem, attrs) {
+        //once Angular is started, remove class:
+        elem.removeClass('waiting-for-angular');
+
+        var login = elem.find('#login-holder');
+        var main = elem.find('#content');
+
+        login.hide();
+
+        scope.$on('event:auth-loginRequired', function() {
+          login.slideDown('slow', function() {
+            alert('auth login required')
+            main.hide();
+          });
+        });
+        scope.$on('event:auth-loginConfirmed', function() {
+          alert('auth login confirmed!')
+          main.show();
+          login.slideUp();
+        });
+      }
+    };
+  })
+.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+    $routeProvider
+    .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: MyCtrl2})
+    .otherwise({redirectTo: '/', controller: ErrorPageController});
+
+    // enable push state
+    $locationProvider.html5Mode(true);
+}])

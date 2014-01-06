@@ -31,12 +31,12 @@ def index():
 	return render_template('public.html')
 
 @auth_token_required
-@app.route('/dashboard', methods=['POST'])
+@app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
 	"""
 	print 'test'
-	return render_template('index.html')
+	return render_template('public.html')
 
 # google analytics routes
 @app.route('/connect/google-analytics/')
