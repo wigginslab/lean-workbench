@@ -76,7 +76,7 @@ class Hypothesis_resource(Resource):
 		print kwargs
 		args = parser.parse_args()
 		username = args.get('username')
-		return Hypothesis_DAO.get_user_hypotheses()	
-		return {"status":200}	
+		hypotheses = Hypothesis_DAO.get_user_hypotheses()	
+		return {"status":200, "hypotheses":hypotheses}	
 	def post(self, **kwargs):
 		return Hypothesis_DAO.add_user_hypothesis(kwargs)

@@ -28,7 +28,13 @@ CsrfProtect(app)
 
 @app.route('/')
 def index():
-	return render_template('public.html')
+	print current_user
+	if current_user:
+		logged_in = True
+		return redirect(url_for('dashboard'))
+	else:
+		logged_in=False
+		return render_template('public.html', logged_in=logged_in)
 
 @auth_token_required
 @app.route('/dashboard', methods=['POST', 'GET'])
@@ -36,8 +42,12 @@ def dashboard():
 	"""
 	"""
 	print 'test'
-	return render_template('public.html')
+	return render_template('public.html', logged_in=True)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+    
 # google analytics routes
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():

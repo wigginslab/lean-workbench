@@ -2,8 +2,15 @@
 
 /* Services */
 
+'use strict';
 
-// Demonstrate how to register services
-// In this case it is a simple value service.
-angular.module('LWBApp.services', []).
-  value('version', '0.1');
+angular.module('LWBServices', ['ngResource'])
+	.factory('Hypotheses', function($resource) {
+		return $resource('/api/v1/hypotheses', {}, {
+			query: {
+				method: 'GET',
+				isArray: true
+			}
+		});
+	})
+;

@@ -7,7 +7,14 @@
       color: #5a5a5a;
     }
 
-
+    body {
+  padding-top: 60px;
+    }
+    @media (max-width: 979px) {
+      body {
+        padding-top: 0px;
+      }
+    }
 
     /* CUSTOMIZE THE NAVBAR
     -------------------------------------------------- */

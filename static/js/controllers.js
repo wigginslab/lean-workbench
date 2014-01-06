@@ -20,9 +20,9 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
 }).controller({
   RegistrationController: function($scope, $http, authService){
     $scope.submit = function(){
-      $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
-      $http.defaults.headers.post['Content-Type'] = 'application/json'
-      $http.defaults.headers.post['Accept'] = 'application/json'
+      $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+      $http.defaults.headers.common['Content-Type'] = 'application/json'
+      $http.defaults.headers.common['Accept'] = 'application/json'
 
       $http.post(
         '/registration',
@@ -108,10 +108,10 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
               if (errors.hasOwnProperty('email')){
                 $scope.email_error = errors['email'][0];
               }
+
               if (errors.hasOwnProperty('password')){
                 $scope.password_error = errors['password'][0];
               }            
-          }
             }
           )
         }
@@ -136,6 +136,17 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
           main.hide();
       });
     }
+     $scope.logout = function() {
+      $http.post('/logout').success(function() {
+        $scope.restrictedContent = [];
+        $.cookie('auth_token', null);
+        $http.defaults.headers.common['Authorization'] = null;
+      }).error(function() {
+        // This should happen after the .post call either way.
+        $.cookie('auth_token', null);
+        $http.defaults.headers.common['Authorization'] = null;
+      });
+    };
   }
 
 })
@@ -179,22 +190,13 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor'],
         }
       );
     };
-
-
-
-    $scope.logout = function() {
-      $http.post('/logout').success(function() {
-        $scope.restrictedContent = [];
-        $.cookie('auth_token', null);
-        $http.defaults.headers.common['Authorization'] = null;
-      }).error(function() {
-        // This should happen after the .post call either way.
-        $.cookie('auth_token', null);
-        $http.defaults.headers.common['Authorization'] = null;
-      });
-    };
   }
-
+})
+.controller({
+  HypothesesListController: function ($scope, $http) {
+    var hypothesesQuery = Hypotheses.get({}, function(hypotheses) {
+    $scope.hypotheses = hypotheses.objects;
+  });
 })
 .directive('authApplication', function() {
     return {
