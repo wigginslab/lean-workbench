@@ -51,8 +51,7 @@ class User(db.Model, UserMixin):
 
 
 	def __repr__(self):
-		return '<User %s>' %self.username
-
+		return '<User %s>' %self.email
 class API(db.Model):
 	__tablename__ = "api"
 	id = db.Column(db.Integer, primary_key=True)

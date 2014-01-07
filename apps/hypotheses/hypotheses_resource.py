@@ -5,6 +5,7 @@ from hypotheses_model import Hypothesis_model, db
 from flask.ext.restful import Resource, reqparse
 from flask import session, escape
 from apps.authenticate_api import authenticate_api, current_user
+from flask.ext.security import auth_token_required
 
 path = os.getenv("path")
 sys.path.append(path)
@@ -33,8 +34,8 @@ class Hypothesis_DAO(object):
 		self.username = username
 		self.profile_id = profile_id
 		
-	def get_user_hypotheses(self, username):
-		hypotheses = Hypothesis_Model.query.filter_by(username=self.username).all()
+	def get_user_hypotheses(self):
+		hypotheses = Hypothesis_model.query.filter_by(username=self.username).all()
 		return hypotheses
 
 	def add_user_hypothesis(self, **kwargs):
@@ -63,8 +64,6 @@ class Hypothesis_resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""
-	method_decorators = [authenticate_api]
-	@marshal_with(method_decorators)
 	def get(self, **kwargs):
 		print kwargs
 		args = parser.parse_args()
