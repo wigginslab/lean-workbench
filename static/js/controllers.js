@@ -82,7 +82,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 }).controller({
   LoginController: function ($scope, $http, authService) {
     $scope.submit = function() {
-      alert('LoginController inside 3');
+      console.log('in logincontroller')
       $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
       $http.defaults.headers.common['Content-Type'] = 'application/json'
       //debugger;
@@ -91,30 +91,23 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          //debugger;
-          $.cookie('email', $scope.email, { expires: 7 });
-          $.cookie('auth_token', data.authentication_token, { expires: 7 });
-          $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
-          authService.loginConfirmed();
-
-          // test
-          $http.post(
-            '/dashboard',
-           JSON.stringify({authentication_token: $.cookie('auth_token')})
-          ).success(
-            function(data) {
-              console.log(data);
-                 // TODO: brevity
-              var errors = data['response']['errors'];
-              if (errors.hasOwnProperty('email')){
-                $scope.email_error = errors['email'][0];
-              }
-
-              if (errors.hasOwnProperty('password')){
-                $scope.password_error = errors['password'][0];
-              }            
+          var status_code = data.meta.code;
+          if (status_code == 200){        
+            $.cookie('email', $scope.email, { expires: 7 });
+            $.cookie('auth_token', data.authentication_token, { expires: 7 });
+            $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
+            authService.loginConfirmed();
+            $scope.$apply(function() { $location.path("/dashboard"); });
+          }
+          else{
+            var errors = data['response']['errors'];
+            if (errors.hasOwnProperty('email')){
+              $scope.email_error = errors['email'][0];
             }
-          )
+            if (errors.hasOwnProperty('password')){
+              $scope.password_error = errors['password'][0];
+            }            
+          }
         }
         ).error(
         function(data) {

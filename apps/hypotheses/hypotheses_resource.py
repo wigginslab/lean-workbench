@@ -1,15 +1,16 @@
-from flask.ext.restful import fields, marshal_with, abort
+from flask.ext.restful import fields, marshal_with
 import sys
 import os
 from hypotheses_model import Hypothesis_model, db
 from flask.ext.restful import Resource, reqparse
-from flask import session, escape
+from flask import session, escape, abort, jsonify
 from apps.authenticate_api import authenticate_api, current_user
 from flask.ext.security import auth_token_required
+from werkzeug.exceptions import Unauthorized
+
 
 path = os.getenv("path")
 sys.path.append(path)
-
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', type=str)
@@ -21,6 +22,17 @@ parser.add_argument('social', type=str)
 parser.add_argument('facebook', type=str)
 parser.add_argument('twitter', type=str)
 
+
+from werkzeug.exceptions import Unauthorized
+
+class MyUnauthorized(Unauthorized):
+    description = '<Why access is denied string goes here...>'
+    def get_headers(self, environ):
+        """Get a list of headers."""
+        return [('Content-Type', 'text/html'),
+            ('WWW-Authenticate', 'Basic realm="Login required"')]
+
+abort.mapping.update({401: MyUnauthorized})
 
 class Hypothesis_DAO(object):
 	"""
@@ -65,6 +77,11 @@ class Hypothesis_resource(Resource):
 	Handles requests and returns the resources they ask for
 	"""
 	def get(self, **kwargs):
+		if not current_user.is_authenticated():
+			response = jsonify(message='Unauthorized')
+        	response.status_code = 200
+        	return response
+
 		print kwargs
 		args = parser.parse_args()
 		print current_user

@@ -12,13 +12,17 @@ from apps.google_analytics.google_analytics_resource import Google_analytics_res
 
 class SecuredStaticFlask(Flask):
     def send_static_file(self, filename):
+    	protected_templates = ['partials/dashboard.html']
+    	print current_user.is_authenticated()
         # Get user from session
-        if current_user.is_authenticated() or 'partials' not in filename:
+        if current_user.is_authenticated() or filename not in protected_templates:
             return super(SecuredStaticFlask, self).send_static_file(filename)
         else:
-            return redirect('/public')
+            return redirect('/static/partials/login.html')
+
 
 app = SecuredStaticFlask(__name__,static_folder="static", static_path="/static")
+#app = Flask(__name__)
 CsrfProtect(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)

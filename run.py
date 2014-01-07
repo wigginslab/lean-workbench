@@ -26,9 +26,7 @@ mail = Mail(app)
 app.config["DEBUG"] = True
 CsrfProtect(app)
 
-@app.route('/public')
-def login():
-	return render_template('login.html')
+
 @app.route('/')
 def index():
 	print current_user

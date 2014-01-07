@@ -8,10 +8,32 @@
 
 'use strict';
 
-module.exports = function(grunt) {
+'use strict';
 
+module.exports = function (grunt) {
+
+grunt.initConfig({
+    sass: {
+        dist: {
+            options: {
+                style: 'expanded'
+            },
+            files: [{
+                expand: true,
+                cwd: './static/sass',
+                src: ['*.scss'],
+                dest: './static/css',
+                ext: '.css'
+            }]
+        }
+    }
+});
+grunt.loadNpmTasks('grunt-sass');
+
+grunt.registerTask('default', ['sass']);
+};
   // Project configuration.
-  grunt.initConfig({
+/*  grunt.initConfig({
     jshint: {
       all: [
         'Gruntfile.js',
@@ -70,4 +92,4 @@ module.exports = function(grunt) {
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
 
-};
+};*/
