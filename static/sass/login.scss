@@ -1,6 +1,5 @@
-
-    <style>
-      ::-moz-selection {
+.login-page{
+ ::-moz-selection {
         background: #b3d4fc;
         text-shadow: none;
       }
@@ -133,26 +132,4 @@
         padding: 0;
         border: 0;
       }
-    </style>
-
-    <div class="container">
-     <div id="login-holder" class="input-group login-page" ng-controller="LoginController">
-      <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
-        <div class="form-group">
-          <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-          <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-          <label>Password</label>
-          <input type="password" class="form-control" ng-model="password" placeholder="Password">
-        </div>
-        <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-      </form>
-   </div>
-      <script>
-        var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
-      </script>
-      <script src="//linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
-    </div>
+}

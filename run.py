@@ -13,7 +13,7 @@ from oauth2client.client import flow_from_clientsecrets
 import httplib2
 from apiclient.discovery import build
 #form validation imports
-from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, auth_token_required, current_user, UserMixin
+from flask.ext.security import Security, SQLAlchemyUserDatastore, login_required, auth_token_required, current_user, UserMixin, logout_user
 from models.user import User, Role
 from forms.registration_form import ExtendedRegisterForm
 from flask.ext.mail import Mail, Message
@@ -39,6 +39,7 @@ def index():
 		return render_template('public.html', logged_in=logged_in)
 
 @auth_token_required
+@app.route('/onboarding', methods=['POST', 'GET'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
@@ -50,6 +51,12 @@ def dashboard():
 def page_not_found(e):
     return render_template('404.html'), 404
     
+
+@app.route('/api/v1/logout', methods=['POST','GET'])
+def logout():
+	logout_user()
+	return jsonify(status=200, message='User has been successfully logged out.')
+
 # google analytics routes
 @app.route('/connect/google-analytics/')
 def google_analytics_oauth():

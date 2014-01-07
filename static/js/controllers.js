@@ -33,23 +33,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
         function(data){
           // if success
           if (data['response']['user']){
-            // login
-             $http.post('/logout').success(
-               $http.post(
-                  '/login',
-                  JSON.stringify({ email: $scope.email, password: $scope.password })
-                ).success(
-                  function(data) {
-                    alert('LoginController submit success');
-                    alert(data);
-                    //debugger;
-                    $.cookie('email', data.email, { expires: 7 });
-                    $.cookie('auth_token', data.auth_token, { expires: 7 });
-                    $http.defaults.headers.common['Authentication-Token'] = data.auth_token;
-                    authService.loginConfirmed();
-                }
-              )
-            )
+                 $location.path("/onboarding/1");
           }
 
           else{
@@ -97,7 +81,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
             $.cookie('auth_token', data.authentication_token, { expires: 7 });
             $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
             authService.loginConfirmed();
-            $scope.$apply(function() { $location.path("/dashboard"); });
+            $location.path("/dashboard");
           }
           else{
             var errors = data['response']['errors'];
@@ -122,23 +106,30 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 })
 .controller({
   NavController: function ($scope, $http, authService) {
-        $scope.click_login = function(){
+      $scope.click_login = function(){
         alert('inside click login')
         var main = $('#content');
         var login = $('#login-holder');
           login.slideDown('slow', function() {
           main.hide();
-      });
-    }
-     $scope.logout = function() {
-      $http.post('/logout').success(function() {
+        });
+      }
+    
+     $scope.click_logout = function() {
+      alert('clicked logout')
+      $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
+
+      $http.post('/api/v1/logout').success(function() {
         $scope.restrictedContent = [];
         $.cookie('auth_token', null);
+        alert('logged out')
         $http.defaults.headers.common['Authorization'] = null;
       }).error(function() {
+        alert('couldnt logout')
         // This should happen after the .post call either way.
         $.cookie('auth_token', null);
         $http.defaults.headers.common['Authorization'] = null;
+          $location.path("/");
       });
     };
   }
@@ -224,6 +215,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: MyCtrl2})
+    .when('/onboarding/1', {templateUrl: 'static/partials/onboarding/stick.html', controller: MyCtrl2})
     .otherwise({redirectTo: '/', controller: ErrorPageController});
 
     // enable push state

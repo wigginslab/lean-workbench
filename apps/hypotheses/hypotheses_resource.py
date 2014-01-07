@@ -78,9 +78,7 @@ class Hypothesis_resource(Resource):
 	"""
 	def get(self, **kwargs):
 		if not current_user.is_authenticated():
-			response = jsonify(message='Unauthorized')
-        	response.status_code = 200
-        	return response
+			return jsonify(message='Unauthorized', status_code=200)
 
 		print kwargs
 		args = parser.parse_args()
