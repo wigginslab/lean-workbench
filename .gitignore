@@ -11,6 +11,7 @@ venv
 
 #assets
 static/node_modules
+node_modules
 
 # credentials
  ga_client_secrets.json
