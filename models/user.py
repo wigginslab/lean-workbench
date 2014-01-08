@@ -47,7 +47,7 @@ class User(db.Model, UserMixin):
 	active = db.Column(db.Boolean())
 	confirmed_at = db.Column(db.DateTime())
 	roles = db.relationship('Role', secondary=roles_users,
-			backref=db.backref('user', lazy='dynamic'))
+			backref=db.backref('user'))
 
 
 	def __repr__(self):

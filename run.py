@@ -6,6 +6,7 @@ import datetime
 import random
 import re
 from models.user import User
+from models.user import db as user_db
 from datetime import datetime
 from app import db, app
 # google analytics imports
@@ -39,13 +40,20 @@ def index():
 		return render_template('public.html', logged_in=logged_in)
 
 @auth_token_required
-@app.route('/onboarding', methods=['POST', 'GET'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
 	"""
 	print 'test'
 	return render_template('public.html', logged_in=True)
+
+
+
+@auth_token_required
+@app.route('/onboarding', methods=['POST', 'GET'])
+def private():
+	return render_template('public.html', logged_in=True)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -54,8 +62,11 @@ def page_not_found(e):
 
 @app.route('/api/v1/logout', methods=['POST','GET'])
 def logout():
+	print session
 	logout_user()
+	user_db.session.remove()
 	return jsonify(status=200, message='User has been successfully logged out.')
+	#return redirect(url_for('index'))
 
 # google analytics routes
 @app.route('/connect/google-analytics/')
