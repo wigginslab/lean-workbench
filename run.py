@@ -40,20 +40,13 @@ def index():
 		return render_template('public.html', logged_in=logged_in)
 
 @auth_token_required
+@app.route('/onboarding', methods=['POST', 'GET'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
 	"""
 	print 'test'
 	return render_template('public.html', logged_in=True)
-
-
-
-@auth_token_required
-@app.route('/onboarding', methods=['POST', 'GET'])
-def private():
-	return render_template('public.html', logged_in=True)
-
 
 @app.errorhandler(404)
 def page_not_found(e):

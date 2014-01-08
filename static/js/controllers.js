@@ -13,6 +13,9 @@ MyCtrl2.$inject = [];
 function ErrorPageController(){
 }
 
+function OnboardingController(){
+}
+
 
 var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
   function($interpolateProvider) {
@@ -126,7 +129,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
       alert('clicked logout')
       $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
 
-      $http.post('/api/v1/logout').success(function() {
+      $http.post('/logout').success(function() {
         $scope.restrictedContent = [];
         $.cookie('auth_token', null);
         $.cookie('email', null);
@@ -142,7 +145,17 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           $location.path("/");
       }); 
     };
-    $location.path("/");
+
+    $scope.logged_in = function(){
+      if ($.cookie('auth_token')){
+        return True;
+      }
+
+      else{
+        return False;
+      }
+    }
+
   }
 
 })
@@ -226,9 +239,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: MyCtrl2})
-    .when('/onboarding', {templateUrl: 'static/partials/onboarding/stick.html', controller: MyCtrl2})
-    .otherwise({redirectTo: '/', controller: ErrorPageController});
-
+    .when('/onboarding', {templateUrl: 'static/partials/onboarding/stick.html', controller: OnboardingController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])
