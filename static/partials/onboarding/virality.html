@@ -6,9 +6,13 @@
         <img src="/static/img/icons/social_google_box.png" style="width:128px;height:138px;">
       </div>
         <p style="font-size:20px">The stick engine focuses on getting users to return. The key performance indicator is <u>customer retention/churn rates</u>, and this can be measured using the Google Analytics API.</p>
-        <p ng-show="has_GA()"><b>Your Google Analytics account is connected.</b></p>
-        <p ng-hide="has_GA()" class="center">
-          <button href="/connect/google-analytics/" type="button" class="btn btn-primary btn-lg">Connect to Google Analytics</button>
+        <p ng-show="has_twitter()"><b>Your Twitter account is connected.</b></p>
+        <p ng-hide="has_twitter()" class="center">
+          <button href="/connect/twitter/" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
+        </p>
+        <p ng-show="has_fb()"><b>Your Facebook account is connected.</b></p>
+        <p ng-hide="has_fb()" class="center">
+          <button href="/connect/facebook/" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>
         </p>
         <div class="center">
           <ul class="pager">
