@@ -4,6 +4,7 @@ import os
 from google_analytics_models import *
 from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
+from flask.ext.security import current_user
 from flask import session, escape
 
 path = os.getenv("path")
@@ -87,14 +88,9 @@ class Google_analytics_resource(Resource):
 	#method_decorators = [authenticate_api]
 	#@marshal_with(resource_fields)
 	def get(self, **kwargs):
-		print kwargs
 		args = parser.parse_args()
-		username = args.get('username')
-		print args
+		username = current_user.email
+		print 'google analytics username: %s' %(username)
 		profile_id = kwargs.get('profile_id')
 		GA = Google_Analytics_DAO(username = username, profile_id = profile_id)
-		try:
-			print GA.get_user_profiles()
-		except:
-			return {"status":"401"}
-		return {"status":"200"}
+		return GA.get_user_profiles()

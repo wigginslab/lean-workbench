@@ -39,19 +39,20 @@ def index():
 		logged_in=False
 		return render_template('public.html', logged_in=logged_in)
 
-@auth_token_required
-@app.route('/onboarding', methods=['POST', 'GET'])
-@app.route('/dashboard', methods=['POST', 'GET'])
-def dashboard():
-	"""
-	"""
-	print 'test'
-	return render_template('public.html', logged_in=True)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
     
+@auth_token_required
+@app.route('/stick', methods=['POST', 'GET'])
+@app.route('/virality', methods=['POST','GET'])
+@app.route('/dashboard', methods=['POST', 'GET'])
+def dashboard():
+	"""
+	"""
+	return render_template('public.html', logged_in=True)
 
 @app.route('/api/v1/logout', methods=['POST','GET'])
 def logout():

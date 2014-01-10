@@ -10,4 +10,11 @@ angular.module('LWBServices', ['ngResource'])
 			}
 		});
 	})
-;
+	.factory('GoogleAnalytics', function($resource){
+		return $resource('/api/v1/googleanalytics',{}, {
+			query:{
+				method: 'POST',
+				isArray: true
+			}
+		})
+});

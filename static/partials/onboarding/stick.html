@@ -1,23 +1,19 @@
  <div class="onboarding holder">
  <div class="container">
-     <div id="stick-holder" class="input-group" ng-controller="LoginController">
-      <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
-        <div class="form-group">
-          <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
+    <div ng-controller="StickController" id="stick-engine" style="">
+      <h2 class="center"> Stick Engine</h2>
+      <div class="center">
+        <img src="/static/img/icons/social_google_box.png" style="width:128px;height:138px;">
+      </div>
+        <p style="font-size:20px">The stick engine focuses on getting users to return. The key performance indicator is <u>customer retention/churn rates</u>, and this can be measured using the Google Analytics API.</p>
+        <p ng-show="has_GA()"><b>Your Google Analytics account is connected.</b></p>
+        <p ng-hide="has_GA()" class="center">
+          <button href="/connect/google-analytics/" type="button" class="btn btn-primary btn-lg">Connect to Google Analytics</button>
+        </p>
+        <div class="center">
+          <ul class="pager">
+            <li><a href="/virality">Next</a></li>
+          </ul>
         </div>
-        <div class="form-group">
-          <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-          <label>Password</label>
-          <input type="password" class="form-control" ng-model="password" placeholder="Password">
-        </div>
-        <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-      </form>
-   </div>
-      <script>
-        var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
-      </script>
-      <script src="//linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
     </div>
-  </div>
+</div>
