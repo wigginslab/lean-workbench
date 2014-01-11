@@ -1,6 +1,6 @@
 from models.user import db as user_tables, API 
 from apps.crunchbase.scripts.models.companyModels import db as cb_tables
-from apps.googleanalytics.models.google_analytics_models import db as ga_tables
+from apps.google_analytics.google_analytics_models import db as ga_tables
 from apps.angellist.models.angellist_models import db as al_tables
 from apps.wufoo.wufoo_models import db as wf_tables
 from apps.hypotheses.hypotheses_model import db as h_tables

@@ -1,23 +1,391 @@
-.item { display:inline; }
-#ga{ width: 25%; }
-#al{ width: 30%; }
-.api-sidebar{
-	width:16%;
-	margin-right:6%;
-	float:left;
-	padding-bottom:100%;
-}
-.funnel{
-	margin-left:20%;
-}
+/* import all SASS sheets here to be served as main.css */
+.onboarding {
+  max-width: 60%;
+  _width: 700px;
+  padding: 30px 20px 50px;
+  border: 1px solid #b3b3b3;
+  border-radius: 4px;
+  margin: 0 auto;
+  box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+  background: #fcfcfc;
+  /* google search */ }
+  .onboarding ::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .onboarding ::selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .onboarding html {
+    padding: 30px 10px;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #737373;
+    background: #f0f0f0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%; }
+  .onboarding html, .onboarding input {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .onboarding .holder {
+    max-width: 500px;
+    _width: 500px;
+    padding: 30px 20px 50px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+    background: #fcfcfc; }
+  .onboarding body {
+    max-width: 500px;
+    _width: 500px;
+    padding: 30px 20px 50px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+    background: #fcfcfc; }
+  .onboarding h1 {
+    margin: 0 10px;
+    font-size: 50px;
+    text-align: center; }
+  .onboarding h1 span {
+    color: #bbbbbb; }
+  .onboarding h3 {
+    margin: 1.5em 0 0.5em; }
+  .onboarding p {
+    margin: 1em 0; }
+  .onboarding ul {
+    padding: 0 0 0 40px;
+    margin: 1em 0; }
+  .onboarding .container {
+    max-width: 380px;
+    _width: 380px;
+    margin: 0 auto; }
+  .onboarding #goog-fixurl ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  .onboarding #goog-fixurl form {
+    margin: 0; }
+  .onboarding #goog-wm-qt, .onboarding #goog-wm-sb {
+    border: 1px solid #bbbbbb;
+    font-size: 16px;
+    line-height: normal;
+    vertical-align: top;
+    color: #444444;
+    border-radius: 2px; }
+  .onboarding #goog-wm-qt {
+    width: 220px;
+    height: 20px;
+    padding: 5px;
+    margin: 5px 10px 0 0;
+    box-shadow: inset 0 1px 1px #cccccc; }
+  .onboarding #goog-wm-sb {
+    display: inline-block;
+    height: 32px;
+    padding: 0 10px;
+    margin: 5px 0 0;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: whitesmoke;
+    background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -ms-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -o-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    *overflow: visible;
+    *display: inline;
+    *zoom: 1; }
+  .onboarding #goog-wm-sb:hover, .onboarding #goog-wm-sb:focus {
+    border-color: #aaaaaa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8; }
+  .onboarding #goog-wm-qt:hover, .onboarding #goog-wm-qt:focus {
+    border-color: #105cb6;
+    outline: 0;
+    color: #222222; }
+  .onboarding input::-moz-focus-inner {
+    padding: 0;
+    border: 0; }
 
-#chart{
-	width:500px;
-}
+/* GLOBAL STYLES
+    -------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+body {
+  padding-bottom: 40px;
+  color: #5a5a5a; }
 
-#body-content{
-	padding-left:26%;
-}
-.center{
-	text-align:center;
-}
+/* CUSTOMIZE THE NAVBAR
+    -------------------------------------------------- */
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  margin-top: 20px;
+  margin-bottom: -90px;
+  /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */ }
+
+
+/* Remove border and change up box shadow for more contrast */
+.navbar .container {
+  border: 0;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25); }
+
+/* Downsize the brand/Lean Workbench a bit */
+.navbar .brand {
+  padding: 14px 20px 16px;
+  /* Increase vertical padding to match navbar links */
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5); }
+
+/* Navbar links: increase padding for taller navbar */
+.navbar .nav > li > a {
+  padding: 15px 20px; }
+
+/* Offset the responsive button for proper vertical alignment */
+.navbar .btn-navbar {
+  margin-top: 10px; }
+
+/* CUSTOMIZE THE CAROUSEL
+    -------------------------------------------------- */
+/* Carousel base class */
+.carousel {
+  margin-bottom: 60px; }
+
+.carousel .container {
+  position: relative;
+  z-index: 9; }
+
+.carousel-control {
+  height: 80px;
+  margin-top: 0;
+  font-size: 120px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  background-color: transparent;
+  border: 0;
+  z-index: 10; }
+
+.carousel .item {
+  height: 500px; }
+
+.carousel img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 500px; }
+
+.carousel-caption {
+  background-color: transparent;
+  position: static;
+  max-width: 550px;
+  padding: 0 20px;
+  margin-top: 200px; }
+
+.carousel-caption h1, .carousel-caption .lead {
+  margin: 0;
+  line-height: 1.25;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4); }
+
+.carousel-caption .btn {
+  margin-top: 10px; }
+
+/* MARKETING CONTENT
+    -------------------------------------------------- */
+/* Center align the text within the three columns below the carousel */
+.marketing .span4 {
+  text-align: center; }
+
+.marketing h2 {
+  font-weight: normal; }
+
+.marketing .span4 p {
+  margin-left: 10px;
+  margin-right: 10px; }
+
+/* Featurettes
+    ------------------------- */
+.featurette-divider {
+  margin: 80px 0;
+  /* Space out the Bootstrap <hr> more */ }
+
+.featurette {
+  padding-top: 120px;
+  /* Vertically center images part 1: add padding above and below text. */
+  overflow: hidden;
+  /* Vertically center images part 2: clear their floats. */ }
+
+.featurette-image {
+  margin-top: -120px;
+  /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */ }
+
+/* Give some space on the sides of the floated elements so text doesn't run right into it. */
+.featurette-image.pull-left {
+  margin-right: 40px; }
+
+.featurette-image.pull-right {
+  margin-left: 40px; }
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px; }
+
+/* RESPONSIVE CSS
+    -------------------------------------------------- */
+@media (max-width: 979px) {
+  .container.navbar-wrapper {
+    margin-bottom: 0;
+    width: auto; }
+  .container {
+    border-radius: 0;
+    margin: -20px 0; }
+  .carousel .item {
+    height: 500px; }
+  .carousel img {
+    width: auto;
+    height: 500px; }
+  .featurette {
+    height: auto;
+    padding: 0; }
+  .featurette-image.pull-left, .featurette-image.pull-right {
+    display: block;
+    float: none;
+    max-width: 40%;
+    margin: 0 auto 20px; } }
+
+@media (max-width: 767px) {
+  .container {
+    margin: -20px; }
+  .carousel {
+    margin-left: -20px;
+    margin-right: -20px; }
+  .carousel .item {
+    height: 300px; }
+  .carousel img {
+    height: 300px; }
+  .carousel-caption {
+    width: 65%;
+    padding: 0 70px;
+    margin-top: 100px; }
+  .carousel-caption h1 {
+    font-size: 30px; }
+  .carousel-caption .lead, .carousel-caption .btn {
+    font-size: 18px; }
+  .marketing .span4 + .span4 {
+    margin-top: 40px; }
+  .featurette-heading {
+    font-size: 30px; }
+  .featurette .lead {
+    font-size: 18px;
+    line-height: 1.5; } }
+
+.login-page {
+  /* google search */ }
+  .login-page ::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .login-page ::selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .login-page html {
+    padding: 30px 10px;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #737373;
+    background: #f0f0f0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%; }
+  .login-page html, .login-page input {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .login-page body {
+    max-width: 500px;
+    _width: 500px;
+    padding: 30px 20px 50px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+    background: #fcfcfc; }
+  .login-page h1 {
+    margin: 0 10px;
+    font-size: 50px;
+    text-align: center; }
+  .login-page h1 span {
+    color: #bbbbbb; }
+  .login-page h3 {
+    margin: 1.5em 0 0.5em; }
+  .login-page p {
+    margin: 1em 0; }
+  .login-page ul {
+    padding: 0 0 0 40px;
+    margin: 1em 0; }
+  .login-page .container {
+    max-width: 380px;
+    _width: 380px;
+    margin: 0 auto; }
+  .login-page #goog-fixurl ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  .login-page #goog-fixurl form {
+    margin: 0; }
+  .login-page #goog-wm-qt, .login-page #goog-wm-sb {
+    border: 1px solid #bbbbbb;
+    font-size: 16px;
+    line-height: normal;
+    vertical-align: top;
+    color: #444444;
+    border-radius: 2px; }
+  .login-page #goog-wm-qt {
+    width: 220px;
+    height: 20px;
+    padding: 5px;
+    margin: 5px 10px 0 0;
+    box-shadow: inset 0 1px 1px #cccccc; }
+  .login-page #goog-wm-sb {
+    display: inline-block;
+    height: 32px;
+    padding: 0 10px;
+    margin: 5px 0 0;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: whitesmoke;
+    background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -ms-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -o-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    *overflow: visible;
+    *display: inline;
+    *zoom: 1; }
+  .login-page #goog-wm-sb:hover, .login-page #goog-wm-sb:focus {
+    border-color: #aaaaaa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8; }
+  .login-page #goog-wm-qt:hover, .login-page #goog-wm-qt:focus {
+    border-color: #105cb6;
+    outline: 0;
+    color: #222222; }
+  .login-page input::-moz-focus-inner {
+    padding: 0;
+    border: 0; }
+
+
+body {
+  padding-top: 65px; }
+
+.center {
+  text-align: center; }

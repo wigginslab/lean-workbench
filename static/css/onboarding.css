@@ -1,0 +1,109 @@
+.onboarding {
+  max-width: 60%;
+  _width: 700px;
+  padding: 30px 20px 50px;
+  border: 1px solid #b3b3b3;
+  border-radius: 4px;
+  margin: 0 auto;
+  box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+  background: #fcfcfc;
+  /* google search */ }
+  .onboarding ::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .onboarding ::selection {
+    background: #b3d4fc;
+    text-shadow: none; }
+  .onboarding html {
+    padding: 30px 10px;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #737373;
+    background: #f0f0f0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%; }
+  .onboarding html, .onboarding input {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .onboarding .holder {
+    max-width: 500px;
+    _width: 500px;
+    padding: 30px 20px 50px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+    background: #fcfcfc; }
+  .onboarding body {
+    max-width: 500px;
+    _width: 500px;
+    padding: 30px 20px 50px;
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    margin: 0 auto;
+    box-shadow: 0 1px 10px #a7a7a7, inset 0 1px 0 white;
+    background: #fcfcfc; }
+  .onboarding h1 {
+    margin: 0 10px;
+    font-size: 50px;
+    text-align: center; }
+  .onboarding h1 span {
+    color: #bbbbbb; }
+  .onboarding h3 {
+    margin: 1.5em 0 0.5em; }
+  .onboarding p {
+    margin: 1em 0; }
+  .onboarding ul {
+    padding: 0 0 0 40px;
+    margin: 1em 0; }
+  .onboarding .container {
+    max-width: 380px;
+    _width: 380px;
+    margin: 0 auto; }
+  .onboarding #goog-fixurl ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; }
+  .onboarding #goog-fixurl form {
+    margin: 0; }
+  .onboarding #goog-wm-qt, .onboarding #goog-wm-sb {
+    border: 1px solid #bbbbbb;
+    font-size: 16px;
+    line-height: normal;
+    vertical-align: top;
+    color: #444444;
+    border-radius: 2px; }
+  .onboarding #goog-wm-qt {
+    width: 220px;
+    height: 20px;
+    padding: 5px;
+    margin: 5px 10px 0 0;
+    box-shadow: inset 0 1px 1px #cccccc; }
+  .onboarding #goog-wm-sb {
+    display: inline-block;
+    height: 32px;
+    padding: 0 10px;
+    margin: 5px 0 0;
+    white-space: nowrap;
+    cursor: pointer;
+    background-color: whitesmoke;
+    background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -ms-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    background-image: -o-linear-gradient(rgba(255, 255, 255, 0), #f1f1f1);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    *overflow: visible;
+    *display: inline;
+    *zoom: 1; }
+  .onboarding #goog-wm-sb:hover, .onboarding #goog-wm-sb:focus {
+    border-color: #aaaaaa;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8; }
+  .onboarding #goog-wm-qt:hover, .onboarding #goog-wm-qt:focus {
+    border-color: #105cb6;
+    outline: 0;
+    color: #222222; }
+  .onboarding input::-moz-focus-inner {
+    padding: 0;
+    border: 0; }

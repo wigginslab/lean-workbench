@@ -1,21 +1,16 @@
-from flask.ext.restful import fields, marshal_with, abort
+from flask.ext.restful import fields, marshal_with
 import sys
 import os
-from hypotheses_model import Hypothesis_Model
+from hypotheses_model import Hypothesis_model, db
 from flask.ext.restful import Resource, reqparse
-from flask import session, escape
-from hypotheses_model import db 
+from flask import session, escape, abort, jsonify
+from apps.authenticate_api import authenticate_api, current_user
+from flask.ext.security import auth_token_required
+from werkzeug.exceptions import Unauthorized
+
 
 path = os.getenv("path")
 sys.path.append(path)
-
-def check_authentication(username):
-	logged_in_user = escape(session.get('username'))
-	if username == logged_in_user:
-		return True
-	else:
-		return False
-
 
 parser = reqparse.RequestParser()
 parser.add_argument('username', type=str)
@@ -23,6 +18,21 @@ parser.add_argument('title', type=str)
 parser.add_argument('google_analytics', type=str)
 parser.add_argument('wufoo', type=str)
 parser.add_argument('event', type=str)
+parser.add_argument('social', type=str)
+parser.add_argument('facebook', type=str)
+parser.add_argument('twitter', type=str)
+
+
+from werkzeug.exceptions import Unauthorized
+
+class MyUnauthorized(Unauthorized):
+    description = '<Why access is denied string goes here...>'
+    def get_headers(self, environ):
+        """Get a list of headers."""
+        return [('Content-Type', 'text/html'),
+            ('WWW-Authenticate', 'Basic realm="Login required"')]
+
+abort.mapping.update({401: MyUnauthorized})
 
 class Hypothesis_DAO(object):
 	"""
@@ -35,11 +45,9 @@ class Hypothesis_DAO(object):
 	def __init__(self, username, profile_id=None):
 		self.username = username
 		self.profile_id = profile_id
-		if not check_authentication(username):
-			return {"status":402}
 		
 	def get_user_hypotheses(self):
-		hypotheses = Hypothesis_Model.query.filter_by(username=username)
+		hypotheses = Hypothesis_model.query.filter_by(username=self.username).all()
 		return hypotheses
 
 	def add_user_hypothesis(self, **kwargs):
@@ -50,7 +58,9 @@ class Hypothesis_DAO(object):
 		hypothesis = Hypothesis_Model(username=self.username,
 				goal=goal,
 				wufoo=wufoo,
-				event=event
+				event=event,
+				twitter=twitter,
+				facebook=facebook
 		)
 		db.session.add(hypothesis)
 		db.session.commit()
@@ -62,17 +72,20 @@ class Hypothesis_DAO(object):
 		# TODO: make query better
 		return Hypothesis_Model.query.filter_by(username=self.username).get_all()[hyp_id]
 
-class Hypothesis_Resource(Resource):
+class Hypothesis_resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""
-	#method_decorators = [authenticate_api]
-	#@marshal_with(resource_fields)
 	def get(self, **kwargs):
+		if not current_user.is_authenticated():
+			return jsonify(message='Unauthorized', status_code=200)
+
 		print kwargs
 		args = parser.parse_args()
-		username = args.get('username')
-		return Hypothesis_DAO.get_user_hypotheses()	
-		return {"status":200}	
+		print current_user
+		username = current_user.email
+		print username
+		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
+		return {"status":200, "hypotheses":hypotheses}	
 	def post(self, **kwargs):
-		return Hypothesis_DAO.add_user_hypothesis()
+		return Hypothesis_DAO.add_user_hypothesis(kwargs)

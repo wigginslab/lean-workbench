@@ -1,0 +1,19 @@
+ <div class="onboarding holder">
+ <div class="container">
+    <div ng-controller="StickController" id="stick-engine" style="">
+      <h2 class="center"> Stick Engine</h2>
+      <div class="center">
+        <img src="/static/img/icons/social_google_box.png" style="width:128px;height:138px;">
+      </div>
+        <p style="font-size:20px">The stick engine focuses on getting users to return. The key performance indicator is <u>customer retention/churn rates</u>, and this can be measured using the Google Analytics API.</p>
+        <p ng-show="has_GA()"><b>Your Google Analytics account is connected.</b></p>
+        <p ng-hide="has_GA()" class="center">
+          <button href="/connect/google-analytics/" type="button" class="btn btn-primary btn-lg">Connect to Google Analytics</button>
+        </p>
+        <div class="center">
+          <ul class="pager">
+            <li><a href="/virality">Next</a></li>
+          </ul>
+        </div>
+    </div>
+</div>

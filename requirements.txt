@@ -11,3 +11,5 @@ gunicorn
 tornado
 py-bcrypt
 nltk
+itsdangerous
+six

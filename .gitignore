@@ -1,19 +1,22 @@
 *.py[cod]
 
-# Vim
-*~
-*swp
-*swo
-
-# google analytics secrets
-apps/googleanalytics/client_secrets.json
-
 # C extensions
 *.so
 
-vctree/
-
+*pyc
+#local
 venv
+*~
+*swo
+*swp
+
+#assets
+static/node_modules
+node_modules
+
+# credentials
+ ga_client_secrets.json
+
 # Packages
 *.egg
 *.egg-info
@@ -46,7 +49,7 @@ nosetests.xml
 .project
 .pydevproject
 
-#google analytics credentials
-ga_client_secrets.json
-
 envs.sh
+*swo
+*swp
+*~

@@ -1,0 +1,13 @@
+/* import all SASS sheets here to be served as main.css */
+@import "onboarding.scss";
+@import "index.scss";
+@import "login.scss";
+@import "hypotheses.scss";
+
+body { 
+    padding-top: 65px; 
+}
+
+.center {
+	text-align:center
+}
