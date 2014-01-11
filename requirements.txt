@@ -10,6 +10,4 @@ flask-WTF
 gunicorn
 tornado
 py-bcrypt
-nltk
-itsdangerous
-six
+twython
