@@ -61,15 +61,14 @@ def logout():
 	logout_user()
 	user_db.session.remove()
 	return jsonify(status=200, message='User has been successfully logged out.')
-	#return redirect(url_for('index'))
 
 # google analytics routes
-@app.route('/connect/google-analytics/')
+@app.route('/connect/google-analytics/', methods=['POST', 'GET'])
 def google_analytics_oauth():
 	username = escape(session.get('username'))
 	if not username:
 		print 'not logged in'
-		return redirect(url_for('index'))
+		return jsonify(status=200, message='User has been successfully logged out.')
 	GA_API = Google_Analytics_API(username)
 	if GA_API.credentials:
 		expires_on = GA_API.credentials.as_dict()['token_expiry']
@@ -84,12 +83,13 @@ def google_analytics_oauth():
 			print "credentials expired, start oauth process"
 			# start OAuth process
 			redirect_url = GA_API.step_one()
-			return redirect(redirect_url)
+			return jsonify(redirect_url=redirect_url, status=100)
 	else:
 		print "start oauth process"
 		# start OAuth process
 		redirect_url = GA_API.step_one()
-		return redirect(redirect_url)
+		return jsonify(redirect_url=redirect_url, status=100)
+
 
 @app.route('/connect/google-analytics/callback/')
 def google_analytics_callback():
@@ -101,6 +101,7 @@ def google_analytics_callback():
 		print request.args
 		print GA_API
 		client = GA_API.step_two(username, ga_api_code)
+		return redirect('/onboarding/stick')
 	else:
 		print 'no user logged in'
 	return redirect(url_for('index'))

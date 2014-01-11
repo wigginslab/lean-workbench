@@ -20,7 +20,7 @@ function OnboardingController(){
 function StickController($scope, GoogleAnalytics){
   var GAQuery = GoogleAnalytics.get();
   console.log(GAQuery);
-  if (GAQuery){
+  if (GAQuery.length > 0){
     $scope.GA = true;
   }
   $scope.has_GA = function(){
@@ -28,6 +28,21 @@ function StickController($scope, GoogleAnalytics){
       return true;
     }
   }
+  $scope.GA_auth = function(){
+     $http.post(
+        '/connect/google-analytics',
+        ).success(
+        function(data){
+          var status = data['status'];
+          if (status == 100){
+            var redirect_url = data['redirect_url'];
+            window.location(redirect_url);
+          }
+        }
+      )
+    )
+  }
+
 }
 
 
