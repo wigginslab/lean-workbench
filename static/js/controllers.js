@@ -61,7 +61,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
         function(data){
           // if success
           if (data['response']['user']){
-                 $location.path("/onboarding");
+                 $location.path("/onboarding/stick");
           }
 
           else{
@@ -264,9 +264,9 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: MyCtrl2})
-    .when('/stick', {templateUrl: 'static/partials/onboarding/stick.html', controller: StickController})
-    .when('/virality', {templateUrl: 'static/partials/onboarding/virality.html', controller: ViralityController})
-    .when('/pay', {templateUrl: 'static/partials/onboarding/pay.html', controller: PayController})
+    .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
+    .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
+    .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])

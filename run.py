@@ -46,9 +46,9 @@ def page_not_found(e):
     return render_template('404.html'), 404
     
 @auth_token_required
-@app.route('/stick', methods=['POST', 'GET'])
-@app.route('/virality', methods=['POST','GET'])
-@app.route('/pay', methods=['POST','GET'])
+@app.route('/onboarding/stick', methods=['POST', 'GET'])
+@app.route('/onboarding/virality', methods=['POST','GET'])
+@app.route('/onboarding/pay', methods=['POST','GET'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
