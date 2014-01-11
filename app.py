@@ -13,7 +13,6 @@ from apps.google_analytics.google_analytics_resource import Google_analytics_res
 class SecuredStaticFlask(Flask):
     def send_static_file(self, filename):
     	protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html']
-    	print 'user is authenticated %s' %(current_user)
         # Get user from session
         if current_user.is_authenticated() or filename not in protected_templates:
             return super(SecuredStaticFlask, self).send_static_file(filename)

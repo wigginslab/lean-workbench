@@ -23,13 +23,24 @@ function StickController($scope, GoogleAnalytics){
   if (GAQuery){
     $scope.GA = true;
   }
-
   $scope.has_GA = function(){
     if ($scope.GA){
       return true;
     }
   }
 }
+
+
+function  ViralityController($scope){
+
+}
+
+
+
+function PayController($scope){
+
+}
+
 
 var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
   function($interpolateProvider) {

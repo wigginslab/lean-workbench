@@ -25,7 +25,7 @@ class Twitter_model:
 	token_response = db.Column(db.String)
 	username = db.Column(db.String)
 	words =  db.relationship('word', secondary=twitter_keywords,
-			backref=db.backref('twitter_credentials')
+			backref=db.backref('twitter_credentials'))
 
 class Word:
 	id = db.Column(db.Integer, primary_key=True)

@@ -48,6 +48,7 @@ def page_not_found(e):
 @auth_token_required
 @app.route('/stick', methods=['POST', 'GET'])
 @app.route('/virality', methods=['POST','GET'])
+@app.route('/pay', methods=['POST','GET'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 def dashboard():
 	"""
@@ -103,6 +104,22 @@ def google_analytics_callback():
 	else:
 		print 'no user logged in'
 	return redirect(url_for('index'))
+
+
+@app.route('/connect/quickbooks/callback')
+def quickbooks_callback():
+	print 'inside quickbooks callback'
+	print request.args
+
+
+
+
+
+
+
+
+
+
 
 @app.route('/google-analytics/profile/<int:profile_id>')
 def get_profile_data(profile_id):
@@ -198,12 +215,6 @@ def wufoo():
 	survey = Wufoo_Survey_Model.query.filter_by(url=url)
 	if not survey:
 		survey = Wufoo_Survey_Model()
-
-# store static files on server for now
-#app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-#	'/': os.path.join(os.path.dirname(__file__), 'static')
-#})
-
 
 if __name__ == '__main__':
 	app.run(debug=True, port=port)
