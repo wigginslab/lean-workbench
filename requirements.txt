@@ -10,3 +10,5 @@ flask-WTF
 gunicorn
 tornado
 flask-script
+py-bcrypt
+twython
