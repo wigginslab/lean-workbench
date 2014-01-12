@@ -11,16 +11,10 @@ twitter_keywords = db.Table('twitter_words',
 
 class Twitter_model:
 	id = db.Column(db.Integer, primary_key=True)
-	token_expiry = db.Column(db.String)
-	access_token = db.Column(db.String)
-	client_id = db.Column(db.String)
-	client_secret = db.Column(db.String)
-	profile_id = db.Column(db.String)
-	refresh_token = db.Column(db.String)
-	revoke_uri = db.Column(db.String)
-	id_token = db.Column(db.String)
-	token_response = db.Column(db.String)
+	oauth_token = db.Column(db.String)
+	oauth_secret = db.Column(db.String)
 	username = db.Column(db.String)
+	twitter_handle = db.Column(db.String)
 	words =  db.relationship('word', secondary=twitter_keywords,
 			backref=db.backref('twitter_credentials'))
 

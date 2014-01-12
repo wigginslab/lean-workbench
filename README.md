@@ -30,7 +30,7 @@ sudo pip install virtualenv
 virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
-python create_db.py
+python leanworkbench/manage.py runserver 
 ```
 Environment Variables
 --------------------
@@ -56,6 +56,9 @@ For each of these APIs you want to use
 * angellist_client_id
 * angellist_client_secret
 * angellist_callback_url
+* twitter_app_key
+* twitter_app_secret
+* twitter_redirect_url
 
 Running the Application
 ---------------------------

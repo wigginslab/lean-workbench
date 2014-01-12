@@ -10,24 +10,6 @@ from flask import session, escape
 path = os.getenv("path")
 sys.path.append(path)
 
-def check_authentication(username):
-	logged_in_user = escape(session.get('username'))
-	if username == logged_in_user:
-		return True
-	else:
-		return False
-
-def authenticate_api(func):
-	def wrapper(*args, **kwargs):
-		print 'in wrapper'
-		logged_in_user = escape(session['username'])
-		print kwargs.get('username')
-		if kwargs.get('username') == logged_in_user:
-			print 'true'
-			return func(*args, **kwargs)
-		abort(401)
-	return wrapper
-
 parser = reqparse.RequestParser()
 parser.add_argument('username', type=str)
 parser.add_argument('start_date', type=str)
@@ -85,8 +67,6 @@ class Google_analytics_resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""
-	#method_decorators = [authenticate_api]
-	#@marshal_with(resource_fields)
 	def get(self, **kwargs):
 		args = parser.parse_args()
 		username = current_user.email

@@ -17,4 +17,21 @@ angular.module('LWBServices', ['ngResource'])
 				isArray: true
 			}
 		})
+	})
+	.factory('Facebook', function($resource){
+		return $resource('/api/v1/facebook', {}, {
+			query:{
+				method: 'POST',
+				isArray: true
+			}
+		})
+	})
+	.factory('Twitter', function($resource){
+		return $resource('/api/v1/twitter', {},{
+			query:{
+				method:'POST',
+				isArray: true
+			}
+		})
+	})
 });

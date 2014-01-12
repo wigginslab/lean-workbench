@@ -45,7 +45,7 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 
-function  ViralityController($scope){
+function ViralityController($scope, $http){
 
 }
 
