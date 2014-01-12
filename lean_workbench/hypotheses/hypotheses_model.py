@@ -1,4 +1,4 @@
-from lean_workbench.core import db
+from database import db
 
 # Standard Databases
 class Hypothesis_model(db.Model):

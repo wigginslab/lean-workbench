@@ -8,11 +8,7 @@ import uuid
 from flask.ext.security import UserMixin, RoleMixin
 from itsdangerous import URLSafeTimedSerializer
 import md5
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
-
-db = SQLAlchemy(app)
+from database import db
 
 apis = db.Table('apis',
 		db.Column('api_id', db.Integer, db.ForeignKey('api.id')),
@@ -49,9 +45,9 @@ class User(db.Model, UserMixin):
 	roles = db.relationship('Role', secondary=roles_users,
 			backref=db.backref('user'))
 
-
 	def __repr__(self):
 		return '<User %s>' %self.email
+
 class API(db.Model):
 	__tablename__ = "api"
 	id = db.Column(db.Integer, primary_key=True)

@@ -4,8 +4,7 @@ import os
 from hypotheses_model import Hypothesis_model, db
 from flask.ext.restful import Resource, reqparse
 from flask import session, escape, abort, jsonify
-from apps.authenticate_api import authenticate_api, current_user
-from flask.ext.security import auth_token_required
+from flask.ext.security import auth_token_required, current_user
 from werkzeug.exceptions import Unauthorized
 
 
@@ -25,14 +24,6 @@ parser.add_argument('twitter', type=str)
 
 from werkzeug.exceptions import Unauthorized
 
-class MyUnauthorized(Unauthorized):
-    description = '<Why access is denied string goes here...>'
-    def get_headers(self, environ):
-        """Get a list of headers."""
-        return [('Content-Type', 'text/html'),
-            ('WWW-Authenticate', 'Basic realm="Login required"')]
-
-abort.mapping.update({401: MyUnauthorized})
 
 class Hypothesis_DAO(object):
 	"""

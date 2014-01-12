@@ -1,13 +1,18 @@
 # -*- coding:utf-8 -*-
 
-from flask import Flask, render_template
-from flask.ext.security import Security, SQLAlchemyUserDatastore
-from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user
+from flask import Flask, render_template, redirect, url_for
+from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user, auth_token_required, current_user
 from users.user_model import User, Role
 from database import db
 from flask_wtf.csrf import CsrfProtect
 import os
 from werkzeug import SharedDataMiddleware
+from flask.ext import restful
+from hypotheses.hypotheses_resource import Hypothesis_resource
+from facebook.facebook_resource import Facebook_resource
+from twitter.twitter_resource import Twitter_resource
+from wufoo.wufoo_resource import Wufoo_resource
+from google_analytics.google_analytics_resource import Google_analytics_resource
 
 
 class SecuredStaticFlask(Flask):
@@ -150,12 +155,31 @@ def configure_views(app):
     security = Security(app, user_datastore)
     csrf = CsrfProtect(app)
 
-    "Add some simple views here like index_view"
-    @app.route("/")
-    def index_view():
-        return render_template("public.html")
+    @app.route('/')
+    def index():
+        print current_user
+        if current_user.is_authenticated():
+            print current_user
+            logged_in = True
+            return redirect(url_for('dashboard'))
+        else:
+            logged_in=False
+            return render_template('public.html', logged_in=logged_in)
 
-    # store static files on server for now
- #   app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-  #          '/': os.path.join(os.path.dirname(__file__), 'static')
-  #  })
+    @auth_token_required
+    @app.route('/onboarding/stick', methods=['POST', 'GET'])
+    @app.route('/onboarding/virality', methods=['POST','GET'])
+    @app.route('/onboarding/pay', methods=['POST','GET'])
+    @app.route('/dashboard', methods=['POST', 'GET'])
+    def dashboard():
+        """
+        """
+        return render_template('public.html', logged_in=True)
+
+    api = restful.Api(app)
+
+    api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
+    api.add_resource(Facebook_resource, '/api/v1/facebook')
+    api.add_resource(Twitter_resource, '/api/v1/twitter')
+    api.add_resource(Wufoo_resource, '/api/v1/wufoo')
+    api.add_resource(Google_analytics_resource, '/api/v1/googleanalytics')

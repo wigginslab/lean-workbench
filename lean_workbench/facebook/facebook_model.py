@@ -1,4 +1,4 @@
-from lean_workbench.core import db
+from database import db
 
 class Facebook_model:
 	pass
