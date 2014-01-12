@@ -30,7 +30,7 @@ function StickController($scope, GoogleAnalytics){
   }
   $scope.GA_auth = function(){
      $http.post(
-        '/connect/google-analytics',
+        '/connect/google-analytics'
         ).success(
         function(data){
           var status = data['status'];
@@ -40,9 +40,7 @@ function StickController($scope, GoogleAnalytics){
           }
         }
       )
-    )
   }
-
 }
 
 
@@ -166,19 +164,16 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
       }
     
      $scope.click_logout = function() {
-      alert('clicked logout')
       $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
 
-      $http.post('/logout').success(function() {
+      $http.get('/logout').success(function() {
         $scope.restrictedContent = [];
         $.cookie('auth_token', null);
         $.cookie('email', null);
-        alert('logged out')
         $http.defaults.headers.common['Authorization'] = null;
         $http.defaults.headers.common['Authentication-Token'] = null;
 
       }).error(function() {
-        alert('couldnt logout')
         // This should happen after the .post call either way.
         $.cookie('auth_token', null);
         $http.defaults.headers.common['Authorization'] = null;
