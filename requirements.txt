@@ -9,7 +9,4 @@ google-api-python-client
 flask-WTF
 gunicorn
 tornado
-py-bcrypt
-nltk
-itsdangerous
-six
+flask-script
