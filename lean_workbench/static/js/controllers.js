@@ -17,7 +17,7 @@ function OnboardingController(){
 }
 
 
-function StickController($scope, GoogleAnalytics){
+function StickController($scope, $http, GoogleAnalytics){
   var GAQuery = GoogleAnalytics.get();
   console.log(GAQuery);
   if (GAQuery.length > 0){
@@ -29,7 +29,8 @@ function StickController($scope, GoogleAnalytics){
     }
   }
   $scope.GA_auth = function(){
-     $http.post(
+    $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+    $http.post(
         '/connect/google-analytics'
         ).success(
         function(data){

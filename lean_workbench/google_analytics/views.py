@@ -1,12 +1,14 @@
-from flask import Blueprint, render_template, request, session, redirect
+from flask import Blueprint, render_template, request, session, redirect, url_for
 from google_analytics_client import Google_Analytics_API
+from flask.ext.security import current_user
 
 app = Blueprint('google_analytics', __name__, template_folder='templates')
 
 # google analytics routes
-@app.route('/connect/google-analytics/')
+@app.route('/connect/google-analytics', methods=['GET', 'POST'])
 def google_analytics_oauth():
-	username = escape(session.get('username'))
+	print current_user
+	username = current_user.email
 	if not username:
 		print 'not logged in'
 		return redirect(url_for('index'))
@@ -31,10 +33,10 @@ def google_analytics_oauth():
 		redirect_url = GA_API.step_one()
 		return redirect(redirect_url)
 
-@app.route('/connect/google-analytics/callback/')
+@app.route('/connect/google-analytics/callback/',methods=['GET', 'POST'])
 def google_analytics_callback():
-	if 'username' in session:
-		username = escape(session['username'])
+	if current_user:
+		username = current_user.email
 		GA_API = Google_Analytics_API('username')
 		ga_api_code= request.args.get("code")
 		print 'ga callback args'
@@ -42,5 +44,5 @@ def google_analytics_callback():
 		print GA_API
 		client = GA_API.step_two(username, ga_api_code)
 	else:
-		print 'no user logged in'
-	return redirect(url_for('index'))
+		return redirect('/')
+	return redirect('/onboarding/virality')

@@ -6,6 +6,7 @@ class Config(object):
 	SQLALCHEMY_DATABASE_URI = os.getenv('db_url')
 	SECRET_KEY = os.environ.get('secret_key')
 	DEBUG = True
+	PORT = os.getenv('port')
 
 	# Setup Flask-Security users
 	SECURITY_PASSWORD_HASH = "bcrypt"
