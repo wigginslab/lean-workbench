@@ -1,7 +1,24 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask, render_template
-from flask.ext.security import Security, SQLAlchemyUserDatastore,
+from flask.ext.security import Security, SQLAlchemyUserDatastore
+from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user
+from users.user_model import User, Role
+from database import db
+from flask_wtf.csrf import CsrfProtect
+import os
+from werkzeug import SharedDataMiddleware
+
+
+class SecuredStaticFlask(Flask):
+    def send_static_file(self, filename):
+        protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html']
+        # Get user from session
+        if current_user.is_authenticated() or filename not in protected_templates:
+            return super(SecuredStaticFlask, self).send_static_file(filename)
+        else:
+            return redirect('/static/partials/login.html')
+
 
 def __import_blueprint(blueprint_str):
     split = blueprint_str.split('.')
@@ -20,7 +37,7 @@ def config_str_to_obj(cfg):
 
 def app_factory(config, app_name=None, blueprints=None):
     app_name = app_name or __name__
-    app = Flask(app_name)
+    app = SecuredStaticFlask(app_name, static_url_path='/static')
 
     config = config_str_to_obj(config)
     configure_app(app, config)
@@ -33,9 +50,6 @@ def app_factory(config, app_name=None, blueprints=None):
     configure_before_request(app)
     configure_views(app)
 
-
-
-    
     return app
 
 
@@ -132,7 +146,16 @@ def configure_before_request(app):
 
 
 def configure_views(app):
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security = Security(app, user_datastore)
+    csrf = CsrfProtect(app)
+
     "Add some simple views here like index_view"
     @app.route("/")
     def index_view():
-        return render_template("index.html")
+        return render_template("public.html")
+
+    # store static files on server for now
+ #   app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+  #          '/': os.path.join(os.path.dirname(__file__), 'static')
+  #  })
