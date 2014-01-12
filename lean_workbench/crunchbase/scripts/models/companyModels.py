@@ -4,9 +4,7 @@ from sqlalchemy.orm import relationship, backref
 from flask.ext.sqlalchemy import *
 import os
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
-db = SQLAlchemy(app)
+from database import db
 
 # many to many associations
 company_investors_association = db.Table('company_investor_association',

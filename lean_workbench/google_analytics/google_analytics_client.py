@@ -1,20 +1,13 @@
-from flask import Flask
 import urllib
 import urllib2
 import os
-from flask.ext.sqlalchemy import SQLAlchemy
 from apiclient.discovery import build
 from google_analytics_models import Google_Analytics_User_Model
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
 from datetime import datetime, timedelta 
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
-db = SQLAlchemy(app)
-app.secret_key = os.environ.get('secret_key')
-app.debug = True
+from database import db
 
 class Google_Analytics_API:
 
