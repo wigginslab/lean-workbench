@@ -15,33 +15,16 @@ def twitter_oauth_step_one():
 	app_key = os.getenv('twitter_app_key')
 	app_secret = os.getenv('twitter_app_secret')
 	twitter_callback_url = os.getenv('twitter_callback_url')
-	oauth_token = "332196424-x9QD7N3oEH66ZQsEw70sSOVidOn3nkwmRmP0tjOK"
-	oauth_secret="qhqNxOpl557NKk2uXcmkfGcGXdCgThgFF9FDcovbKm62P"
 	print twitter_callback_url
 	print app_key
 	print app_secret
 	twitter = Twython(app_key, app_secret)
-	token = twitter.get_authentication_tokens(callback_url=twitter_callback_url)
-	print token
-#	session['twitter_oauth_token'] = auth['oauth_token']
-#	session['twitter_oauth_token_secret'] = auth['oauth_token_secret']
-	"""
-	print app_key
-	print app_secret
-	auth = tweepy.auth.OAuthHandler(app_key, app_secret, "http://localhost:5000")
-	print auth.request_token
-	try:
-		redirect_url = auth.get_authorization_url()
-		print redirect_url
-		resp = jsonify(status=200,redirect_url=redirect_url)
-		return make_response(resp, 200)
-	except tweepy.TweepError:
-		error_msg = 'Error! Failed to get request token.'
-		resp = jsonify(status=500, error=error_msg)
-		return make_response(resp, 500)
-	"""
-	#oauth_token = "332196424-x9QD7N3oEH66ZQsEw70sSOVidOn3nkwmRmP0tjOK"
-	#ajaxRequest(url="https://api.twitter.com/oauth/request_token", values={'oauth_callback':twitter_callback_url})
+	auth= twitter.get_authentication_tokens(callback_url=twitter_callback_url)
+	print auth
+	session['twitter_oauth_token'] = auth['oauth_token']
+	session['twitter_oauth_token_secret'] = auth['oauth_token_secret']
+	auth_url = auth['auth_url']
+	return jsonify()
 
 
 @app.route('/connect/twitter/callback/',methods=['GET', 'POST'])
