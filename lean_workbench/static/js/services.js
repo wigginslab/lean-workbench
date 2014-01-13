@@ -34,4 +34,3 @@ angular.module('LWBServices', ['ngResource'])
 			}
 		})
 	})
-});

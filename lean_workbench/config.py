@@ -31,7 +31,8 @@ class Config(object):
 	BLUEPRINTS = [
 	'google_analytics.app',
     'hypotheses.app',
-    'twitter.app'
+    'twitter.app',
+    'facebook.app'
         # or ('blog.views.app', {'url_prefix':'/blog'})
     ]  # each as (blueprint_instance, url_preffix)
 

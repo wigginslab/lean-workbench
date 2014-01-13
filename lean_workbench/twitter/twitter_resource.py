@@ -5,10 +5,12 @@ from flask.ext.restful import Resource, reqparse
 from flask import Flask
 import os
 from database import db
+from flask.ext.security import current_user
+
 
 class Twitter_DAO(object):
 
-	def __init__():
+	def __init__(self):
 		self.user_twitter = Twitter_model(username=current_user).first()
 
 class Twitter_resource(Resource):
@@ -16,7 +18,7 @@ class Twitter_resource(Resource):
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print self.user_twitter
-			return self.user_twitter
+			return [self.user_twitter]
 		else:
 			return []
 

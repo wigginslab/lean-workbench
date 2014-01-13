@@ -41,11 +41,48 @@ function StickController($scope, $http, GoogleAnalytics){
           }
         }
       )
-  }
+    }
 }
 
 
-function ViralityController($scope, $http){
+function ViralityController($scope, $http, Facebook, Twitter){
+  $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+  var FBQuery = Facebook.get();
+  var TwitterQuery = Twitter.get();
+
+  if (FBQuery.length > 0){
+    $scope.FB = true;
+  }
+  $scope.has_FB = function(){
+    if ($scope.FB){
+      return true;
+    }
+  }
+
+  if (TwitterQuery.length > 0){
+    $scope.Twitter = true;
+  }
+
+  $scope.has_Twitter = function(){
+    if ($scope.Twitter){
+      return true;
+    }
+  }
+
+  $scope.twitter_auth = function(){
+    $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+    $http.post(
+        '/connect/twitter'
+        ).success(
+        function(data){
+          var status = data['status'];
+          if (status == 100){
+            var redirect_url = data['redirect_url'];
+            window.location(redirect_url);
+          }
+        }
+      )
+    }
 
 }
 
