@@ -59,6 +59,8 @@ For each of these APIs you want to use
 * twitter_app_key
 * twitter_app_secret
 * twitter_redirect_url
+* facebook_app_id
+* facebook_app_secret
 
 Running the Application
 ---------------------------

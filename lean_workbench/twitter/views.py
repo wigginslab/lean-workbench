@@ -9,7 +9,6 @@ from twython import Twython
 
 app = Blueprint('twitter', __name__, template_folder='templates')
 
-# google analytics routes
 @app.route('/connect/twitter', methods=['GET', 'POST'])
 def twitter_oauth_step_one():
 	app_key = os.getenv('twitter_app_key')

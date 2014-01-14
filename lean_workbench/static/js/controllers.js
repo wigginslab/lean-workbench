@@ -53,11 +53,33 @@ function ViralityController($scope, $http, Facebook, Twitter){
   if (FBQuery.length > 0){
     $scope.FB = true;
   }
+
   $scope.has_FB = function(){
     if ($scope.FB){
       return true;
     }
   }
+
+  $scope.fb_auth = function(){
+    $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+    $http.post(
+        '/connect/facebook'
+        ).success(
+        function(data){
+          var status = data['status'];
+          if (status == 100){
+            var redirect_url = data['redirect_url'];
+            open(redirect_url);
+          }
+        }
+      ).error(  
+        function(data){
+          console.log('error')
+          $scope.FB_error = "Facebook authentication failed."
+        }
+      )
+    }
+  
 
   if (TwitterQuery['twitter_handle']){
     $scope.Twitter = true;
@@ -87,7 +109,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
         }
       )
     }
-
+  
 }
 
 
