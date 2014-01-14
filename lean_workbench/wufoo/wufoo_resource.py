@@ -1,6 +1,6 @@
 import sys
 import os
-from wufoo_models import Wufoo_Survey_Model
+from wufoo_model import Wufoo_Survey_Model
 from flask.ext.restful import Resource, reqparse
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy

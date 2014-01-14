@@ -2,7 +2,6 @@ from flask import Blueprint, Response, render_template, request, session, redire
 url_for, make_response
 from flask.ext.security import current_user
 import os
-import tweepy
 from twitter_model import Twitter_model, db
 import urllib
 from twython import Twython

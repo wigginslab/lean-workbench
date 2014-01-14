@@ -12,6 +12,7 @@ from hypotheses.hypotheses_resource import Hypothesis_resource
 from facebook.facebook_resource import Facebook_resource
 from twitter.twitter_resource import Twitter_resource
 from wufoo.wufoo_resource import Wufoo_resource
+from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
 
 
@@ -152,7 +153,7 @@ def configure_before_request(app):
 
 def configure_views(app):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security = Security(app, user_datastore)
+    security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
     csrf = CsrfProtect(app)
 
     @app.route('/')

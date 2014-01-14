@@ -1,5 +1,4 @@
-from lean_workbench.core import db
-
+from database import db
 
 class Wufoo_Survey_Model(db.Model):
 	__tablename__ = "wufoo_survey"
