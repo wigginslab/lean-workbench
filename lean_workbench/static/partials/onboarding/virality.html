@@ -9,10 +9,12 @@
          </p>
       </div>
         <p style="font-size:20px">The virality engine thrives on getting the word out about your product. Who's talking about your work and why? The key performance indicator is <u>viral coefficient</u>,the number of users each user brings on, and this can be measured using the Facebook and Twitter APIs. We estimate the viral coefficient with a formula that weighs product mentions and interactions with your product pages by the influence of the user interacting.<p></p>
+        <span class="help-block" ng-show="twitter_error">[[twitter_error ]]</span>
         <p ng-show="has_twitter()"><b>Your Twitter account is connected.</b></p>
         <p ng-hide="has_twitter()" class="center">
           <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
         </p>
+       <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
         <p ng-show="has_fb()"><b>Your Facebook account is connected.</b></p>
         <p ng-hide="has_fb()" class="center">
           <button ng-click="fb_auth()" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>

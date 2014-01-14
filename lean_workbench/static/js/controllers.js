@@ -59,7 +59,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
     }
   }
 
-  if (TwitterQuery.length > 0){
+  if (TwitterQuery['twitter_handle']){
     $scope.Twitter = true;
   }
 
@@ -78,8 +78,12 @@ function ViralityController($scope, $http, Facebook, Twitter){
           var status = data['status'];
           if (status == 100){
             var redirect_url = data['redirect_url'];
-            window.location(redirect_url);
+            open(redirect_url);
           }
+        }
+      ).error(  
+        function(data){
+          $scope.twitter_error = "Twitter authentication failed."
         }
       )
     }

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, redirect, jsonify, \
+from flask import Blueprint, Response, render_template, request, session, redirect, jsonify, \
 url_for, make_response
 from flask.ext.security import current_user
 import os
@@ -24,24 +24,22 @@ def twitter_oauth_step_one():
 	session['twitter_oauth_token'] = auth['oauth_token']
 	session['twitter_oauth_token_secret'] = auth['oauth_token_secret']
 	auth_url = auth['auth_url']
-	return jsonify()
+	return jsonify(redirect_url=auth_url,status=100)
 
 
 @app.route('/connect/twitter/callback/',methods=['GET', 'POST'])
 def twitter_oauth_callback():
-	print request.args()
-	"""
-	app_key = os.getenv("twitter_app_key")
-	app_secret = os.getenv("twitter_app_secret")
-
-	oauth_verifier = request.args['oauth_verifier']
-	twitter = Twython(app_key, app_secret,
-                  session['twitter_oauth_token'], session['twitter_oauth_token_secret'])
+	oauth_verifier = request.args.get('oauth_verifier')
+	app_key = os.getenv('twitter_app_key')
+	app_secret = os.getenv('twitter_app_secret')
+	oauth_token = session['twitter_oauth_token']
+	oauth_token_secret = session['twitter_oauth_token_secret'] 
+	twitter = Twython(app_key, app_secret, oauth_token, oauth_token_secret)
 	final_step = twitter.get_authorized_tokens(oauth_verifier)
-	oauth_token = final_step['oauth_token']
-	oauth_secret = final_step['oauth_token_secret']
-	credentials_model = Twitter_Model(username = current_user, oauth_token=oauth_token, oauth_secret=oauth_secret)
-	db.session.add(credentials_model)
-	db.session.submit()
+	user_oauth_token = final_step['oauth_token']
+	user_oauth_token_secret = final_step['oauth_token_secret']
+	twitter_row = Twitter_model({'username':current_user.email, 'oauth_token':user_oauth_token,'oauth_token_secret':user_oauth_token_secret})
+	db.session.add(twitter_row)
+	db.session.commit()
 	db.session.close()
-	"""
+	return "Success!"

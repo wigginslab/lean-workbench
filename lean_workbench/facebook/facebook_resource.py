@@ -8,13 +8,13 @@ from flask.ext.security import current_user
 class Facebook_DAO(object):
 
 	def __init__(self):
-		self.user_facebook = Facebook_model(username=current_user).first()
+		self.user_facebook = Facebook_model.query.filter_by(username=current_user.email).first()
 
 class Facebook_resource(Resource):
 	def get(self, **kwargs):
 		fb = Facebook_DAO()
 		if fb.user_facebook:
-			return [self.user_facebook]
+			return [fb.user_facebook]
 		else:
 			return []
 
