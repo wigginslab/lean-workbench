@@ -55,7 +55,6 @@ def app_factory(config, app_name=None, blueprints=None):
     configure_extensions(app)
     configure_before_request(app)
     configure_views(app)
-
     return app
 
 

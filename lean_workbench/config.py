@@ -40,6 +40,7 @@ class Config(object):
 class Dev(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
+  
 
 class Testing(Config):
     TESTING = True

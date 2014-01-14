@@ -10,6 +10,8 @@ venv
 *swo
 *swp
 
+package.json
+
 #assets
 node_modules
 
