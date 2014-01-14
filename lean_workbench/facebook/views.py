@@ -19,20 +19,24 @@ def facebook_oauth_step_one():
 
 @app.route('/connect/facebook/callback/',methods=['GET', 'POST'])
 def facebook_oauth_callback():
-	print request.args
-	"""
-	oauth_verifier = request.args.get('oauth_verifier')
-	app_key = os.getenv('twitter_app_key')
-	app_secret = os.getenv('twitter_app_secret')
-	oauth_token = session['twitter_oauth_token']
-	oauth_token_secret = session['twitter_oauth_token_secret'] 
-	twitter = Twython(app_key, app_secret, oauth_token, oauth_token_secret)
-	final_step = twitter.get_authorized_tokens(oauth_verifier)
-	user_oauth_token = final_step['oauth_token']
-	user_oauth_token_secret = final_step['oauth_token_secret']
-	twitter_row = Twitter_model({'username':current_user.email, 'oauth_token':user_oauth_token,'oauth_token_secret':user_oauth_token_secret})
-	db.session.add(twitter_row)
+	args = {}
+	args["client_secret"] = os.getenv('facebook_app_secret')
+	args["code"] = request.args.get("code")
+	response = urllib.urlopen(
+		"https://graph.facebook.com/oauth/access_token?" +
+		urllib.urlencode(args)).read()
+	access_token = response["access_token"][-1]
+
+	# Download the user profile and cache a local instance of the
+	# basic profile info
+	profile = json.load(urllib.urlopen(
+		"https://graph.facebook.com/me?" +
+		urllib.urlencode(dict(access_token=access_token))))
+
+	fb_user = Facebook_model(key_name=str(profile["id"]),
+		name=profile["name"], access_token=access_token,
+		profile_url=profile["link"], username=current_user.email)
+
+	db.session.add(fb_user)
 	db.session.commit()
 	db.session.close()
-	return "Success!"
-	"""

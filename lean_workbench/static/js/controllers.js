@@ -74,10 +74,6 @@ function ViralityController($scope, $http, Facebook, Twitter){
         '/connect/facebook'
         ).success(
         function(data){
-          var status = data['status'];
-          if (status == 100){
-            var redirect_url = data['redirect_url'];
-            open(redirect_url);
           }
         }
       ).error(  
