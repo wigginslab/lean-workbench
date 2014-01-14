@@ -10,6 +10,14 @@ function MyCtrl2() {
 }
 MyCtrl2.$inject = [];
 
+function CarouselController($scope, $location, $anchorScroll){
+  $scope.scroll_to = function(id) {
+    alert(id)
+      $location.hash(id);
+      $anchorScroll();
+   }
+}
+
 function ErrorPageController(){
 }
 

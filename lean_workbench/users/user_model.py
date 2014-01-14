@@ -44,7 +44,11 @@ class User(db.Model, UserMixin):
 	confirmed_at = db.Column(db.DateTime())
 	roles = db.relationship('Role', secondary=roles_users,
 			backref=db.backref('user'))
+	onboarded = db.Column(db.Boolean())
 
+	def __init__(self):
+		self.onboarded = False
+		
 	def __repr__(self):
 		return '<User %s>' %self.email
 
