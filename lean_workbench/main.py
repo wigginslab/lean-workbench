@@ -44,7 +44,6 @@ def config_str_to_obj(cfg):
 def app_factory(config, app_name=None, blueprints=None):
     app_name = app_name or __name__
     app = SecuredStaticFlask(app_name, static_url_path='/static')
-
     config = config_str_to_obj(config)
     configure_app(app, config)
     configure_blueprints(app, blueprints or config.BLUEPRINTS)
