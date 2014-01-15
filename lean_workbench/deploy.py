@@ -9,7 +9,7 @@ app = app_factory(config.Dev)
 app.run()
 
 http_server = HTTPServer(WSGIContainer(app))
-port = os.getenv('port')
+port =80 
 http_server.listen(port)
 IOLoop.instance().start()
 print 'running on port %i ' %(port)
