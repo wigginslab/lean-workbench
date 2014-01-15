@@ -13,3 +13,5 @@ flask-script
 py-bcrypt
 twython==3.1.1
 facebook-sdk
+twython
+itsdangerous
