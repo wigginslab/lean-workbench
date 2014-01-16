@@ -175,7 +175,7 @@ def configure_views(app):
         return render_template('public.html', logged_in=True)
 
     api = restful.Api(app)
-
+    app.config['SQLALCHEMY_DATABASE_URI']='derp'
     api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
     api.add_resource(Facebook_resource, '/api/v1/facebook')
     api.add_resource(Twitter_resource, '/api/v1/twitter')
