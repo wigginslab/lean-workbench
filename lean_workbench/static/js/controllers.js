@@ -72,17 +72,15 @@ function ViralityController($scope, $http, Facebook, Twitter){
     $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
     $http.post(
         '/connect/facebook'
-        ).success(
-        function(data){
-          }
+    ).success(
+    	function(data){
         }
-      ).error(  
+    ).error(  
         function(data){
-          console.log('error')
-          $scope.FB_error = "Facebook authentication failed."
-        }
-      )
-    }
+          	console.log('error')
+          	$scope.FB_error = "Facebook authentication failed."
+        })   
+	}
   
 
   if (TwitterQuery['twitter_handle']){
