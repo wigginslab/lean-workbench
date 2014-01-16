@@ -6,4 +6,5 @@ from main import app_factory
 import config
 
 app = app_factory(config.Dev)
-app.run()
+if __name__ == "__main__":
+	app.run()
