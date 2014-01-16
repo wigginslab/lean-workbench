@@ -1,1 +1,1 @@
-web: gunicorn lean_workbench/uwsgi_app:app
+web: python lean_workbench/manage.py gunicorn
