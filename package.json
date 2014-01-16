@@ -1,0 +1,46 @@
+{
+  "name": "lean-workbench",
+  "description": "Assets for Lean Workbench",
+  "version": "0.1.0",
+  "homepage": "https://github.com/wigginslab/lean-workbench",
+  "author": {
+    "name": "Jennifer Brooke Rubinovitz",
+    "email": "jen@leanworkbench.com",
+    "url": "www.leanworkbench.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/wigginslab/lean-workbench.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wigginslab/lean-workbench/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/wigginslab/lean-workbench/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.2",
+    "grunt-contrib-sass": "~0.3.0",
+    "grunt-contrib-watch": "~0.4.4",
+	"grunt-sass": "*"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.2"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
