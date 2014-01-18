@@ -30,7 +30,7 @@ sudo pip install virtualenv
 virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
-python lean_workbech/manage.py create_db
+python lean_workbench/manage.py create_db
 python lean_workbench/manage.py runserver 
 ```
 Configuration
@@ -57,7 +57,7 @@ For each of these APIs you want to use
 
 Example lean_workbench/user_config.py
 ```
-Class UserConfig(Object):
+class UserConfig(Object):
     FACEBOOK_APP_ID = '43543534534'
     ...
 ```
