@@ -5,6 +5,7 @@ from facebook_model import Facebook_model, db
 import urllib
 import requests
 import json
+import cgi
 
 app = Blueprint('facebook', __name__, template_folder='templates')
 
@@ -15,25 +16,30 @@ def facebook_oauth_step_one():
 	callback_url= current_app.config['FACEBOOK_CALLBACK_URL']
 	args = dict(client_id=app_key,
                     redirect_uri=callback_url)
+	session['redirect_uri'] = callback_url
 	return jsonify({"redirect_url": "https://graph.facebook.com/oauth/authorize?" +
                 urllib.urlencode(args), 'status':100})
 
-@app.route('/connect/facebook/callback/',methods=['GET', 'POST'])
+@app.route('/connect/facebook/callback/', methods=['GET', 'POST'])
 def facebook_oauth_callback():
 	args = {}
+	args["client_id"] = current_app.config["FACEBOOK_APP_KEY"]
 	args["client_secret"] = current_app.config['FACEBOOK_APP_SECRET'] 
 	args["code"] = request.args.get("code")
-	return json.dumps(args)
-	#response = requests.get("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args))
-	response_json = response.json()
-	access_token = response_json["access_token"]
-	print access_token
+	args["redirect_uri"] = session.pop('redirect_uri', None)
+	#return json.dumps(request.args.get['path_url']
+	#response = "https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)
+	response = cgi.parse_qs(urllib.urlopen("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)).read())
+	#access_token = response["access_token"]
+	access_token = response["access_token"][-1]
 
 	# Download the user profile and cache a local instance of the
 	# basic profile info
 	profile = json.load(urllib.urlopen(
 		"https://graph.facebook.com/me?" +
 		urllib.urlencode(dict(access_token=access_token))))
+
+	#return json.dumps(profile)
 
 	fb_user = Facebook_model(key_name=str(profile["id"]),
 		name=profile["name"], access_token=access_token,
