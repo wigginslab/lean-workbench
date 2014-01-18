@@ -27,10 +27,7 @@ def facebook_oauth_callback():
 	args["client_secret"] = current_app.config['FACEBOOK_APP_SECRET'] 
 	args["code"] = request.args.get("code")
 	args["redirect_uri"] = session.pop('redirect_uri', None)
-	#return json.dumps(request.args.get['path_url']
-	#response = "https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)
 	response = cgi.parse_qs(urllib.urlopen("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)).read())
-	#access_token = response["access_token"]
 	access_token = response["access_token"][-1]
 
 	# Download the user profile and cache a local instance of the
@@ -39,8 +36,6 @@ def facebook_oauth_callback():
 		"https://graph.facebook.com/me?" +
 		urllib.urlencode(dict(access_token=access_token))))
 
-	#return json.dumps(profile)
-
 	fb_user = Facebook_model(key_name=str(profile["id"]),
 		name=profile["name"], access_token=access_token,
 		profile_url=profile["link"], username=current_user.email)
@@ -48,3 +43,5 @@ def facebook_oauth_callback():
 	db.session.add(fb_user)
 	db.session.commit()
 	db.session.close()
+
+	return "OK"
