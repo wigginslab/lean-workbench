@@ -1,5 +1,3 @@
-# -*- coding:utf-8 -*-
-
 from flask import Flask, render_template, redirect, url_for
 from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user, auth_token_required, current_user
 from users.user_model import User, Role
@@ -17,13 +15,13 @@ from google_analytics.google_analytics_resource import Google_analytics_resource
 
 
 class SecuredStaticFlask(Flask):
-    def send_static_file(self, filename):
-        protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/virality.html']
-        # Get user from session
-        if current_user.is_authenticated() or filename not in protected_templates:
-            return super(SecuredStaticFlask, self).send_static_file(filename)
-        else:
-            return redirect('/static/partials/login.html')
+	def send_static_file(self, filename):
+		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/virality.html']
+		# Get user from session
+		if current_user.is_authenticated() or filename not in protected_templates:
+			return super(SecuredStaticFlask, self).send_static_file(filename)
+		else:
+			return redirect('/static/partials/login.html')
 
 
 def __import_blueprint(blueprint_str):
@@ -131,54 +129,51 @@ def configure_database(app):
 
 
 def configure_context_processors(app):
-    "Modify templates context here"
-    pass
+	"Modify templates context here"
+	pass
 
 
 def configure_template_filters(app):
-    "Configure filters and tags for jinja"
-    pass
+	"Configure filters and tags for jinja"
+	pass
 
 
 def configure_extensions(app):
-    "Configure extensions like mail and login here"
-    pass
+	"Configure extensions like mail and login here"
+	pass
 
 
 def configure_before_request(app):
     pass
 
+
 def configure_views(app):
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
-    csrf = CsrfProtect(app)
+	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
+	csrf = CsrfProtect(app)
 
-    @app.route('/')
-    def index():
-        print current_user
-        if current_user.is_authenticated():
-            print current_user
-            logged_in = True
-            return redirect(url_for('dashboard'))
-        else:
-            logged_in=False
-            return render_template('public.html', logged_in=logged_in)
+	@app.route('/')
+	def index():
+		if current_user.is_authenticated():
+			logged_in = True
+			return redirect(url_for('dashboard'))
+		else:
+			logged_in=False
+			return render_template('public.html', logged_in=logged_in)
 
-    @auth_token_required
-    @app.route('/onboarding/stick', methods=['POST', 'GET'])
-    @app.route('/onboarding/virality', methods=['POST','GET'])
-    @app.route('/onboarding/pay', methods=['POST','GET'])
-    @app.route('/dashboard', methods=['POST', 'GET'])
-    def dashboard():
-        """
-        """
-        return render_template('public.html', logged_in=True)
-
-    api = restful.Api(app)
-    app.config['SQLALCHEMY_DATABASE_URI']='derp'
-    api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
-    api.add_resource(Facebook_resource, '/api/v1/facebook')
-    api.add_resource(Twitter_resource, '/api/v1/twitter')
-    api.add_resource(Wufoo_resource, '/api/v1/wufoo')
-    api.add_resource(Google_analytics_resource, '/api/v1/googleanalytics')
-
+	@auth_token_required
+	@app.route('/onboarding/stick', methods=['POST', 'GET'])
+	@app.route('/onboarding/virality', methods=['POST','GET'])
+	@app.route('/onboarding/pay', methods=['POST','GET'])
+	@app.route('/dashboard', methods=['POST', 'GET'])
+	def dashboard():
+		"""
+		"""
+		return render_template('public.html', logged_in=True)
+	
+	api = restful.Api(app)
+	api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
+	api.add_resource(Facebook_resource, '/api/v1/facebook')
+	api.add_resource(Twitter_resource, '/api/v1/twitter')
+	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
+	api.add_resource(Google_analytics_resource, '/api/v1/googleanalytics')

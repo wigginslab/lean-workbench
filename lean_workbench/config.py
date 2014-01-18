@@ -3,7 +3,8 @@ from user_config import UserConfig
 
 project_name="leanworkbench"
 
-class Dev(UserConfig):
+
+class Config(UserConfig):
 	DEBUG = True
 
 	# Setup Flask-Security users
