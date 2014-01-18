@@ -3,6 +3,8 @@ from flask.ext.security import current_user
 import os
 from facebook_model import Facebook_model, db
 import urllib
+import requests
+import json
 
 app = Blueprint('facebook', __name__, template_folder='templates')
 
@@ -21,10 +23,11 @@ def facebook_oauth_callback():
 	args = {}
 	args["client_secret"] = current_app.config['FACEBOOK_APP_SECRET'] 
 	args["code"] = request.args.get("code")
-	response = urllib.urlopen(
-		"https://graph.facebook.com/oauth/access_token?" +
-		urllib.urlencode(args)).read()
-	access_token = response["access_token"][-1]
+	return json.dumps(args)
+	#response = requests.get("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args))
+	response_json = response.json()
+	access_token = response_json["access_token"]
+	print access_token
 
 	# Download the user profile and cache a local instance of the
 	# basic profile info

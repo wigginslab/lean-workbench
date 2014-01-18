@@ -4,7 +4,7 @@ from user_config import UserConfig
 project_name="leanworkbench"
 
 
-class Config(UserConfig):
+class Dev(UserConfig):
 	DEBUG = True
 
 	# Setup Flask-Security users
@@ -31,8 +31,8 @@ class Config(UserConfig):
         # or ('blog.views.app', {'url_prefix':'/blog'})
     ]  # each as (blueprint_instance, url_preffix)
   
-
-class Testing(Dev):
+	SQLALCHEMY_ECHO=True
+class Testing(UserConfig):
     TESTING = True
     CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = "sqlite:////tmp/%s_test.sqlite" % project_name
