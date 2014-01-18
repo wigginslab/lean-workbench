@@ -27,7 +27,6 @@ class Google_Analytics_DAO(object):
 	def __init__(self, username, profile_id=None):
 		self.username = username
 		self.profile_id = profile_id
-		print check_authentication(username)
 
 	def get_user_profiles(self):
 		"""

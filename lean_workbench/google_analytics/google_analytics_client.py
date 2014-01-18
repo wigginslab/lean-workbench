@@ -19,8 +19,6 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		# get latest credentials
-		print 'username '
-		print username
 		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).all()
 		print self.credentials
 		if self.credentials:
@@ -79,26 +77,21 @@ class Google_Analytics_API:
 		print client
 		return client
 
-	def step_one(self):
+	def step_one(self, google_analytics_callback_url, google_analytics_client_id):
 		"""
 		Construct URL for user to login to Google through. 
 
 		Returns:
 			redirect url
 		"""
-		print 'step 1'
-		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
-		google_analytics_client_id = os.getenv("google_analytics_client_id") 
 		redirect_url = "https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/analytics.readonly&access_type=offline&redirect_uri="+google_analytics_callback_url+"&client_id="+google_analytics_client_id+"&hl=en&from_login=1&as=819ec18979456db&pli=1&authuser=0"
 		print redirect_url	
 		return redirect_url
 
-	def step_two(self,username, ga_api_code):
+	def step_two(self,username, ga_api_code, google_analytics_callback_url):
 		"""
 		Handle callback information
 		"""
-		print 'step 2'
-		google_analytics_callback_url = os.getenv("google_analytics_callback_url")
 		client_secrets = 'ga_client_secrets.json'
 		flow = flow_from_clientsecrets(client_secrets,
 						scope='https://www.googleapis.com/auth/analytics.readonly',

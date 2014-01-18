@@ -53,7 +53,6 @@ def app_factory(config, app_name=None, blueprints=None):
     configure_template_filters(app)
     configure_extensions(app)
     configure_before_request(app)
-	manual_configs(app)
     configure_views(app)
     return app
 
@@ -148,46 +147,6 @@ def configure_extensions(app):
 
 def configure_before_request(app):
     pass
-
-
-def manual_configs(app):
-	"""
-	Because apache
-	"""
-	app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
-	app.config['SECRET_KEY'] = os.environ.get('secret_key')
-	app.config['DEBUG'] = True
-	app.config['PORT'] = os.getenv('port')
-
-	# Setup Flask-Security users
-	app.config['SECURITY_PASSWORD_HASH'] = "bcrypt"
-	app.config['SECURITY_EMAIL_SENDER'] = "noreply@leanworkbench.com"
-	app.config['SECURITY_REGISTERABLE'] = True
-	app.config['SECURITY_PASSWORD_SALT'] = os.getenv("secret_key")
-	app.config['SECURITY_EMAIL_SENDER'] = "noreply@leanworkbench.com"
-	app.config['SECURITY_TRACKABLE'] = True
-	app.config['SECURITY_RECOVERABLE'] = True
-	app.config['SECURITY_REGISTER_URL'] = "/registration"
-
-
-	# Setup Flask-Security email
-	app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-	app.config['MAIL_PORT'] = 465
-	app.config['MAIL_USE_SSL'] = True
-	app.config['MAIL_USERNAME'] = os.getenv("email_username")
-	app.config['MAIL_PASSWORD'] = os.getenv("email_password")
-	app.config['SECURITY_EMAIL_SENDER'] = os.getenv("email_username")
-	app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
-
-	app.config['BLUEPRINTS'] = [
-	'google_analytics.app',
-    'hypotheses.app',
-    'twitter.app',
-    'facebook.app'
-        # or ('blog.views.app', {'url_prefix':'/blog'})
-    ]  # each as (blueprint_instance, url_preffix)
-
-
 
 def configure_views(app):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)

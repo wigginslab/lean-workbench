@@ -12,7 +12,11 @@ class Twitter_DAO(object):
 
 	def __init__(self):
 		self.user_twitter = Twitter_model.query.filter_by(username=current_user.email).first()
-		self.twitter_handle = self.user_twitter.twitter_handle
+		try:
+			self.twitter_handle = self.user_twitter.twitter_handle
+		except:
+			self.twitter_handle = None
+
 	def as_dict(self):
 		return self.user_twitter.as_dict()
 

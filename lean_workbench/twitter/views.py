@@ -1,5 +1,5 @@
-from flask import Blueprint, Response, render_template, request, session, redirect, jsonify, \
-url_for, make_response
+from flask import Blueprint, Response, render_template, request, session, redirect, jsonify,\
+url_for, make_response, current_app
 from flask.ext.security import current_user
 import os
 from twitter_model import Twitter_model, db
@@ -10,15 +10,11 @@ app = Blueprint('twitter', __name__, template_folder='templates')
 
 @app.route('/connect/twitter', methods=['GET', 'POST'])
 def twitter_oauth_step_one():
-	app_key = os.getenv('twitter_app_key')
-	app_secret = os.getenv('twitter_app_secret')
-	twitter_callback_url = os.getenv('twitter_callback_url')
-	print twitter_callback_url
-	print app_key
-	print app_secret
+	app_key = current_app.config['TWITTER_APP_KEY']
+	app_secret = current_app.config['TWITTER_APP_SECRET']
+	twitter_callback_url = current_app.config['TWITTER_APP_CALLBACK_URL'] 
 	twitter = Twython(app_key, app_secret)
-	auth= twitter.get_authentication_tokens(callback_url=twitter_callback_url)
-	print auth
+	auth = twitter.get_authentication_tokens(callback_url=twitter_callback_url)
 	session['twitter_oauth_token'] = auth['oauth_token']
 	session['twitter_oauth_token_secret'] = auth['oauth_token_secret']
 	auth_url = auth['auth_url']
@@ -28,8 +24,8 @@ def twitter_oauth_step_one():
 @app.route('/connect/twitter/callback/',methods=['GET', 'POST'])
 def twitter_oauth_callback():
 	oauth_verifier = request.args.get('oauth_verifier')
-	app_key = os.getenv('twitter_app_key')
-	app_secret = os.getenv('twitter_app_secret')
+	app_key = current_app.config['TWITTER_APP_KEY']
+	app_secret = current_app.config['TWITTER_APP_SECRET']
 	oauth_token = session['twitter_oauth_token']
 	oauth_token_secret = session['twitter_oauth_token_secret'] 
 	twitter = Twython(app_key, app_secret, oauth_token, oauth_token_secret)

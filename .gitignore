@@ -3,6 +3,8 @@
 # C extensions
 *.so
 
+
+user_config.py
 *pyc
 #local
 venv

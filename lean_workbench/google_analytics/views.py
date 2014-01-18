@@ -1,13 +1,15 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from google_analytics_client import Google_Analytics_API
 from flask.ext.security import current_user
+from flask import current_app
 
 app = Blueprint('google_analytics', __name__, template_folder='templates')
 
 # google analytics routes
 @app.route('/connect/google-analytics', methods=['GET', 'POST'])
 def google_analytics_oauth():
-	print current_user
+	google_analytics_callback_url = current_app.config['GOOGLE_ANALYTICS_CALLBACK_URL']
+	google_analytics_client_id = current_app.config['GOOGLE_ANALYTICS_CLIENT_ID']
 	username = current_user.email
 	if not username:
 		print 'not logged in'
@@ -25,16 +27,17 @@ def google_analytics_oauth():
 		else:
 			print "credentials expired, start oauth process"
 			# start OAuth process
-			redirect_url = GA_API.step_one()
+			redirect_url = GA_API.step_one(google_analytics_callback_url, google_analytics_client_id)
 			return redirect(redirect_url)
 	else:
 		print "start oauth process"
 		# start OAuth process
-		redirect_url = GA_API.step_one()
+		redirect_url = GA_API.step_one(google_analytics_callback_url, google_analytics_client_id)
 		return redirect(redirect_url)
 
 @app.route('/connect/google-analytics/callback/',methods=['GET', 'POST'])
 def google_analytics_callback():
+	google_analytics_callback_url = current_app.config['GOOGLE_ANALYTICS_CALLBACK_URL']
 	if current_user:
 		username = current_user.email
 		GA_API = Google_Analytics_API('username')
@@ -42,7 +45,7 @@ def google_analytics_callback():
 		print 'ga callback args'
 		print request.args
 		print GA_API
-		client = GA_API.step_two(username, ga_api_code)
+		client = GA_API.step_two(username, ga_api_code, google_analytics_callback_url)
 	else:
 		return redirect('/')
 	return redirect('/onboarding/virality')
