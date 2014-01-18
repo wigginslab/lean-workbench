@@ -39,6 +39,7 @@ The following variables must be set in an object called UserConfig in lean_workb
 
 * DB_URL- url to a sqlalchemy compatible database
 * SECRET - secret for hashing
+* SECRET_KEY - key for CSRF
 
 For each of these APIs you want to use
 
@@ -57,7 +58,7 @@ For each of these APIs you want to use
 
 Example lean_workbench/user_config.py
 ```
-class UserConfig(Object):
+class UserConfig(object):
     FACEBOOK_APP_ID = '43543534534'
     ...
 ```
