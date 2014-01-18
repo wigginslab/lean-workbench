@@ -15,6 +15,7 @@ def twitter_oauth_step_one():
 	twitter_callback_url = current_app.config['TWITTER_APP_CALLBACK_URL'] 
 	twitter = Twython(app_key, app_secret)
 	auth = twitter.get_authentication_tokens(callback_url=twitter_callback_url)
+	print auth
 	session['twitter_oauth_token'] = auth['oauth_token']
 	session['twitter_oauth_token_secret'] = auth['oauth_token_secret']
 	auth_url = auth['auth_url']

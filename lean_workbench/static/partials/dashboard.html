@@ -1,4 +1,4 @@
-  <div class="container-fluid col-lg-2">
+<div class="container-fluid col-lg-2" ng-controller="DashboardController">
             <ul class="nav nav-pills nav-stacked">
                 <li class="active">
                     <a href="index.html"><i class="icon-chevron-right"></i>Hypotheses</a>
@@ -54,8 +54,8 @@
 											</div>
 										</list>
                                     </tbody>
-                                    <div ng-show="!hypothesis.length">You have no experiments yet.
-
+									<div ng-show="!hypothesis.length">
+										You have no experiments yet.<a ng-click="new_hypothesis()">Make one?</a>
                                     <div>
 
                                 </table>

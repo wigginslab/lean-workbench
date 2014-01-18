@@ -5,10 +5,41 @@ function MyCtrl1() {}
 MyCtrl1.$inject = [];
 
 
-function MyCtrl2() {
+function DashboardController() {
+	$scope.hypothesis_submit = function(){
+      $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+      $http.defaults.headers.common['Content-Type'] = 'application/json'
+      $http.defaults.headers.common['Accept'] = 'application/json'
 
+      $http.post(
+        '/api/v1/hypotheses',
+
+        JSON.stringify({ $scope., company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
+        ).success(
+        function(data){
+          // if success
+          if (data['response']['user']){
+                 $location.path("/onboarding/stick");
+          }
+
+          else{
+            // TODO: brevity
+            var errors = data['response']['errors'];
+           }
+          }
+     	).error(
+        function(data){
+          console.log('registration error')
+          alert(data)
+          $scope.errorMsg = data.reason;
+        }
+      );
+    };
+  }
+
+	$scope.new_hypothesis = function(){
+	{
 }
-MyCtrl2.$inject = [];
 
 function CarouselController($scope, $location, $anchorScroll){
   $scope.scroll_to = function(id) {
@@ -344,7 +375,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: MyCtrl2})
+    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
