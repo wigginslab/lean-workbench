@@ -16,7 +16,8 @@ class Dev(UserConfig):
 	SECURITY_RECOVERABLE = True
 	SECURITY_REGISTER_URL = "/registration"
 
-
+	SQLALCHEMY_DATABASE_URI='postgresql://neil:daemonlog1@localhost:5432/leanworkbench'
+	SQL_ALCHEMY_ECHO=True
 	# Setup Flask-Security email
 	MAIL_SERVER = 'smtp.gmail.com'
 	MAIL_PORT = 465
