@@ -30,7 +30,8 @@ sudo pip install virtualenv
 virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
-python leanworkbench/manage.py runserver 
+python lean_workbech/manage.py create_db
+python lean_workbench/manage.py runserver 
 ```
 Configuration
 --------------------
@@ -60,14 +61,6 @@ Class UserConfig(Object):
     FACEBOOK_APP_ID = '43543534534'
     ...
 ```
-
-Running the Application
----------------------------
-Set the environment variables then:
-```
-python run.py
-```
-
 
 Quirks
 ----
