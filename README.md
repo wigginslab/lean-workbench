@@ -45,7 +45,7 @@ For each of these APIs you want to use
 * PATH - path to application on server (so it can be added to python path within application)
 * WUFOO_API_TOKEN
 * WUFOO_ACCOUNT
-* ANGELLSIT_CLIENT_ID
+* ANGELLIST_CLIENT_ID
 * ANGELLIST_CLIENT_SECRET
 * ANGELLIST_CALLBACK_URL
 * TWITTER_APP_KEY
