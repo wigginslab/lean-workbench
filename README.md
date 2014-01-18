@@ -32,35 +32,34 @@ virtualenv venv
  pip install -r "requirements.txt"
 python leanworkbench/manage.py runserver 
 ```
-Environment Variables
+Configuration
 --------------------
-The following variables must be set on your machine:
+The following variables must be set in an object called UserConfig in lean_workbench/user_config.py
 
-* db_url- url to a sqlalchemy compatible database
-* port- port from which you wish the serve the app
-* mail_server - mail server (e.g. smtp.example.com)
-* email_username - username for mail server
-* email_password- password for mail server
-* mail_port - port for mail server
-* secret - secret for hashing
+* DB_URL- url to a sqlalchemy compatible database
+* SECRET - secret for hashing
 
 For each of these APIs you want to use
 
-* crunchbase_key - API key for crunchbase
-* path - path to application on server (so it can be added to python path within application)
-*mixpanel_api_key - if using mixpanel
-* mixpanel_api_secret- ...
-* mixpanel_token - ..
-* wufoo_api_token 
-* wufoo_account
-* angellist_client_id
-* angellist_client_secret
-* angellist_callback_url
-* twitter_app_key
-* twitter_app_secret
-* twitter_redirect_url
-* facebook_app_id
-* facebook_app_secret
+* CRUNCHBASE KEY - API key for crunchbase
+* PATH - path to application on server (so it can be added to python path within application)
+* WUFOO_API_TOKEN
+* WUFOO_ACCOUNT
+* ANGELLSIT_CLIENT_ID
+* ANGELLIST_CLIENT_SECRET
+* ANGELLIST_CALLBACK_URL
+* TWITTER_APP_KEY
+* TWITTER_APP_SECRET
+* TWITTER_CALLBACK_URL
+* FACEBOOK_APP_ID
+* FACEBOOK_APP_SECRET
+
+Example lean_workbench/user_config.py
+```
+Class UserConfig(Object):
+    FACEBOOK_APP_ID = '43543534534'
+    ...
+```
 
 Running the Application
 ---------------------------
