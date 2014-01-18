@@ -37,9 +37,10 @@ Configuration
 --------------------
 The following variables must be set in an object called UserConfig in lean_workbench/user_config.py
 
-* DB_URL- url to a sqlalchemy compatible database
+* SQLALCHEMY_DATABASE_URI - url to a sqlalchemy compatible database
 * SECRET - secret for hashing
 * SECRET_KEY - key for CSRF
+* SECURITY_PASSWORD_SALT - secret for salting passwords (nomz)
 
 For each of these APIs you want to use
 
