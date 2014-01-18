@@ -62,6 +62,13 @@ Class UserConfig(Object):
     ...
 ```
 
+Styling
+----
+Sass files in the lean_workbench/sass folder are compiled to css in the lean_workbench/sass folder by running
+```
+grunt sass
+```
+
 Quirks
 ----
 * For angular template variables use 
