@@ -13,8 +13,7 @@ function DashboardController() {
 
       $http.post(
         '/api/v1/hypotheses',
-
-        JSON.stringify({ $scope., company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
+        JSON.stringify({name: $scope.name, twitter: $scope.twitter})
         ).success(
         function(data){
           // if success
@@ -34,11 +33,11 @@ function DashboardController() {
           $scope.errorMsg = data.reason;
         }
       );
-    };
-  }
+    }
 
 	$scope.new_hypothesis = function(){
-	{
+	
+	}
 }
 
 function CarouselController($scope, $location, $anchorScroll){
