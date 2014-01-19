@@ -57,8 +57,10 @@
 									<div ng-show="!hypothesis.length">
 										You have no experiments yet.<a ng-click="new_hypothesis()">Make one?</a>
                                     <div>
+									</table>
+								<form novalidate role="form" ng-show="make_hyp()" form-submit="submit_hyp()" name="hypothesis-form">
+						</form>
 
-                                </table>
                             </div>
                         </div>
                         <h3>Percent Completed</h3>
