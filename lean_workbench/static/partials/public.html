@@ -1,21 +1,17 @@
 <!-- PUBLIC.HTML TEMPLATE
 ================================================== -->
-  <!-- Carousel
-    ================================================== -->
-    <div id="myCarousel" class="carousel slide" ng-controller="CarouselController">
-      <div class="carousel-inner">
-        <div class="item active">
-          <img src="/static/img/lwb-large.jpg" alt="">
-          <div class="container">
-            <div class="carousel-caption">
-              <h1>Hypothesize</h1>
-              <p class="lead">Make hypotheses about viral, stickiness, and monetary growth and automate your results.</p>
-            <a ng-click="scroll_to('registration')" class="btn btn-large btn-primary"> <strong>Sign Up Today</strong></a>  
-            </div>
-          </div>
-        </div>
-      </div>
-    </div><!-- /.carousel -->
+
+<!-- HERO -->
+<div class="lb-hero">
+  <div class="hero-text-wrapper">
+    <h1>Hypothesize</h1>
+    <p>Make hypotheses about viral, stickiness, and monetary growth and automate your results.</p>
+    <div ng-click="scroll_to('registration')" class="green-btn"> Sign Up Today</div> 
+  </div>
+  <!-- <div class="transparent"></div> -->
+</div>
+
+
 <!-- Wrap the rest of the page in another container to center all the content. -->
 <div class="container marketing">
 <!-- Three columns of text below the carousel -->
@@ -78,4 +74,4 @@
 </div><!-- /.row -->
 <hr class="featurette-divider">
 <!-- /END THE FEATURETTES -->
-<!-- FOOTER -->
+<!-- FOOTER

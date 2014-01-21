@@ -4,10 +4,87 @@
 @import "login.scss";
 @import "hypotheses.scss";
 
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
+
+.green-btn {
+    background: #3ACAA8;
+    color: #fff;
+    width: 300px;
+    height: auto;
+    padding: 1em 2em;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    transition: ease-in-out .3s;
+    -moz-transition: ease-in-out .3s;
+    -ms-transition: ease-in-out .3s;
+    -webkit-transition: ease-in-out .3s;
+    cursor: pointer;
+    margin: 2em auto;
+    font-size: 1.7em;
+
+    &:hover {
+        background: #27C09C;
+    }
+}
+
 body { 
-    padding-top: 65px; 
+    font-family: 'Source Sans Pro', serif;
+    font-weight: 300;
+    font-size: 1em;
+
+    p {
+        line-height: 1.5em;
+        font-size: 2em;
+        color: #fff;
+    }
+
+    .lb-hero {
+        background: #2c3e50;
+        width: 100%;
+        height: 500px;
+        position: relative;
+        z-index: 1;
+
+        .hero-text-wrapper {
+            margin: 0 auto;
+            text-align: center;
+            top: 30%;
+            position: relative;
+        }
+
+        p {
+            margin: 1em auto;
+        }
+    }
+
+    .transparent {
+        z-index: 0;
+        position: absolute;
+        background: url('/static/assets/grilled.png');
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        -khtml-opacity: .20; 
+        -moz-opacity: .20; 
+        -ms-filter: "alpha(opacity=20)";
+        filter: alpha(opacity=20);
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.2);
+        opacity: .20;       
+    }
+
+    h1 {
+        font-family: 'Josefin Slab', serif;
+        color: #fff;
+        font-weight: 300;
+        font-size: 6em;
+        text-transform: uppercase;
+    }
+    
 }
 
 .center {
-	text-align:center
+	text-align:center;
 }
