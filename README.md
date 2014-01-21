@@ -19,6 +19,7 @@ lean-workbench uses a number of open source projects to work properly:
 * Flask-Sqlalchemy- a Flask SQL database wrapper
 * Postgresql- A SQL database
 * HTML5Boilerplate
+* Yeoman - Frontend management (you should have Node.js and NPM installed)
  
 Installation
 --------------
@@ -32,6 +33,7 @@ virtualenv venv
  pip install -r "requirements.txt"
 python lean_workbench/manage.py create_db
 python lean_workbench/manage.py runserver 
+npm install .
 ```
 Configuration
 --------------------
