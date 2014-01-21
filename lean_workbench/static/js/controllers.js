@@ -5,7 +5,7 @@ function MyCtrl1() {}
 MyCtrl1.$inject = [];
 
 
-function DashboardController() {
+function DashboardController($scope) {
 	$scope.hypothesis_submit = function(){
       $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
       $http.defaults.headers.common['Content-Type'] = 'application/json'
@@ -29,7 +29,6 @@ function DashboardController() {
      	).error(
         function(data){
           console.log('registration error')
-          alert(data)
           $scope.errorMsg = data.reason;
         }
       );
@@ -42,7 +41,6 @@ function DashboardController() {
 
 function CarouselController($scope, $location, $anchorScroll){
   $scope.scroll_to = function(id) {
-    alert(id)
       $location.hash(id);
       $anchorScroll();
    }
@@ -198,7 +196,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
       ).error(
         function(data){
           console.log('registration error')
-          alert(data)
           $scope.errorMsg = data.reason;
         }
       );
@@ -244,7 +241,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
         }
         ).error(
         function(data) {
-          alert('LoginController submit error');
           $scope.errorMsg = data.reason;
           //debugger;
         }
@@ -256,7 +252,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .controller({
   NavController: function ($scope, $http, authService, $location) {
       $scope.click_login = function(){
-        alert('inside click login')
         var main = $('#content');
         var login = $('#login-holder');
           login.slideDown('slow', function() {
@@ -313,13 +308,11 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
         }
       ).error(
         function(response) {
-          alert('error 99');
         }
       );
     };
 
     $scope.restrictedAction = function() {
-      alert('restrictedAction');
 
       $http.post(
         'http://localhost:8001/api/myproperty/paymenttype/',
@@ -329,7 +322,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
         }
       ).success(
         function(response) {
-          alert('restrictedAction inside');
           // this piece of code will not be executed until user is authenticated
           $scope.restrictedContent.push(response);
         }
@@ -359,12 +351,10 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
         scope.$on('event:auth-loginRequired', function() {
           login.slideDown('slow', function() {
-            alert('auth login required')
             main.hide();
           });
         });
         scope.$on('event:auth-loginConfirmed', function() {
-          alert('auth login confirmed!')
           main.show();
           login.slideUp();
         });
@@ -378,6 +368,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
+	.when('/measurements, ' {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])
