@@ -20,9 +20,9 @@ grunt.initConfig({
             },
             files: [{
                 expand: true,
-                cwd: './static/sass',
+                cwd: './lean_workbench/static/sass',
                 src: ['*.scss'],
-                dest: './static/css',
+                dest: './lean_workbench/static/css',
                 ext: '.css'
             }]
         }
