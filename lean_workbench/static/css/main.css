@@ -390,7 +390,7 @@ body {
   color: #fff;
   width: 300px;
   height: auto;
-  padding: 1em 2em;
+  padding: 0.75em 0;
   border: solid 1px #fff;
   text-transform: uppercase;
   transition: ease-in-out 0.3s;
@@ -403,13 +403,37 @@ body {
   .border-button:hover {
     background: #3ACAA8; }
 
+html {
+  font-size: 1em; }
+
 body {
   font-family: 'Source Sans Pro', serif;
   font-weight: 300;
-  font-size: 1.3em; }
+  font-size: 1em; }
+  body .navbar-inverse {
+    background-color: #fff;
+    border-color: #fff; }
+  body .navbar-inverse .navbar-nav > .active > a {
+    background: transparent;
+    color: #3ACAA8; }
+    body .navbar-inverse .navbar-nav > .active > a:hover {
+      background: transparent;
+      color: #3ACAA8; }
+  body .navbar-inverse .navbar-nav > li > a {
+    transition: ease-in-out 0.3s;
+    -moz-transition: ease-in-out 0.3s;
+    -ms-transition: ease-in-out 0.3s;
+    -webkit-transition: ease-in-out 0.3s;
+    color: #325A6B; }
+    body .navbar-inverse .navbar-nav > li > a:hover {
+      color: #3ACAA8; }
+  body .navbar-nav > li {
+    color: #609288;
+    text-transform: uppercase;
+    font-weight: 400; }
   body p {
     line-height: 1.3em;
-    font-size: 1.5em;
+    font-size: 1.2em;
     color: #fff; }
   body .lb-hero {
     /*background: #0069AD;*/
@@ -444,7 +468,7 @@ body {
     font-family: 'Josefin Slab', serif;
     color: #fff;
     font-weight: 300;
-    font-size: 5em;
+    font-size: 4em;
     text-transform: uppercase; }
 
 .features {
