@@ -446,7 +446,6 @@ body {
     right: 2em; }
   body .navbar-nav > li {
     color: #609288;
-    /*text-transform: uppercase;*/
     font-weight: 400; }
   body p {
     line-height: 1.3em;
@@ -504,6 +503,9 @@ body {
       width: 300px;
       margin: 0 auto;
       color: #000; }
+    .features .col-lg-4 hr {
+      border-top: 2px solid #f1f1f1;
+      width: 85px; }
 
 .center {
   text-align: center; }
