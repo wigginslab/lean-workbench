@@ -37,32 +37,35 @@
 
 <!-- Wrap the rest of the page in another container to center all the content. -->
 <div class="container marketing">
-<!-- Three columns of text below the carousel -->
+
+<!-- signup -->
 <div id="registration" class="input-group" ng-controller="RegistrationController">
   <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
     <div class="form-group">
       <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-      <label for="email">Email address</label>
-      <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
+     <!--  <label for="email">Email address</label> -->
+      <input type="email" class="form-control" ng-model="email" placeholder="Email">
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
       <span class="help-block" ng-show="email_error">[[ company_error ]]</span>
       <label>Company Name</label>
       <input type="text" class="form-control" ng-model="company" placeholder="Company Name">
-    </div>
+    </div> -->
     <div class="form-group">
       <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-      <label>Password</label>
+      <!-- <label>Password</label> -->
       <input type="password" class="form-control" ng-model="password" placeholder="Password">
     </div>
     <div class="form-group">
       <span>[[ confirm_password_error ]]</span>
-      <label>Confirm Password</label>
+      <!-- <label>Confirm Password</label> -->
       <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
     </div>
     <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
   </form>
  </div>
+
+  <!-- regular login -->
    <div id="login-holder" class="input-group" ng-controller="LoginController">
     <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
       <div class="form-group">
