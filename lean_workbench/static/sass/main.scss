@@ -36,6 +36,11 @@ body {
     font-weight: 300;
     font-size: 1em;
 
+    hr {
+        border-top: 2px solid #f1f1f1;
+        width: 85px;
+    }
+
     .navbar-inverse {
         background-color: #fff;
         border-color: #fff;
@@ -119,6 +124,11 @@ body {
         p {
             margin: 1em auto;
         }
+
+        h1 {
+            color: #fff;
+            margin-bottom: 0;
+        }
     }
 
     .transparent {
@@ -139,10 +149,12 @@ body {
 
     h1 {
         font-family: 'Josefin Slab', serif;
-        color: #fff;
+        color: #000;
         font-weight: 300;
         font-size: 4em;
         text-transform: uppercase;
+        text-align: center;
+        margin: 0 0 .5em;
     }
     
 }
@@ -167,11 +179,6 @@ body {
             width: 300px;
             margin: 0 auto;
             color: #000;
-        }
-
-        hr {
-            border-top: 2px solid #f1f1f1;
-            width: 85px;
         }
     }
 }

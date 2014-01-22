@@ -410,6 +410,9 @@ body {
   font-family: 'Source Sans Pro', serif;
   font-weight: 300;
   font-size: 1em; }
+  body hr {
+    border-top: 2px solid #f1f1f1;
+    width: 85px; }
   body .navbar-inverse {
     background-color: #fff;
     border-color: #fff;
@@ -466,6 +469,9 @@ body {
       position: relative; }
     body .lb-hero p {
       margin: 1em auto; }
+    body .lb-hero h1 {
+      color: #fff;
+      margin-bottom: 0; }
   body .transparent {
     z-index: 0;
     position: absolute;
@@ -482,10 +488,12 @@ body {
     opacity: 0.2; }
   body h1 {
     font-family: 'Josefin Slab', serif;
-    color: #fff;
+    color: #000;
     font-weight: 300;
     font-size: 4em;
-    text-transform: uppercase; }
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 0 0.5em; }
 
 .features {
   width: 100%;
@@ -503,9 +511,6 @@ body {
       width: 300px;
       margin: 0 auto;
       color: #000; }
-    .features .col-lg-4 hr {
-      border-top: 2px solid #f1f1f1;
-      width: 85px; }
 
 .center {
   text-align: center; }
