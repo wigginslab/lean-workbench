@@ -412,7 +412,20 @@ body {
   font-size: 1em; }
   body .navbar-inverse {
     background-color: #fff;
-    border-color: #fff; }
+    border-color: #fff;
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); }
+  body .navbar-inverse .navbar-brand {
+    color: #000;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: ease-in-out 0.3s;
+    -moz-transition: ease-in-out 0.3s;
+    -ms-transition: ease-in-out 0.3s;
+    -webkit-transition: ease-in-out 0.3s; }
+    body .navbar-inverse .navbar-brand:hover {
+      color: #3ACAA8; }
   body .navbar-inverse .navbar-nav > .active > a {
     background: transparent;
     color: #3ACAA8; }
@@ -427,9 +440,13 @@ body {
     color: #325A6B; }
     body .navbar-inverse .navbar-nav > li > a:hover {
       color: #3ACAA8; }
+  body .navbar-nav {
+    float: right;
+    position: relative;
+    right: 2em; }
   body .navbar-nav > li {
     color: #609288;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-weight: 400; }
   body p {
     line-height: 1.3em;

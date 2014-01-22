@@ -39,6 +39,22 @@ body {
     .navbar-inverse {
         background-color: #fff;
         border-color: #fff;
+        -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.08);
+        -moz-box-shadow: 0 2px 5px rgba(0,0,0,.08);
+        box-shadow: 0 2px 5px rgba(0,0,0,.08);
+    }
+
+    .navbar-inverse .navbar-brand {
+        color: #000;
+        text-transform: uppercase;
+        font-weight: 400;
+        transition: ease-in-out .3s;
+        -moz-transition: ease-in-out .3s;
+        -ms-transition: ease-in-out .3s;
+        -webkit-transition: ease-in-out .3s;
+        &:hover {
+            color: #3ACAA8;
+        }
     }
     
 
@@ -67,9 +83,14 @@ body {
         }
     }
 
+    .navbar-nav {
+        float: right;
+        position: relative;
+        right: 2em;
+    }
+
     .navbar-nav>li {
         color: #609288;
-        text-transform: uppercase;
         font-weight: 400;
     }
 
