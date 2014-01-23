@@ -25,7 +25,7 @@ class Word(db.Model):
 
 	id = db.Column(db.Integer, primary_key=True)
 	word = db.Column(db.String(140))
-	counts = db.relationship('date_count', secondary =counts, backref=db.backref('words', lazy='dynamic'))
+	counts = db.relationship('Date_count', secondary =counts, backref=db.backref('words', lazy='dynamic'))
 
 class Twitter_model(db.Model):
 
@@ -35,7 +35,7 @@ class Twitter_model(db.Model):
 	oauth_token_secret = db.Column(db.String)
 	username = db.Column(db.String)
 	twitter_handle = db.Column(db.String)
-	words =  db.relationship('words', secondary=tracked_twitter_words,
+	words =  db.relationship('Word', secondary=tracked_twitter_words,
 		backref=db.backref('Twitter_model'))
 
 	def __init__(self, cred_dict):

@@ -7,15 +7,15 @@ import commands
 from gunicorn_server import GunicornServer
 
 if __name__ == "__main__":
-    from main import app_factory
-    import config
-    from flask.ext.script import Server, Manager
-    import os
-    manager = script.Manager(app_factory)
-    manager.add_option("-c", "--config", dest="config", required=False, default=config.Dev)
-    manager.add_command("test", commands.Test())
-    manager.add_command("create_db", commands.CreateDB())
-    manager.add_command("drop_db", commands.DropDB())
-    manager.add_command("gunicorn", GunicornServer())
+	from main import app_factory
+	import config
+	from flask.ext.script import Server, Manager
+	import os
+	manager = script.Manager(app_factory)
+	manager.add_option("-c", "--config", dest="config", required=False, default=config.Dev)
+	manager.add_command("test", commands.Test())
+	manager.add_command("create_db", commands.CreateDB())
+	manager.add_command("drop_db", commands.DropDB())
+	manager.add_command("mine", commands.Mine())
 
-    manager.run()
+	manager.run()
