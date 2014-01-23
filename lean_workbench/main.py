@@ -12,7 +12,7 @@ from twitter.twitter_resource import Twitter_resource
 from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
-
+from users.user_resource import User_resource
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -177,3 +177,4 @@ def configure_views(app):
 	api.add_resource(Twitter_resource, '/api/v1/twitter')
 	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
 	api.add_resource(Google_analytics_resource, '/api/v1/googleanalytics')
+	api.add_resource(User_resource, '/api/v1/users')

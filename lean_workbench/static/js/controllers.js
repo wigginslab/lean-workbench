@@ -4,6 +4,8 @@
 function MyCtrl1() {}
 MyCtrl1.$inject = [];
 
+function MeasurementsController($scope){
+}
 
 function DashboardController($scope) {
 	$scope.hypothesis_submit = function(){
@@ -368,7 +370,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
-	.when('/measurements, ' {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	.when('/stats', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])
