@@ -170,6 +170,8 @@ body {
     }
 
     footer {
+        height: 75px;
+        width: 100%;
         background: #3D3D3D;
         padding: 1.5em 0;
         text-align: center;        
@@ -203,13 +205,13 @@ body {
 
 .signup-modal {
     text-align: center;
-    margin-left: -350px;
+    margin-left: -270px;
     left: 50%;
     background: #fff;
     border-radius: 5px;
     -webkit-border-radius: 5px;
     padding: 2.5em 1em;
-    width: 730px;
+    width: 550px;
     z-index: 2;
     position: absolute;
     top: 7em;
@@ -223,6 +225,21 @@ body {
     input {
         width: 400px;
         border-radius: 3px;
+        margin: 1.2em auto;
+        outline: none;
+    }
+
+    .btn {
+        border: none;
+        width: 400px;
+        padding: .5em 0;
+        color: #fff;
+        background: #3ACAA8;
+        transition: .5s ease-in-out;
+        &:hover {
+            border: none;
+            background: #2CA387;
+        }
     }
 }
 
@@ -280,5 +297,16 @@ body {
 .navbar nav {
     li a {
         font-size: 1.5em;
+    }
+}
+
+.dashboard {
+    padding: 3em 0 5em;
+
+    .chart, .chart-bottom-heading {
+        margin: 0 auto;
+    }
+    .chart-bottom-heading {
+        text-align: center;
     }
 }

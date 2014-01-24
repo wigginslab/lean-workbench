@@ -181,7 +181,9 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 				JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
 				).success(
 				function(data){
+					console.log(data);
 					// if success
+					console.log(data['response']['user']);
 					if (data['response']['user']){
 						$location.path("/onboarding/stick");
 					}
@@ -190,16 +192,20 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 						// TODO: brevity
 						var errors = data['response']['errors'];
 						if (errors.hasOwnProperty('email')){
-							$scope.email_error = errors['email'][0];
+							// $scope.email_error = errors['email'][0];
+							$scope.email_error = true;
 						}
 						if (errors.hasOwnProperty('company')){
-							$scope.company_error = errors['company'][0];
+							// $scope.company_error = errors['company'][0];
+							$scope.comapany_error = true;
 						}
-						if (errors.hasOwnProperty('password')){
-							$scope.password_error = errors['password'][0];
+						if (errors.hasOwnProperty('password')) {
+							$scope.password_error = true;
+							// $scope.password_error = errors['password'][0];
 						}            
 						if (errors.hasOwnProperty('password_confirm')){
-							$scope.password_confirm_error = errors['password_confirm'][0];
+							$scope.password_confirm_error = true;
+							// $scope.password_confirm_error = errors['password_confirm'][0];
 						}
 					}
 				}
