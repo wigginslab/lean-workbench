@@ -388,6 +388,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 		$routeProvider
 		.when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+		.when('/signin', {templateUrl: 'static/partials/signin.html'})
 		.when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
 		.when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
 		.when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
