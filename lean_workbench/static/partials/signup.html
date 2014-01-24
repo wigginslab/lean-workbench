@@ -1,7 +1,7 @@
-<div class="registration">
+<div class="registration" ng-controller="RegistrationController">
     <h2> Sign Up </h2>
     <div class="form-wrapper">
-        <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
+        <form novalidate role="form simple-form" name="registration_form">
             <div class="form-group">
                 <input type="email" class="form-control" ng-model="email" placeholder="Email">
                 <span class="help-block" ng-show="email_error">Please provide a valid email.</span>

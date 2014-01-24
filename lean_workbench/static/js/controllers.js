@@ -169,7 +169,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 			$scope.showModal = !$scope.showModal;
 		};
 
-		$scope.submit = function(){
+		$scope.submit = function() {
 			$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 			console.log(csrf_token);
 			$http.defaults.headers.common['Content-Type'] = 'application/json';
