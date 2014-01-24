@@ -318,6 +318,34 @@ body {
     cursor: pointer;
 }
 
+
+form {
+
+    .form-wrapper {
+        width: 400px;
+        margin: 2em auto;
+    }
+
+    input {
+        height: 40px;
+    }
+
+    .btn {
+        height: 45px;
+        border: none;
+        width: 400px;
+        padding: .5em 0;
+        color: #fff;
+        background: #3ACAA8;
+        transition: .5s ease-in-out;
+        &:hover {
+            border: none;
+            background: #2CA387;
+        }
+    }
+
+}
+
 .signin, .registration {
     text-align: center;
     padding: 4em 0;
