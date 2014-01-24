@@ -162,7 +162,8 @@ def configure_views(app):
 			return render_template('public.html', logged_in=logged_in)
 
 	@app.route('/signin', methods=["POST", "GET"])
-	def signin():
+	@app.route('/signup', methods=["POST", "GET"])
+	def sign():
 		return render_template('public.html')
 
 	@auth_token_required

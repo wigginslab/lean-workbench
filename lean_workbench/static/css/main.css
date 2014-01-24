@@ -617,3 +617,24 @@ body {
     margin: 0 auto; }
   .dashboard .chart-bottom-heading {
     text-align: center; }
+
+.signin, .registration {
+  text-align: center;
+  padding: 4em 0; }
+  .signin p, .registration p {
+    color: #000;
+    margin-top: 1em; }
+  .signin .form-wrapper, .registration .form-wrapper {
+    width: 400px;
+    margin: 2em auto; }
+  .signin .btn, .registration .btn {
+    height: 45px;
+    border: none;
+    width: 400px;
+    padding: 0.5em 0;
+    color: #fff;
+    background: #3ACAA8;
+    transition: 0.5s ease-in-out; }
+    .signin .btn:hover, .registration .btn:hover {
+      border: none;
+      background: #2CA387; }
