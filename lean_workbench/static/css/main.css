@@ -384,7 +384,6 @@ body {
     border: 0; }
 
 
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
 .border-button {
   background: none;
   color: #fff;
@@ -407,7 +406,7 @@ html {
   font-size: 1em; }
 
 body {
-  font-family: 'Source Sans Pro', serif;
+  font-family: 'Lato', sans-serif;
   font-weight: 300;
   font-size: 1em;
   padding-bottom: 0; }
@@ -499,7 +498,7 @@ body {
     text-align: center;
     margin: 0 0 0.5em; }
   body h2 {
-    font-family: 'Source Sans Pro', serif;
+    font-family: 'Lato', sans-serif;
     color: #000;
     font-weight: 300;
     font-size: 1.5em; }
@@ -519,19 +518,19 @@ body {
     text-align: center; }
     .features .col-lg-4 h2 {
       font-weight: 300;
-      font-family: "Source Sans Pro", sans-serif; }
+      font-family: "Lato", sans-serif; }
     .features .col-lg-4 p {
       width: 300px;
       margin: 0 auto;
       color: #000; }
 
 .signup-modal {
+  text-align: center;
   margin-left: -350px;
   left: 50%;
   background: #fff;
   border-radius: 5px;
   -webkit-border-radius: 5px;
-  height: 550px;
   padding: 2.5em 1em;
   width: 730px;
   z-index: 2;
@@ -539,6 +538,11 @@ body {
   top: 7em;
   bottom: 0;
   right: 0; }
+  .signup-modal .input-group {
+    margin: 0 auto; }
+  .signup-modal input {
+    width: 400px;
+    border-radius: 3px; }
 
 .modal-backdrop {
   background: #000;

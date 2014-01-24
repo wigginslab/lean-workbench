@@ -4,7 +4,6 @@
 @import "login.scss";
 @import "hypotheses.scss";
 
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400);
 
 .border-button {
     background: none;
@@ -32,7 +31,7 @@ html {
 }
 
 body { 
-    font-family: 'Source Sans Pro', serif;
+    font-family: 'Lato', sans-serif;
     font-weight: 300;
     font-size: 1em;
     padding-bottom: 0;
@@ -164,7 +163,7 @@ body {
     }
 
     h2 {
-        font-family: 'Source Sans Pro', serif;
+        font-family: 'Lato', sans-serif;
         color: #000;
         font-weight: 300;
         font-size: 1.5em;
@@ -191,7 +190,7 @@ body {
 
         h2 {
             font-weight: 300;
-            font-family: "Source Sans Pro", sans-serif;
+            font-family: "Lato", sans-serif;
         }
 
         p {
@@ -203,12 +202,12 @@ body {
 }
 
 .signup-modal {
+    text-align: center;
     margin-left: -350px;
     left: 50%;
     background: #fff;
     border-radius: 5px;
     -webkit-border-radius: 5px;
-    height: 550px;
     padding: 2.5em 1em;
     width: 730px;
     z-index: 2;
@@ -216,6 +215,15 @@ body {
     top: 7em;
     bottom: 0;
     right: 0;
+
+    .input-group {
+        margin: 0 auto;
+    }
+
+    input {
+        width: 400px;
+        border-radius: 3px;
+    }
 }
 
 .modal-backdrop {

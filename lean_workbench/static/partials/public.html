@@ -14,33 +14,23 @@
 <!-- modal -->
 <div class="signup-modal" ng-show="showModal">
 	<div class="exit" ng-click="toggleModal()">x</div>
-	hi
 	<!-- signup -->
-	<!-- <div id="registration" class="input-group">
-	<form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
-		<div class="form-group">
-			<span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-		  <label for="email">Email address</label>
-			<input type="email" class="form-control" ng-model="email" placeholder="Email">
+	<h2>Lean Workbench</h2>
+	<div id="registration">
+		<div class="form-wrapper">
+			<form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
+				<span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+				<input type="email" class="form-control" ng-model="email" placeholder="Email">
+				<span class="help-block" ng-show="email_error">[[ company_error ]]</span>
+				<input type="text" class="form-control" ng-model="company" placeholder="Company Name">
+				<span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password">
+				<span>[[ confirm_password_error ]]</span>
+				<input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
+				<button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
+			</form>
 		</div>
-		<div class="form-group">
-			<span class="help-block" ng-show="email_error">[[ company_error ]]</span>
-			<label>Company Name</label>
-			<input type="text" class="form-control" ng-model="company" placeholder="Company Name">
-		</div>
-		<div class="form-group">
-			<span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-			<label>Password</label>
-			<input type="password" class="form-control" ng-model="password" placeholder="Password">
-		</div>
-		<div class="form-group">
-			<span>[[ confirm_password_error ]]</span>
-			<label>Confirm Password</label>
-			<input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
-		</div>
-		<button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-	</form>
- </div> -->
+ 	</div>
 </div>
 <div class="modal-backdrop" ng-show="showModal" ng-click="toggleModal()"></div>
 
