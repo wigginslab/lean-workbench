@@ -6,14 +6,16 @@ from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
 from flask import session, escape
+from database import db
 
 path = os.getenv("path")
 sys.path.append(path)
 
 parser = reqparse.RequestParser()
-parser.add_argument('username', type=str)
 parser.add_argument('start_date', type=str)
 parser.add_argument('end_date', type=str)
+parser.add_argument('dimension', type=str)
+parser.add_argument('metric', type=str)
 
 class Google_Analytics_DAO(object):
 	"""
@@ -24,16 +26,17 @@ class Google_Analytics_DAO(object):
 		username: required
 		profile_id: id of specific GA profile to query
 	"""
-	def __init__(self, username, profile_id=None):
+	def __init__(self, username, profile_id=None, metric=None, dimension=None):
 		self.username = username
 		self.profile_id = profile_id
+		self.metric = metric
+		self.dimension = dimension
 
 	def get_user_profiles(self):
 		"""
 		Retrieve all userprofiles of a user
 		"""
 		g = Google_Analytics_API(self.username)
-		print g.credentials
 		user_accounts = g.get_user_accounts()
 		return user_accounts.get('items')
 
@@ -44,7 +47,6 @@ class Google_Analytics_DAO(object):
 		g = Google_Analytics_API("jen")
 		user_profiles = g.get_user_accounts().get('items')
 		profile = user_profiles[-1]
-		profile_id = profile.get('id')
 		# convert date from isoformat to GA query format
 		date_created = profile.get('created').split('T')[0]
 		current_date = datetime.now().timetuple()
@@ -61,7 +63,6 @@ class Google_Analytics_DAO(object):
 								  end_date=end_date,
 										metrics='ga:visits').execute()
 
-
 class Google_analytics_resource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
@@ -69,7 +70,27 @@ class Google_analytics_resource(Resource):
 	def get(self, **kwargs):
 		args = parser.parse_args()
 		username = current_user.email
-		print 'google analytics username: %s' %(username)
 		profile_id = kwargs.get('profile_id')
-		GA = Google_Analytics_DAO(username = username, profile_id = profile_id)
-		return GA.get_user_profiles()
+		if not profile_id:
+			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
+		metric = kwargs.get('metric')
+		dimension = kwargs.get('dimension')
+		GA = Google_Analytics_DAO(username = username, profile_id = profile_id, metric=metric,
+				dimension=dimension)
+		if metric == "profiles":	
+			return GA.get_user_profiles()
+		if metric == "visits"
+			return GA.get_user_profile_visits()
+
+	def post(self, **kwargs):
+		"""
+		Get profile-id
+		"""
+		profile_id = kwargs.get('profile_id')
+		if profile_id:
+			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
+			ga_cred.profile_id = profile_id
+			db.session.add(ga_cred)
+			db.session.commit()
+			db.session.close()
+

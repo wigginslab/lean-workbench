@@ -4,10 +4,14 @@ from twitter_model import Twitter_model, Date_count
 from twython import Twython
 from database import db
 
-def track_keywords():
+def track_keywords(username = None):
 	app_key = os.getenv('twitter_app_key') 
 	app_secret = os.getenv('twitter_app_secret')
-	twitter_models = Twitter_model.query.all()
+	if username:
+		twitter_models = Twitter_model.query.filter_by(username=username)
+	else:
+		twitter_models = Twitter_model.query.all()
+
 	for user_twitter in twitter_models:
 		oauth_token = user_twitter.oauth_token
 		oauth_token_secret = user_twitter.oauth_token_secret
