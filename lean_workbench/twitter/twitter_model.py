@@ -33,6 +33,7 @@ class Twitter_model(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	oauth_token = db.Column(db.String)
 	oauth_token_secret = db.Column(db.String)
+	# LWB email
 	username = db.Column(db.String)
 	twitter_handle = db.Column(db.String)
 	words =  db.relationship('Word', secondary=tracked_twitter_words,
@@ -43,6 +44,8 @@ class Twitter_model(db.Model):
 		self.oauth_token_secret = cred_dict.get('oauth_token_secret')
 		self.username = cred_dict.get('username')
 		self.twitter_handle = cred_dict.get('twitter_handle')
+		company_name = cred_dict.get('company')
+		self.words = [(Word(word=company_name))]
 
 	def as_dict(self):
 		return {c.name: getattr(self, c.name) for c in self.__table__.columns}

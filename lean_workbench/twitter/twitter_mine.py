@@ -2,19 +2,23 @@ import os
 import datetime
 from twitter_model import Twitter_model, Date_count
 from twython import Twython
+from database import db
 
 def track_keywords():
 	app_key = os.getenv('twitter_app_key') 
 	app_secret = os.getenv('twitter_app_secret')
-
 	twitter_models = Twitter_model.query.all()
 	for user_twitter in twitter_models:
 		oauth_token = user_twitter.oauth_token
-		oauth_token_secret = user.twitter.oauth_token_secret
+		oauth_token_secret = user_twitter.oauth_token_secret
 		twitter = Twython(app_key, app_secret, oauth_token, oauth_token_secret)
 		search_words = user_twitter.words
-		for word.word in search_words:
-			search_results = twitter.search(q=word)
+		for word in search_words:
+			search_results = twitter.search(q=word.word)
+			print search_results
 			count = len(search_results['statuses'])
+			print 'count :%i' %(count)
 			date_count = Date_count(count=count)
-			word.counts.append(date_count)
+			word.counts.append(date_c
+		db.session.commit()
+	db.session.close()
