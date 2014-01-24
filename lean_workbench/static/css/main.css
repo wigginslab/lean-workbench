@@ -539,15 +539,18 @@ body {
   position: absolute;
   top: 7em;
   bottom: 0;
-  right: 0; }
+  right: 0;
+  height: 100%; }
   .signup-modal .input-group {
     margin: 0 auto; }
   .signup-modal input {
+    height: 35px;
     width: 400px;
     border-radius: 3px;
     margin: 1.2em auto;
     outline: none; }
   .signup-modal .btn {
+    height: 45px;
     border: none;
     width: 400px;
     padding: 0.5em 0;

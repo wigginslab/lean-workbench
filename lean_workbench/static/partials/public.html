@@ -16,17 +16,18 @@
 	<div class="exit" ng-click="toggleModal()">x</div>
 	<!-- signup -->
 	<h2>Lean Workbench</h2>
+	<hr>
 	<div id="registration">
 		<div class="form-wrapper">
 			<form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
 				<input type="email" class="form-control" ng-model="email" placeholder="Email">
-				<span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+				<span class="help-block" ng-show="email_error">Please provide a valid email.</span>
 				<input type="text" class="form-control" ng-model="company" placeholder="Company Name">
-				<span class="help-block" ng-show="email_error">[[ company_error ]]</span>
+				<span class="help-block" ng-show="comapany_error">Please provide a company.</span>
 				<input type="password" class="form-control" ng-model="password" placeholder="Password">
-				<span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+				<span class="help-block" ng-show="password_error">Password must be at least 6 characters.</span>
 				<input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
-				<span>[[ confirm_password_error ]]</span>
+				<span class="help-block" ng-show="password_confirm_error">Your passwords did not match.</span>
 				<button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
 			</form>
 		</div>

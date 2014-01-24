@@ -217,12 +217,14 @@ body {
     top: 7em;
     bottom: 0;
     right: 0;
+    height: 100%;
 
     .input-group {
         margin: 0 auto;
     }
 
     input {
+        height: 35px;
         width: 400px;
         border-radius: 3px;
         margin: 1.2em auto;
@@ -230,6 +232,7 @@ body {
     }
 
     .btn {
+        height: 45px;
         border: none;
         width: 400px;
         padding: .5em 0;
