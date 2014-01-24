@@ -2,87 +2,102 @@
 ================================================== -->
 
 <!-- HERO -->
-<div class="lb-hero">
-  <div class="hero-text-wrapper">
-    <h1>Hypothesize</h1>
-    <p>Make hypotheses about viral, stickiness, and monetary growth and automate your results.</p>
-    <div ng-click="scroll_to('registration')" class="border-button"> Sign Up Today</div> 
-  </div>
-  <!-- <div class="transparent"></div> -->
+<div class="hero-wrapper" ng-controller="RegistrationController">
+	<div class="lb-hero">
+		<div class="hero-text-wrapper">
+			<h1>Hypothesize</h1>
+			<p>Make hypotheses about viral, stickiness, and monetary growth and automate your results.</p>
+			<div ng-click="toggleModal()" class="border-button"> Sign Up Today</div> 
+		</div>
+	</div>
+
+<!-- modal -->
+<div class="signup-modal" ng-show="showModal">
+	<div class="exit" ng-click="toggleModal()">x</div>
+	hi
+	<!-- signup -->
+	<!-- <div id="registration" class="input-group">
+	<form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
+		<div class="form-group">
+			<span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+		  <label for="email">Email address</label>
+			<input type="email" class="form-control" ng-model="email" placeholder="Email">
+		</div>
+		<div class="form-group">
+			<span class="help-block" ng-show="email_error">[[ company_error ]]</span>
+			<label>Company Name</label>
+			<input type="text" class="form-control" ng-model="company" placeholder="Company Name">
+		</div>
+		<div class="form-group">
+			<span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+			<label>Password</label>
+			<input type="password" class="form-control" ng-model="password" placeholder="Password">
+		</div>
+		<div class="form-group">
+			<span>[[ confirm_password_error ]]</span>
+			<label>Confirm Password</label>
+			<input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
+		</div>
+		<button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
+	</form>
+ </div> -->
 </div>
+<div class="modal-backdrop" ng-show="showModal" ng-click="toggleModal()"></div>
+
+</div>
+<!-- Wrap the rest of the page in another container to center all the content. -->
+
+	<!-- regular login -->
+	 <!-- <div id="login-holder" class="input-group" ng-controller="LoginController">
+		<form novalidate role="form simple-form" form-submit="submit()" name="login_form">
+			<div class="form-group">
+				<span class="help-block" ng-show="email_error">[[ email_error ]]</span>
+				<label for="email">Email address</label>
+				<input type="email" class="form-control" ng-model="email" placeholder="Enter email">
+			</div>
+			<div class="form-group">
+				<span class="help-block" ng-show="email_error">[[ password_error ]]</span>
+				<label>Password</label>
+				<input type="password" class="form-control" ng-model="password" placeholder="Password">
+			</div>
+			<button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
+		</form>
+ </div> -->
 
 
 <!-- features -->
 <div class="features clearfix">
-  <h1>We Help You</h1>
+	<h1>We Help You</h1>
 
-  <div class="col-lg-4">
-    <img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/flat-ui/svg/clipboard.svg">
-    <h2>Hypothesize</h2>
-    <hr>
-    <p>Test your intuition and ideas you have received during interviews empirically by creating a Lean Workbench hypothesis.</p>
-  </div><!-- /.span4 -->
-  <div class="col-lg-4">
-    <img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/smallicons/SVG/calc.svg">
-    <h2>Measure</h2>
-    <hr>
-    <p>Automate the measurement of your key performance indicators for your experiment. </p>
-  </div><!-- /.span4 -->
-  <div class="col-lg-4">
-    <img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/flat-ui/svg/compass.svg">
-    <h2>Pivot or Persevere</h2>
-    <hr>
-    <p>Take a look at your data and the data of your cohort and decide how to proceed with your product.</p>
-  </div><!-- /.span4 -->
+	<div class="col-lg-4">
+		<img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/flat-ui/svg/clipboard.svg">
+		<h2>Hypothesize</h2>
+		<hr>
+		<p>Test your intuition and ideas you have received during interviews empirically by creating a Lean Workbench hypothesis.</p>
+	</div><!-- /.span4 -->
+	<div class="col-lg-4">
+		<img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/smallicons/SVG/calc.svg">
+		<h2>Measure</h2>
+		<hr>
+		<p>Automate the measurement of your key performance indicators for your experiment. </p>
+	</div><!-- /.span4 -->
+	<div class="col-lg-4">
+		<img class="feature-image" data-src="holder.js/140x140" alt="140x140" src="/static/assets/flat-ui/svg/compass.svg">
+		<h2>Pivot or Persevere</h2>
+		<hr>
+		<p>Take a look at your data and the data of your cohort and decide how to proceed with your product.</p>
+	</div><!-- /.span4 -->
 </div>
 
 
-<!-- Wrap the rest of the page in another container to center all the content. -->
-<div class="container marketing">
+<!-- supporters -->
+<div class="supporters">
+	<h1>Supported By:</h1>
+	<img src="/static/assets/nsf.png" alt="National Science Foundation">
+	<h2>The National Science Foundation Award #1305023</h2>
+	
+</div>
 
-<!-- signup -->
-<div id="registration" class="input-group" ng-controller="RegistrationController">
-  <form novalidate role="form simple-form" form-submit="submit()" name="reigstration_form">
-    <div class="form-group">
-      <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-     <!--  <label for="email">Email address</label> -->
-      <input type="email" class="form-control" ng-model="email" placeholder="Email">
-    </div>
-    <!-- <div class="form-group">
-      <span class="help-block" ng-show="email_error">[[ company_error ]]</span>
-      <label>Company Name</label>
-      <input type="text" class="form-control" ng-model="company" placeholder="Company Name">
-    </div> -->
-    <div class="form-group">
-      <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-      <!-- <label>Password</label> -->
-      <input type="password" class="form-control" ng-model="password" placeholder="Password">
-    </div>
-    <div class="form-group">
-      <span>[[ confirm_password_error ]]</span>
-      <!-- <label>Confirm Password</label> -->
-      <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
-    </div>
-    <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-  </form>
- </div>
-
-  <!-- regular login -->
-   <div id="login-holder" class="input-group" ng-controller="LoginController">
-    <form novalidate role="form simple-form" form-submit="submit()" name="login_form">
-      <div class="form-group">
-        <span class="help-block" ng-show="email_error">[[ email_error ]]</span>
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" ng-model="email" placeholder="Enter email">
-      </div>
-      <div class="form-group">
-        <span class="help-block" ng-show="email_error">[[ password_error ]]</span>
-        <label>Password</label>
-        <input type="password" class="form-control" ng-model="password" placeholder="Password">
-      </div>
-      <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
-    </form>
- </div>
 <hr class="featurette-divider">
 <!-- /END THE FEATURETTES -->
 <!-- FOOTER
