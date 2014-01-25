@@ -23,7 +23,7 @@ def google_analytics_oauth():
 			print GA_API.credentials.as_dict()
 			# you shouldn't have hit this link
 			print "you have credentials for GA"
-			return redirect(url_for('view_ga'))
+			return redirect('/onboarding/stick')
 		else:
 			print "credentials expired, start oauth process"
 			# start OAuth process
@@ -42,10 +42,8 @@ def google_analytics_callback():
 		username = current_user.email
 		GA_API = Google_Analytics_API('username')
 		ga_api_code= request.args.get("code")
-		print 'ga callback args'
-		print request.args
-		print GA_API
 		client = GA_API.step_two(username, ga_api_code, google_analytics_callback_url)
+		return render_template('ga_success.html')
 	else:
 		return redirect('/')
 	return redirect('/onboarding/virality')

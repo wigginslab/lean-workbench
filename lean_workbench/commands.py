@@ -27,6 +27,13 @@ class DropDB(Command):
 
         drop_all()
 
+class Mine(Command):
+	"""
+	Mines the data sources
+	"""
+	def run(self):
+		from twitter.twitter_mine import track_keywords
+		track_keywords()
 
 class Test(Command):
     """
