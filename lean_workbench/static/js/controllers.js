@@ -5,7 +5,7 @@ function MyCtrl1() {}
 MyCtrl1.$inject = [];
 
 
-function DashboardController() {
+function DashboardController($scope) {
 	$scope.hypothesis_submit = function(){
 			$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 			$http.defaults.headers.common['Content-Type'] = 'application/json'
