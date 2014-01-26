@@ -70,7 +70,7 @@ class Google_analytics_resource(Resource):
 	def get(self, **kwargs):
 		args = parser.parse_args()
 		username = current_user.email
-		profile_id = kwargs.get('profile_id')
+		profile_id = kwargs.get('profile-id')
 		if not profile_id:
 			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
 		metric = kwargs.get('metric')
@@ -86,7 +86,7 @@ class Google_analytics_resource(Resource):
 		"""
 		Get profile-id
 		"""
-		profile_id = kwargs.get('profile_id')
+		profile_id = kwargs.get('profile-id')
 		if profile_id:
 			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
 			ga_cred.profile_id = profile_id

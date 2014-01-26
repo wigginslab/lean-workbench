@@ -1,0 +1,10 @@
+<div class="container">
+	<div id="ga-succes-holder" ng-controller="StickController">
+	<h1> Success! </h1>
+	Your Google Analytics account has been successfully authenticated. Choose a profile below.
+	<select>
+		<div ng-repeat="profile in GA_profiles">
+			<option value=[[profile.id]]>[[profile.id]]</option>
+		</div>
+	</select>
+</div>

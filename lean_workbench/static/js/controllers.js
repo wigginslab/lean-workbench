@@ -84,6 +84,11 @@ function StickController($scope, $http, GoogleAnalytics){
 				}
 			)
 		}
+
+	$scope.GA_profiles = function(){
+		var GAQuery = GoogleAnalytics.get();
+
+	)}
 }
 
 
