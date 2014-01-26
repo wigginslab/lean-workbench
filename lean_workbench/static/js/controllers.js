@@ -1,10 +1,14 @@
 /* Controllers */
 
 
-function MyCtrl1() {}
-MyCtrl1.$inject = [];
+function MyCtrl1(){
+}
 
-function MeasurementsController($scope){
+function MeasurementsController($scope, $http){
+	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+	$http.defaults.headers.common['Content-Type'] = 'application/json';
+	$http.defaults.headers.common['Accept'] = 'application/json';
+
 }
 
 function DashboardController($scope) {
@@ -158,49 +162,62 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 		$interpolateProvider.startSymbol('[[');
 		$interpolateProvider.endSymbol(']]');
 }).controller({
-  RegistrationController: function($scope, $http, authService, $location){
-    $scope.submit = function(){
-      $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
-	  console.log(csrf_token);
-      $http.defaults.headers.common['Content-Type'] = 'application/json'
-      $http.defaults.headers.common['Accept'] = 'application/json'
+ 	RegistrationController: function($scope, $http, authService, $location) {
 
-      $http.post(
-        '/registration',
+                $scope.showModal = false;
+                $scope.toggleModal = function() {
+                        $scope.showModal = !$scope.showModal;
+                };
 
-        JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
-        ).success(
-        function(data){
-          // if success
-          if (data['response']['user']){
-                 $location.path("/onboarding/stick");
-          }
+                $scope.submit = function() {
+                	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+					console.log(csrf_token);
+					$http.defaults.headers.common['Content-Type'] = 'application/json';
+					$http.defaults.headers.common['Accept'] = 'application/json';
 
-          else{
-            // TODO: brevity
-            var errors = data['response']['errors'];
-            if (errors.hasOwnProperty('email')){
-              $scope.email_error = errors['email'][0];
-            }
-            if (errors.hasOwnProperty('company')){
-              $scope.company_error = errors['company'][0];
-            }
-            if (errors.hasOwnProperty('password')){
-              $scope.password_error = errors['password'][0];
-            }            
-            if (errors.hasOwnProperty('password_confirm')){
-              $scope.password_confirm_error = errors['password_confirm'][0];
-            }
-          }
-        }
-      ).error(
-        function(data){
-          console.log('registration error')
-          $scope.errorMsg = data.reason;
-        }
-      );
-    };
-  }
+					$http.post(
+						'/registration',
+
+						JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
+						).success(
+							function(data){
+								console.log(data);
+								// if success
+								console.log(data['response']['user']);
+								if (data['response']['user']){
+										$location.path("/onboarding/stick");
+								}
+
+								else{
+									// TODO: brevity
+									var errors = data['response']['errors'];
+									if (errors.hasOwnProperty('email')){
+										// $scope.email_error = errors['email'][0];
+										$scope.email_error = true;
+									}
+									if (errors.hasOwnProperty('company')){
+										// $scope.company_error = errors['company'][0];
+										$scope.comapany_error = true;
+									}
+									if (errors.hasOwnProperty('password')) {
+										$scope.password_error = true;
+										// $scope.password_error = errors['password'][0];
+									}            
+									if (errors.hasOwnProperty('password_confirm')){
+										$scope.password_confirm_error = true;
+										// $scope.password_confirm_error = errors['password_confirm'][0];
+									}
+								}
+							}
+						).error(
+							function(data){
+								console.log('registration error')
+								alert(data)
+								$scope.errorMsg = data.reason;
+							}
+						);
+				};
+		}
 
 }).controller({
   LoginController: function ($scope, $http, authService, $location) {
@@ -297,39 +314,14 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 		});
 	}
 })
-.directive('authApplication', function() {
-   return {
-      restrict: 'C',
-
-      link: function(scope, elem, attrs) {
-        //once Angular is started, remove class:
-        elem.removeClass('waiting-for-angular');
-
-        var login = elem.find('#login-holder');
-        var main = elem.find('#content');
-
-        login.hide();
-
-        scope.$on('event:auth-loginRequired', function() {
-          login.slideDown('slow', function() {
-            main.hide();
-          });
-        });
-        scope.$on('event:auth-loginConfirmed', function() {
-          main.show();
-          login.slideUp();
-        });
-      }
-    };
-  })
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
+  //  .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
-	.when('/stats', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	.when('/dashboard', {templateUrl: '/static/partials/dashboard.html', controller: MeasurementsController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])
