@@ -11,12 +11,31 @@ angular.module('LWBServices', ['ngResource'])
 		});
 	})
 	.factory('GoogleAnalytics', function($resource){
-		return $resource('/api/v1/googleanalytics',{}, {
-			query:{
-				method: 'POST',
-				isArray: true
-			}
-		})
+		var GoogleAnalytics = {};
+		GoogleAnalytics.get_profiles = function(){
+			$http.get('/api/v1/google-analytics/?metric=profiles'
+
+			).success(					
+				function(data) {
+				
+					callback(data);
+							
+				}
+			)
+		}
+
+		GoogleAnalytics.get = function(){
+			$http.get('/api/v1/google-analytics/'
+			).success(
+				function(data) {
+					callback(data);
+				}
+			)
+
+		}
+
+		return GoogleAnalytics;
+
 	})
 	.factory('Facebook', function($resource){
 		return $resource('/api/v1/facebook', {}, {

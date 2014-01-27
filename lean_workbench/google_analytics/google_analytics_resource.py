@@ -71,14 +71,15 @@ class Google_analytics_resource(Resource):
 		args = parser.parse_args()
 		username = current_user.email
 		profile_id = kwargs.get('profile-id')
-		if not profile_id:
-			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
 		metric = kwargs.get('metric')
+		if not profile_id and metric != "profiles":
+			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
+		else:
+			return GA.get_user_profiles()
+
 		dimension = kwargs.get('dimension')
 		GA = Google_Analytics_DAO(username = username, profile_id = profile_id, metric=metric,
 				dimension=dimension)
-		if metric == "profiles":	
-			return GA.get_user_profiles()
 		if metric == "visits":
 			return GA.get_user_profile_visits()
 

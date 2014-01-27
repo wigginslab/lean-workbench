@@ -83,12 +83,12 @@ function StickController($scope, $http, GoogleAnalytics){
 					}
 				}
 			)
-		}
+	}
 
 	$scope.GA_profiles = function(){
 		var GAQuery = GoogleAnalytics.get();
 
-	)}
+	}
 }
 
 
@@ -274,12 +274,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .controller({
   NavController: function ($scope, $http, authService, $location) {
       $scope.click_login = function(){
-        var main = $('#content');
-        var login = $('#login-holder');
-          login.slideDown('slow', function() {
-          main.hide();
-        });
-      }
+		$location.path('/signin');  
+	  }
     
      $scope.click_logout = function() {
       $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
@@ -326,6 +322,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
+	.when('/signin', {templateUrl: 'static/partials/signin.html'})
 	.when('/dashboard', {templateUrl: '/static/partials/dashboard.html', controller: MeasurementsController})
     // enable push state
     $locationProvider.html5Mode(true);
