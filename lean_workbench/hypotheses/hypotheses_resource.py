@@ -69,14 +69,13 @@ class Hypothesis_resource(Resource):
 	"""
 	def get(self, **kwargs):
 		if not current_user.is_authenticated():
-			return jsonify(message='Unauthorized', status_code=200)
-
+			return jsonify(message='Unauthorized', status_code=400)
 		print kwargs
 		args = parser.parse_args()
 		print current_user
 		username = current_user.email
 		print username
 		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
-		return {"status":200, "hypotheses":hypotheses}	
+		return {"status":200, "hypotheses":hypotheses, "onboarded":current_user.onboarded}	
 	def post(self, **kwargs):
 		return Hypothesis_DAO.add_user_hypothesis(kwargs)

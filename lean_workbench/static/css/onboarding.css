@@ -51,7 +51,8 @@
   .onboarding h3 {
     margin: 1.5em 0 0.5em; }
   .onboarding p {
-    margin: 1em 0; }
+    margin: 1em 0;
+    color: black; }
   .onboarding ul {
     padding: 0 0 0 40px;
     margin: 1em 0; }

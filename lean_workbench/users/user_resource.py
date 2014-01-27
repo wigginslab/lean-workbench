@@ -18,8 +18,6 @@ class User_resource(Resource):
 	def get(self, **kwargs):
 		if not current_user.is_authenticated():
 			return jsonify(message='Unauthorized', status_code=200)
-		else:
-			return jsonify(onboarded=current_user.onboarded)
-		return {"status":200, "hypotheses":hypotheses}	
+
 	def post(self, **kwargs):
 		return Hypothesis_DAO.add_user_hypothesis(kwargs)

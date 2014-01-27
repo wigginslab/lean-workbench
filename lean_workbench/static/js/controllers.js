@@ -8,7 +8,29 @@ function MeasurementsController($scope, $http){
 	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 	$http.defaults.headers.common['Content-Type'] = 'application/json';
 	$http.defaults.headers.common['Accept'] = 'application/json';
+	// check if onboarded
+    $http.get(
+    	'/api/v1/hypotheses'
+    ).success(
+    	function(data){
+          // if success
+		  	console.log('success')
+			var onboarded = data['onboarded'];
+			if (onboarded == false){
+				console.log('onboarding false')
+				window.location = "/onboarding/stick";
+			}
 
+		  	else{
+            	var errors = data['response']['errors'];	
+		  	}
+        }
+     	).error(
+        function(data){
+          console.log('registration error')
+          $scope.errorMsg = data.reason;
+        }
+      );
 }
 
 function DashboardController($scope) {
