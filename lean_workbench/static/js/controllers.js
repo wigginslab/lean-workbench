@@ -82,16 +82,22 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
-	var GAQuery = GoogleAnalytics.get();
-	console.log(GAQuery);
-	if (GAQuery.length > 0){
+/*	var GAQuery = GoogleAnalytics.get();
+	//TODO: ternaries
+	if (GAQuery){
 		$scope.GA = true;
 	}
+	else{
+		$scope.GA = false;
+	}
 	$scope.has_GA = function(){
-		if ($scope.GA){
+		if ($scope.GA == true){
 			return true;
 		}
-	}
+		else{
+			return false;
+		}
+	}*/
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 		$http.post(
@@ -99,19 +105,29 @@ function StickController($scope, $http, GoogleAnalytics){
 				).success(
 				function(data){
 					var status = data['status'];
+					console.log(data);
+					console.log(status);
 					if (status == 100){
 						var redirect_url = data['redirect_url'];
-						window.location(redirect_url);
+						window.location = redirect_url;
 					}
 				}
 			)
 	}
 
-	$scope.GA_profiles = function(){
-		var GAQuery = GoogleAnalytics.get();
-
-	}
+	var profiles =  $http.get(
+			'/api/v1/google-analytics/'
+			).success(
+			function(data){
+				$scope.GA_profiles = data;
+			}
+		).error(function(data){
+				console.log(data)
+			}
+		)
 }
+
+
 
 
 function ViralityController($scope, $http, Facebook, Twitter){
@@ -346,6 +362,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
 	.when('/dashboard', {templateUrl: '/static/partials/dashboard.html', controller: MeasurementsController})
+	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])

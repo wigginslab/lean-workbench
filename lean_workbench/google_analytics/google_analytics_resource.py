@@ -44,7 +44,7 @@ class Google_Analytics_DAO(object):
 		"""
 		Go as far back as you can go, then check daily
 		"""
-		g = Google_Analytics_API("jen")
+		g = Google_Analytics_API(username=self.username)
 		user_profiles = g.get_user_accounts().get('items')
 		profile = user_profiles[-1]
 		# convert date from isoformat to GA query format
@@ -68,30 +68,37 @@ class Google_analytics_resource(Resource):
 	Handles requests and returns the resources they ask for
 	"""
 	def get(self, **kwargs):
-		args = parser.parse_args()
-		username = current_user.email
-		profile_id = kwargs.get('profile-id')
-		metric = kwargs.get('metric')
-		if not profile_id and metric != "profiles":
-			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
-		else:
+		print 'ga get'
+		profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email)
+		if profile:
+			GA = Google_Analytics_DAO(username = current_user.email)
 			return GA.get_user_profiles()
+		else:
+			return jsonify(status=333)
+		#	GA = Google_Analytics_DAO(username = current_user.email, profile=profile.profile_id)
 
-		dimension = kwargs.get('dimension')
-		GA = Google_Analytics_DAO(username = username, profile_id = profile_id, metric=metric,
-				dimension=dimension)
-		if metric == "visits":
-			return GA.get_user_profile_visits()
-
+			
 	def post(self, **kwargs):
 		"""
 		Get profile-id
 		"""
+		print 'GA post'
+		args = parser.parse_args()
+		username = current_user.email
+		profile_id = args.get('profile-id')
+		metric = args.get('metric')
 		profile_id = kwargs.get('profile-id')
-		if profile_id:
+		dimension = kwargs.get('dimension')
+
+		# if just posting profile id
+		if profile_id and not metric:
 			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
 			ga_cred.profile_id = profile_id
 			db.session.add(ga_cred)
 			db.session.commit()
 			db.session.close()
+
+		if metric == "visits":
+			return GA.get_user_profile_visits()
+
 
