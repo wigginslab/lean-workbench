@@ -119,7 +119,9 @@ function StickController($scope, $http, GoogleAnalytics){
 			JSON.stringify({metric:'profile-id', profile_id:$scope.user_profile})
 		).success(
 			function(data){
-
+				if (data.status == 200){
+					window.location = '/onboarding/virality';
+				}
 			}
 		)
 	}	
