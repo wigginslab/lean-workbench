@@ -5,7 +5,7 @@ from google_analytics_models import *
 from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
-from flask import session, escape
+from flask import session, escape, request, jsonify
 from database import db
 
 path = os.getenv("path")
@@ -37,8 +37,11 @@ class Google_Analytics_DAO(object):
 		Retrieve all userprofiles of a user
 		"""
 		g = Google_Analytics_API(self.username)
-		user_accounts = g.get_user_accounts()
-		return user_accounts.get('items')
+		if g:
+			user_accounts = g.get_user_accounts()
+			return user_accounts.get('items')
+		else:
+			return None
 
 	def get_user_profile_visits(self, start_date, profile_id):
 		"""
@@ -82,22 +85,23 @@ class Google_analytics_resource(Resource):
 		"""
 		Get profile-id
 		"""
-		print 'GA post'
-		args = parser.parse_args()
+		args = request.json 
 		username = current_user.email
-		profile_id = args.get('profile-id')
 		metric = args.get('metric')
-		profile_id = kwargs.get('profile-id')
-		dimension = kwargs.get('dimension')
-
+		profile_id = args.get('profile_id')
+		dimension = args.get('dimension')
+		print 'args'	
+		print args
+		print profile_id
 		# if just posting profile id
-		if profile_id and not metric:
-			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
+		if metric == 'profile-id':
+			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+			print ga_cred.profile_id
 			ga_cred.profile_id = profile_id
-			db.session.add(ga_cred)
 			db.session.commit()
+			print ga_cred.profile_id
 			db.session.close()
-
+			return jsonify(status=200,message="success!")
 		if metric == "visits":
 			return GA.get_user_profile_visits()
 

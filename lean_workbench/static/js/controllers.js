@@ -82,24 +82,10 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
-/*	var GAQuery = GoogleAnalytics.get();
-	//TODO: ternaries
-	if (GAQuery){
-		$scope.GA = true;
-	}
-	else{
-		$scope.GA = false;
-	}
-	$scope.has_GA = function(){
-		if ($scope.GA == true){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}*/
+
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		console.log('ga auth');
 		$http.post(
 				'/connect/google-analytics'
 				).success(
@@ -125,10 +111,19 @@ function StickController($scope, $http, GoogleAnalytics){
 				console.log(data)
 			}
 		)
+	
+	$scope.submit_prof = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.post(
+			'/api/v1/google-analytics/',
+			JSON.stringify({metric:'profile-id', profile_id:$scope.user_profile})
+		).success(
+			function(data){
+
+			}
+		)
+	}	
 }
-
-
-
 
 function ViralityController($scope, $http, Facebook, Twitter){
 	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;

@@ -32,7 +32,7 @@ class Google_Analytics_API:
 				print 'expires on is greater than the current time'
 				self.client = self.build_client(self.credentials)
 			else:
-				print 'crdentials expired'
+				print 'credentials expired'
 				print self.credentials
 				credentials_dict = self.credentials.as_dict()
 				self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
@@ -48,12 +48,10 @@ class Google_Analytics_API:
 		url = 'https://accounts.google.com/o/oauth2/token'
 		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
 		# encode data
-		print values
 		data = urllib.urlencode(values)
 		# post request for refresh token
 		req = urllib2.Request(url, data)
 		response = urllib2.urlopen(req)
-		print response
 		response_json = json.loads(response.read())
 		new_access_token = response_json["access_token"]
 		new_expiration_date = str(datetime.now() + timedelta(1))
@@ -69,12 +67,10 @@ class Google_Analytics_API:
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
-		print credentials
 		http = httplib2.Http()
 		http = credentials.authorize(http)  
 		#  Build the Analytics Service Object with the authorized http object
 		client = build('analytics', 'v3', http=http)
-		print client
 		return client
 
 	def step_one(self, google_analytics_callback_url, google_analytics_client_id):
@@ -99,6 +95,7 @@ class Google_Analytics_API:
 		credentials = flow.step2_exchange(code=str(ga_api_code))
 		credentials_json = json.loads(credentials.to_json())
 		credentials_json['username'] = username
+		print credentials_json
 		http = httplib2.Http()
 		http = credentials.authorize(http)  
 		self.save_google_analytics_credentials(credentials_json)
