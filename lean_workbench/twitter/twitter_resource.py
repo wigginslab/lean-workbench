@@ -2,7 +2,7 @@ import sys
 import os
 from twitter_model import Twitter_model
 from flask.ext.restful import Resource, reqparse
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import os
 from database import db
 from flask.ext.security import current_user
@@ -22,6 +22,7 @@ class Twitter_DAO(object):
 
 class Twitter_resource(Resource):
 	def get(self, **kwargs):
+		args = request.args()
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print twitter.user_twitter
