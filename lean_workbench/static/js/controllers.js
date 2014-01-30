@@ -10,7 +10,7 @@ function MeasurementsController($scope, $http){
 	$http.defaults.headers.common['Accept'] = 'application/json';
 	// check if onboarded
     $http.get(
-    	'/api/v1/hypotheses'
+    	'/api/v1/users'
     ).success(
     	function(data){
           // if success
@@ -189,6 +189,18 @@ function ViralityController($scope, $http, Facebook, Twitter){
 		).error(  
 			function(data){
 				$scope.twitter_error = "Twitter authentication failed."
+			}
+		)
+	}
+
+	$scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
 			}
 		)
 	}
