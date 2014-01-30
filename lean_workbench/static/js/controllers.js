@@ -8,7 +8,29 @@ function MeasurementsController($scope, $http){
 	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 	$http.defaults.headers.common['Content-Type'] = 'application/json';
 	$http.defaults.headers.common['Accept'] = 'application/json';
+	// check if onboarded
+    $http.get(
+    	'/api/v1/users'
+    ).success(
+    	function(data){
+          // if success
+		  	console.log('success')
+			var onboarded = data['onboarded'];
+			if (onboarded == false){
+				console.log('onboarding false')
+				window.location = "/onboarding/stick";
+			}
 
+		  	else{
+            	var errors = data['response']['errors'];	
+		  	}
+        }
+     	).error(
+        function(data){
+          console.log('registration error')
+          $scope.errorMsg = data.reason;
+        }
+      );
 }
 
 function DashboardController($scope) {
@@ -60,42 +82,56 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
-	var GAQuery = GoogleAnalytics.get();
-	console.log(GAQuery);
-	if (GAQuery.length > 0){
-		$scope.GA = true;
-	}
-	$scope.has_GA = function(){
-		if ($scope.GA){
-			return true;
-		}
-	}
+	$scope.has_GA = false;
+
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		console.log('ga auth');
 		$http.post(
 				'/connect/google-analytics'
 				).success(
 				function(data){
 					var status = data['status'];
+					console.log(data);
+					console.log(status);
 					if (status == 100){
 						var redirect_url = data['redirect_url'];
-						window.location(redirect_url);
+						window.location = redirect_url;
 					}
 				}
 			)
 	}
 
-	$scope.GA_profiles = function(){
-		var GAQuery = GoogleAnalytics.get();
-
-	}
+	var profiles =  $http.get(
+			'/api/v1/google-analytics/'
+			).success(
+			function(data){
+				$scope.GA_profiles = data;
+				$scope.has_GA = true;	
+			}
+		).error(function(data){
+				console.log(data)
+			}
+		)
+	
+	$scope.submit_prof = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.post(
+			'/api/v1/google-analytics/',
+			JSON.stringify({metric:'profile-id', profile_id:$scope.user_profile})
+		).success(
+			function(data){
+				if (data.status == 200){
+					window.location = '/onboarding/virality';
+				}
+			}
+		)
+	}	
 }
-
 
 function ViralityController($scope, $http, Facebook, Twitter){
 	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 	var FBQuery = Facebook.get();
-	var TwitterQuery = Twitter.get();
 
 	if (FBQuery.length > 0){
 		$scope.FB = true;
@@ -125,17 +161,19 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				})   
 	}
 	
+	$scope.has_twitter = false;
+		$http.get(
+				'/api/v1/twitter'
+		).success(
+			function(data){
+				if (data['twitter_authed']){
+					$scope.has_twitter = true;
+				}
+			}
+		)
 
-	if (TwitterQuery['twitter_handle']){
-		$scope.Twitter = true;
-	}
-
-	$scope.has_Twitter = function(){
-		if ($scope.Twitter){
-			return true;
-		}
-	}
-
+	   
+	
 	$scope.twitter_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 		$http.post(
@@ -145,12 +183,24 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				var status = data['status'];
 				if (status == 100){
 					var redirect_url = data['redirect_url'];
-					open(redirect_url);
+					window.location = redirect_url;
 				}
 			}
 		).error(  
 			function(data){
 				$scope.twitter_error = "Twitter authentication failed."
+			}
+		)
+	}
+
+	$scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
 			}
 		)
 	}
@@ -324,6 +374,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
 	.when('/dashboard', {templateUrl: '/static/partials/dashboard.html', controller: MeasurementsController})
+	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])

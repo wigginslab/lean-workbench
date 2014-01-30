@@ -5,7 +5,7 @@ from google_analytics_models import *
 from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
-from flask import session, escape
+from flask import session, escape, request, jsonify
 from database import db
 
 path = os.getenv("path")
@@ -37,14 +37,17 @@ class Google_Analytics_DAO(object):
 		Retrieve all userprofiles of a user
 		"""
 		g = Google_Analytics_API(self.username)
-		user_accounts = g.get_user_accounts()
-		return user_accounts.get('items')
+		if g:
+			user_accounts = g.get_user_accounts()
+			return user_accounts.get('items')
+		else:
+			return None
 
 	def get_user_profile_visits(self, start_date, profile_id):
 		"""
 		Go as far back as you can go, then check daily
 		"""
-		g = Google_Analytics_API("jen")
+		g = Google_Analytics_API(username=self.username)
 		user_profiles = g.get_user_accounts().get('items')
 		profile = user_profiles[-1]
 		# convert date from isoformat to GA query format
@@ -68,30 +71,38 @@ class Google_analytics_resource(Resource):
 	Handles requests and returns the resources they ask for
 	"""
 	def get(self, **kwargs):
-		args = parser.parse_args()
-		username = current_user.email
-		profile_id = kwargs.get('profile-id')
-		metric = kwargs.get('metric')
-		if not profile_id and metric != "profiles":
-			profile_id = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
-		else:
+		print 'ga get'
+		profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email)
+		if profile:
+			GA = Google_Analytics_DAO(username = current_user.email)
 			return GA.get_user_profiles()
+		else:
+			return jsonify(status=333)
+		#	GA = Google_Analytics_DAO(username = current_user.email, profile=profile.profile_id)
 
-		dimension = kwargs.get('dimension')
-		GA = Google_Analytics_DAO(username = username, profile_id = profile_id, metric=metric,
-				dimension=dimension)
-		if metric == "visits":
-			return GA.get_user_profile_visits()
-
+			
 	def post(self, **kwargs):
 		"""
 		Get profile-id
 		"""
-		profile_id = kwargs.get('profile-id')
-		if profile_id:
-			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.username).profile_id
+		args = request.json 
+		username = current_user.email
+		metric = args.get('metric')
+		profile_id = args.get('profile_id')
+		dimension = args.get('dimension')
+		print 'args'	
+		print args
+		print profile_id
+		# if just posting profile id
+		if metric == 'profile-id':
+			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+			print ga_cred.profile_id
 			ga_cred.profile_id = profile_id
-			db.session.add(ga_cred)
 			db.session.commit()
+			print ga_cred.profile_id
 			db.session.close()
+			return jsonify(status=200,message="success!")
+		if metric == "visits":
+			return GA.get_user_profile_visits()
+
 

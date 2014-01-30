@@ -21,7 +21,7 @@ class SecuredStaticFlask(Flask):
 		if current_user.is_authenticated() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
 		else:
-			return redirect('/static/partials/login.html')
+			return redirect('/static/partials/signin.html')
 
 
 def __import_blueprint(blueprint_str):
@@ -164,7 +164,7 @@ def configure_views(app):
 	@app.route('/signin', methods=["POST", "GET"])
 	@app.route('/signup', methods=["POST", "GET"])
 	def sign():
-		return render_template('public.html')
+		return render_template('public.html', logged_in=current_user.is_authenticated())
 
 	@auth_token_required
 	@app.route('/onboarding/stick', methods=['POST', 'GET'])
@@ -181,5 +181,5 @@ def configure_views(app):
 	api.add_resource(Facebook_resource, '/api/v1/facebook')
 	api.add_resource(Twitter_resource, '/api/v1/twitter')
 	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
-	api.add_resource(Google_analytics_resource, '/api/v1/googleanalytics')
+	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics/')
 	api.add_resource(User_resource, '/api/v1/users')
