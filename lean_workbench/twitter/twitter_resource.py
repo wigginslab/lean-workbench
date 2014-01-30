@@ -25,7 +25,7 @@ class Twitter_resource(Resource):
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print twitter.user_twitter
-			return jsonify({'twitter_handle':twitter.twitter_handle})
+			return jsonify(twitter_authed=True)
 		else:
 			return []
 

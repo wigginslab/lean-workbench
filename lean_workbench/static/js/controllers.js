@@ -132,7 +132,6 @@ function StickController($scope, $http, GoogleAnalytics){
 function ViralityController($scope, $http, Facebook, Twitter){
 	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 	var FBQuery = Facebook.get();
-	var TwitterQuery = Twitter.get();
 
 	if (FBQuery.length > 0){
 		$scope.FB = true;
@@ -162,17 +161,19 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				})   
 	}
 	
+	$scope.has_twitter = false;
+		$http.get(
+				'/api/v1/twitter'
+		).success(
+			function(data){
+				if (data['twitter_authed']){
+					$scope.has_twitter = true;
+				}
+			}
+		)
 
-	if (TwitterQuery['twitter_handle']){
-		$scope.Twitter = true;
-	}
-
-	$scope.has_Twitter = function(){
-		if ($scope.Twitter){
-			return true;
-		}
-	}
-
+	   
+	
 	$scope.twitter_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 		$http.post(
