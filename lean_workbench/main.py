@@ -21,7 +21,7 @@ class SecuredStaticFlask(Flask):
 		if current_user.is_authenticated() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
 		else:
-			return redirect('/static/partials/login.html')
+			return redirect('/static/partials/signin.html')
 
 
 def __import_blueprint(blueprint_str):

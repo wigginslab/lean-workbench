@@ -22,6 +22,11 @@ def twitter_oauth_step_one():
 	return jsonify(redirect_url=auth_url,status=100)
 
 
+@app.route('/connect/twitter/success/', methods=['GET', 'POST'])
+def twitter_success():
+	#return render_template('public.html')
+	return redirect('/onboarding/virality')
+
 @app.route('/connect/twitter/callback/',methods=['GET', 'POST'])
 def twitter_oauth_callback():
 	oauth_verifier = request.args.get('oauth_verifier')

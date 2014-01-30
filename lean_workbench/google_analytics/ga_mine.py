@@ -4,6 +4,8 @@ from models.google_analytics_models import Google_Analytics_Visitors, db
 from google_analytics_client import Google_Analytics_API
 import json 
 
+
+
 class Google_Analytics_User_Querier:
 	"""
 	Used to make leanworkench specific queries to the Google Analytics API

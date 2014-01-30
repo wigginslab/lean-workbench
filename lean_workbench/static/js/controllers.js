@@ -82,6 +82,7 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
+	$scope.has_GA = false;
 
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
@@ -106,6 +107,7 @@ function StickController($scope, $http, GoogleAnalytics){
 			).success(
 			function(data){
 				$scope.GA_profiles = data;
+				$scope.has_GA = true;	
 			}
 		).error(function(data){
 				console.log(data)
@@ -180,7 +182,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				var status = data['status'];
 				if (status == 100){
 					var redirect_url = data['redirect_url'];
-					open(redirect_url);
+					window.location = redirect_url;
 				}
 			}
 		).error(  
