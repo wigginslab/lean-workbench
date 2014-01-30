@@ -23,6 +23,6 @@ def track_keywords(username = None):
 			count = len(search_results['statuses'])
 			print 'count :%i' %(count)
 			date_count = Date_count(count=count)
-			word.counts.append(date_c
-		db.session.commit()
+			word.counts.append(date_count)
+			db.session.commit()
 	db.session.close()

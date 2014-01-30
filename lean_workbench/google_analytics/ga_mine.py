@@ -1,9 +1,16 @@
 from google_time_string import Google_Time_String
 from datetime import datetime, timedelta
-from models.google_analytics_models import Google_Analytics_Visitors, db
+from google_analytics_models import Google_Analytics_Visitors, Google_Analytics_User_Model, db
 from google_analytics_client import Google_Analytics_API
 import json 
 
+def mine_visits():
+	ga_users = Google_Analytics_User_Model.query.all()
+	print ga_users
+	for ga_user in ga_users:
+		ga = Google_Analytics_User_Querier(username=ga_user.username)
+		print ga.get_new_user_visit_data()
+		break
 
 
 class Google_Analytics_User_Querier:
@@ -22,10 +29,10 @@ class Google_Analytics_User_Querier:
 		date = datetime.now()-timedelta(days=1)
 		# google string formatted date
 		google_date = Google_Time_String(str(date))
+		g = Google_Analytics_API(self.username)
 		# go backwards in time up to a year
 		for backwards_days in range(1,366):
 			# create google query object	
-			g = Google_Analytics_API(self.username)
 			# get visitors and visitor types for the day
 			visitor_data = g.client.data().ga().get(
 				ids='ga:' + self.profile_id,
