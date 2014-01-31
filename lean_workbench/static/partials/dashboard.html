@@ -3,22 +3,16 @@
 <div class="container-fluid col-lg-2" ng-controller="DashboardController">
     <ul class="nav nav-pills nav-stacked">
         <li class="active">
-            <a href="index.html"><i class="icon-chevron-right"></i>Hypotheses</a>
+            <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
+        </li>
+       <li>
+            <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
+        </li>
+       <li>
+            <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIS</a>
         </li>
         <li>
-            <a href="/stats"><i class="icon-chevron-right"></i>Measurements</a>
-        </li>
-        <li>
-            <a href="stats.html"><i class="icon-chevron-right"></i>Results</a>
-        </li>
-        <li>
-            <a href="form.html"><i class="icon-chevron-right"></i>Decisions</a>
-        </li>
-        <li>
-            <a href="form.html"><i class="icon-chevron-right"></i>APIS</a>
-        </li>
-        <li>
-            <a href="tables.html"><i class="icon-chevron-right"></i>Export Data</a>
+            <a href="/dashboard"><i class="icon-chevron-right"></i>Export Data</a>
         </li>
     </ul>
 </div>
@@ -31,7 +25,7 @@
                 <div class="block">
                     <div class="navbar container block-header navbar-inverse col-lg-12">
                         <div class="navbar-left navbar-inverse"><a href="#" class="navbar-link">Hypotheses</a></div>
-                        <div class="navbar-right"><span class="badge badge-info">3</span>
+                        <div class="navbar-right"><span class="badge badge-info">2</span>
                         </div>
                     </div>
                     <div class="block-content collapse in">
@@ -48,18 +42,13 @@
                                         <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                <td><a href="#">Revamped Dashboard-Stickiness</a></td>
+                                                <td><a href="/stats/1">Revamped Dashboard-Stickiness</a></td>
                                                 <td>/dashboard</td>
-                                                <td>Stick</td>
+                                                <td>Stick, Virality, Paid</td>
                                             </tr>
                                             <tr>
+                                           <tr>
                                                 <td>2</td>
-                                                <td><a href="#">Revamped Dashboard-Virality</a></td>
-                                                <td>/dashboard</td>
-                                                <td>Virality</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
                                                 <td><a href="#">VC-Matcher</a></td>
                                                 <td>/vcmatch</td>
                                                 <td>Paid</td>

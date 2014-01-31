@@ -2,20 +2,14 @@
 <div class="container-fluid col-lg-2" >
  
     <ul class="nav nav-pills nav-stacked">
+        <li>
+            <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
+        </li>
         <li class="active">
-            <a href="index.html"><i class="icon-chevron-right"></i>Hypotheses</a>
+            <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
         </li>
-        <li>
-            <a href="/stats"><i class="icon-chevron-right"></i>Measurements</a>
-        </li>
-        <li>
-            <a href="stats.html"><i class="icon-chevron-right"></i>Results</a>
-        </li>
-        <li>
-            <a href="form.html"><i class="icon-chevron-right"></i>Decisions</a>
-        </li>
-        <li>
-            <a href="form.html"><i class="icon-chevron-right"></i>APIS</a>
+                <li>
+            <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIS</a>
         </li>
         <li>
             <a href="tables.html"><i class="icon-chevron-right"></i>Export Data</a>
@@ -23,19 +17,19 @@
     </ul>
 </div>
  
-                <div class="span9" id="content">
+                <div class="col-lg-10" id="content">
                       <!-- morris stacked chart -->
                     <div class="row-fluid section">
                          <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Hypothesis: Revamped Dashboard-Stickiness (Monthly)</div>
+								<div class="navbar-left"><h2>Hypothesis: Revamped Dashboard-Stickiness (Monthly)</h2></div>
                                 <div class="pull-right">
                                     <span class="label label-info">Stick Engine</span>
                                 </div>
                             </div>
                             <div class="block-content collapse in">
-                                <div class="span9">
+                                <div class="col-lg-12">
                                     <div id="hero-graph" style="height: 230px;"></div>
                                 </div>
                             </div>
@@ -48,18 +42,18 @@
                           <!-- morris graph chart -->
 
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Hypothesis: Revamped Dashboard-Virality</div>
+								<div class="pull-left"><h2>Hypothesis: Revamped Dashboard-Virality</h2></div>
                                 <div class="pull-right">
                                     <span class="label label-info">Virality Engine</span>
                                 </div>
                             </div>
                             <div class="block-content collapse in">
-                                <div class="span7">
-                                    <h5>Twitter and Facebook Virality Coefficients</h5>
+                                <div class="col-lg-7">
+									<h3>Twitter and Facebook Virality</h3>
                                     <div id="hero-area" style="height: 250px;"></div>
                                 </div>
-                                <div class="span5 chart">
-                                    <h5>Traffic Sources</h5>
+                                <div class="col-lg-5 chart">
+                                    <h3>Traffic Sources</h3>
                                     <div id="hero-donut" style="height: 250px;"></div>    
                                 </div>
                             </div>
@@ -74,15 +68,15 @@
                          <!-- block -->
                         <div class="block">
                             <div class="navbar navbar-inner block-header">
-                                <div class="muted pull-left">Paid Engine</div>
+								<div class="muted pull-left"><h2>Hypothesis: VC-Matcher-Paid</h2></div>
                             </div>
                             <div class="block-content collapse in">
-                                <div class="span6 chart">
-                                    <h5>Subscriptions sold</h5>
+                                <div class="col-lg-6 chart">
+                                    <h3>Subscriptions sold</h3>
                                     <div id="hero-bar" style="height: 250px;"></div>
                                 </div>
-                                <div class="span5 chart">
-                                    <h5>Average Income</h5>
+                                <div class="col-lg-5 chart">
+                                    <h3>Average Income</h3>
                                     <div id="money-area" style="height: 250px;"></div>    
                                 </div>
                             </div>

@@ -360,6 +360,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
 	.when('/stats', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);
