@@ -54,7 +54,7 @@ class Google_Analytics_Visitors(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String)
 	profile_id = db.Column(db.Integer)
-	date = db.Column(db.String)
+	date = db.Column(db.DateTime)
 	visitors = db.Column(db.Integer)
 	new_visits = db.Column(db.Integer)
 	percent_new_visits = db.Column(db.Integer)

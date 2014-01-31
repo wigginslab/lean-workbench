@@ -30,3 +30,5 @@ class Twitter_resource(Resource):
 		else:
 			return []
 
+	def post(self):
+		args = request.args()
