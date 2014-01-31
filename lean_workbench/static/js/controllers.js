@@ -31,6 +31,20 @@ function MeasurementsController($scope, $http){
           $scope.errorMsg = data.reason;
         }
       );
+			$http.get(
+				'/api/v1/google-analytics/',
+				JSON.stringify({'metric':'visits'})
+			).success(
+				function(data){
+					$scope.GA_data = data;
+				}
+			)
+
+    $scope.xAxisTickFormat = function(){
+        return function(d){
+            return d3.time.format('%x')(new Date(d));  //uncomment for date format
+        }
+    }
 }
 
 function DashboardController($scope) {
@@ -373,7 +387,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
-	.when('/dashboard', {templateUrl: '/static/partials/dashboard.html', controller: MeasurementsController})
+	.when('/dashboard', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);
