@@ -5,46 +5,7 @@ function MyCtrl1(){
 }
 
 function MeasurementsController($scope, $http){
-	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
-	$http.defaults.headers.common['Content-Type'] = 'application/json';
-	$http.defaults.headers.common['Accept'] = 'application/json';
-	// check if onboarded
-    $http.get(
-    	'/api/v1/users'
-    ).success(
-    	function(data){
-          // if success
-		  	console.log('success')
-			var onboarded = data['onboarded'];
-			if (onboarded == false){
-				console.log('onboarding false')
-				window.location = "/onboarding/stick";
-			}
-
-		  	else{
-            	var errors = data['response']['errors'];	
-		  	}
-        }
-     	).error(
-        function(data){
-          console.log('registration error')
-          $scope.errorMsg = data.reason;
-        }
-      );
-			$http.get(
-				'/api/v1/google-analytics/',
-				JSON.stringify({'metric':'visits'})
-			).success(
-				function(data){
-					$scope.GA_data = data;
-				}
-			)
-
-    $scope.xAxisTickFormat = function(){
-        return function(d){
-            return d3.time.format('%x')(new Date(d));  //uncomment for date format
-        }
-    }
+ 
 }
 
 function DashboardController($scope) {
@@ -186,7 +147,18 @@ function ViralityController($scope, $http, Facebook, Twitter){
 			}
 		)
 
-	   
+		$scope.has_fb = false;
+		$http.get(
+				'/api/v1/facebook'
+		).success(
+			function(data){
+				if (data['fb_authed']){
+					$scope.has_fb = true;
+				}
+			}
+		)
+
+   
 	
 	$scope.twitter_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
@@ -382,12 +354,12 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-  //  .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
+    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
-	.when('/dashboard', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	.when('/stats', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);

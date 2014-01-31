@@ -1,29 +1,113 @@
 <div ng-controller="MeasurementsController">
-<nav class="navbar navbar-default" role="navigation">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
-      <span class="sr-only">Toggle navigation</span>
-    </button>
-    <a class="navbar-brand" href="#">Flat UI</a>
-  </div>
-  <div class="collapse navbar-collapse" id="navbar-collapse-01">
-    <ul class="nav navbar-nav">           
-      <li class="active"><a href="#fakelink">Products</a></li>
-      <li><a href="#fakelink">Features</a></li>
-    </ul>           
-  </div><!-- /.navbar-collapse -->
-</nav><!-- /navbar -->
-    <nvd3-line-chart
-            data="GA_data"
-            id="google-analytics-graph"
-            width="800"
-            height="400"
-            showXAxis="true"
-            showYAxis="true"
-            tooltips="true"
-            margin="{left:50,top:50,bottom:50,right:50}"
-            xAxisTickFormat="xAxisTickFormat()"
-            >
-        <svg></svg>
-    </nvd3-line-chart>
-</div>               
+<div class="container-fluid col-lg-2" >
+ 
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active">
+            <a href="index.html"><i class="icon-chevron-right"></i>Hypotheses</a>
+        </li>
+        <li>
+            <a href="/stats"><i class="icon-chevron-right"></i>Measurements</a>
+        </li>
+        <li>
+            <a href="stats.html"><i class="icon-chevron-right"></i>Results</a>
+        </li>
+        <li>
+            <a href="form.html"><i class="icon-chevron-right"></i>Decisions</a>
+        </li>
+        <li>
+            <a href="form.html"><i class="icon-chevron-right"></i>APIS</a>
+        </li>
+        <li>
+            <a href="tables.html"><i class="icon-chevron-right"></i>Export Data</a>
+        </li>
+    </ul>
+</div>
+ 
+                <div class="span9" id="content">
+                      <!-- morris stacked chart -->
+                    <div class="row-fluid section">
+                         <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">Hypothesis: Revamped Dashboard-Stickiness (Monthly)</div>
+                                <div class="pull-right">
+                                    <span class="label label-info">Stick Engine</span>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span9">
+                                    <div id="hero-graph" style="height: 230px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                    <div class="row-fluid">
+                        <!-- block -->
+                        <div class="block">
+                          <!-- morris graph chart -->
+
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">Hypothesis: Revamped Dashboard-Virality</div>
+                                <div class="pull-right">
+                                    <span class="label label-info">Virality Engine</span>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span7">
+                                    <h5>Twitter and Facebook Virality Coefficients</h5>
+                                    <div id="hero-area" style="height: 250px;"></div>
+                                </div>
+                                <div class="span5 chart">
+                                    <h5>Traffic Sources</h5>
+                                    <div id="hero-donut" style="height: 250px;"></div>    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+
+        
+
+                    <!-- morris bar & donut charts -->
+                    <div class="row-fluid section">
+                         <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+                                <div class="muted pull-left">Paid Engine</div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="span6 chart">
+                                    <h5>Subscriptions sold</h5>
+                                    <div id="hero-bar" style="height: 250px;"></div>
+                                </div>
+                                <div class="span5 chart">
+                                    <h5>Average Income</h5>
+                                    <div id="money-area" style="height: 250px;"></div>    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                </div>
+            </div>
+			<hr>
+        </div>
+        <!--/.fluid-container-->
+        <link rel="stylesheet" href="/static/vendors/morris/morris.css">
+
+
+        <script src="/static/demo/vendors/jquery-1.9.1.min.js"></script>
+        <script src="/static/demo/vendors/jquery.knob.js"></script>
+        <script src="/static/demo/vendors/raphael-min.js"></script>
+        <script src="/static/demo/vendors/morris/morris.min.js"></script>
+
+        <script src="/static/demo/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.categories.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.pie.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.time.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.stack.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.resize.js"></script>
+		<script src="/static/demo/assets/scripts.js"></script>
+		<script src="/static/js/demo.js"></script>

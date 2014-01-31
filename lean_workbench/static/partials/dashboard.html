@@ -44,22 +44,28 @@
                                     <th>Engine</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                            	<div ng-controller="HypothesesListController">
-                                	<div ng-repeat="hypothesis in hypotheses | orderBy: 'id':true ">
-                                		<tr>
-                                			<td>[[hypothesis.id]]</td>
-                                			<td><a href="/api/v1/hypotheses/[[hypothesis.id]]">[[hypothesis.title]]</td>
-                                			<td>[[hypothesis.endpoint]]</td>
-                                			<td>[[hypothesis.engine]]</td>
-                                		</tr>
-    								</div>
-    							</list>
-                            </tbody>
-    						<div ng-show="!hypothesis.length">
-    							You have no experiments yet.<a ng-click="new_hypothesis()">Make one?</a>
-                            <div>
-    						</table>
+                     
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td><a href="#">Revamped Dashboard-Stickiness</a></td>
+                                                <td>/dashboard</td>
+                                                <td>Stick</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td><a href="#">Revamped Dashboard-Virality</a></td>
+                                                <td>/dashboard</td>
+                                                <td>Virality</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td><a href="#">VC-Matcher</a></td>
+                                                <td>/vcmatch</td>
+                                                <td>Paid</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
     					<form novalidate role="form" ng-show="make_hyp()" form-submit="submit_hyp()" name="hypothesis-form">
     			</form>
 

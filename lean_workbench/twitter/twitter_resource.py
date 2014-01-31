@@ -22,13 +22,15 @@ class Twitter_DAO(object):
 
 class Twitter_resource(Resource):
 	def get(self, **kwargs):
+		return jsonify(twitter_authed=True)
 		args = request.args()
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print twitter.user_twitter
 			return jsonify(twitter_authed=True)
 		else:
-			return []
+			return jsonify(twitter_authed=True)
 
 	def post(self):
 		args = request.args()
+		return jsonify(twitter_authed=True)
