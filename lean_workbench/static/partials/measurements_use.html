@@ -1,0 +1,40 @@
+<div ng-controller="MeasurementsController">
+	<nav class="navbar navbar-default" role="navigation">
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+		  <span class="sr-only">Toggle navigation</span>
+		</button>
+		<a class="navbar-brand" href="#">Stickiness</a>
+	  </div>
+	</nav><!-- /navbar -->
+    <nvd3-line-chart
+            data="GA_data"
+            id="google-analytics-graph"
+            width="800"
+            height="400"
+            showXAxis="true"
+            showYAxis="true"
+            tooltips="true"
+            margin="{left:50,top:50,bottom:50,right:50}"
+            xAxisTickFormat="xAxisTickFormat()"
+            >
+        <svg></svg>
+		</nvd3-line-chart>
+	<nav class="navbar navbar-default" role="navigation">
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+		  <span class="sr-only">Toggle navigation</span>
+		</button>
+		<a class="navbar-brand" href="#">Virality</a>
+	  </div>
+	</nav><!-- /navbar -->
+    <nav class="navbar navbar-default" role="navigation">
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">
+		  <span class="sr-only">Toggle navigation</span>
+		</button>
+		<a class="navbar-brand" href="#">Pay</a>
+	  </div>
+	</nav><!-- /navbar -->
+    
+</div>               

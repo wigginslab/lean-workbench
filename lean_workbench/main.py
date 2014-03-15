@@ -166,7 +166,11 @@ def configure_views(app):
 	def sign():
 		return render_template('public.html', logged_in=current_user.is_authenticated())
 
+
+
 	@auth_token_required
+	@app.route('/stats', methods=['POST','GET'])
+	@app.route('/stats/1',methods=['POST','GET'])
 	@app.route('/onboarding/stick', methods=['POST', 'GET'])
 	@app.route('/onboarding/virality', methods=['POST','GET'])
 	@app.route('/onboarding/pay', methods=['POST','GET'])

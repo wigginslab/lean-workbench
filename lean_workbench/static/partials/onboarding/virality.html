@@ -16,13 +16,13 @@
           <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
         </p>
        <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
-        <p ng-show="has_fb()"><b>Your Facebook account is connected.</b></p>
-        <p ng-hide="has_fb()" class="center">
+        <p ng-show="has_fb"><b>Your Facebook account is connected.</b></p>
+        <p ng-hide="has_fb" class="center">
           <button ng-click="fb_auth()" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>
         </p>
         <div class="center">
           <ul class="pager">
-            <li><a ng-click="done_onboarding()">Next</a></li>
+            <li><a href="/onboarding/pay">Next</a></li>
           </ul>
         </div>
     </div>

@@ -1,5 +1,6 @@
 import sys
 import os
+from flask import jsonify
 from facebook_model import Facebook_model
 from database import db
 from flask.ext.restful import Resource, reqparse, fields, marshal_with, abort
@@ -12,7 +13,8 @@ class Facebook_DAO(object):
 
 class Facebook_resource(Resource):
 	def get(self, **kwargs):
-		fb = Facebook_DAO()
+		#fb = Facebook_DAO()
+		return jsonify(fb_authed=True)
 		if fb.user_facebook:
 			return [fb.user_facebook]
 		else:
