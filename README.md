@@ -31,9 +31,9 @@ sudo pip install virtualenv
 virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
+npm install .
 python lean_workbench/manage.py create_db
 python lean_workbench/manage.py runserver 
-npm install .
 ```
 Configuration
 --------------------
