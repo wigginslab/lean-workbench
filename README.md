@@ -32,6 +32,7 @@ virtualenv venv
  . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
  pip install -r "requirements.txt"
 npm install .
+grunt sass
 python lean_workbench/manage.py create_db
 python lean_workbench/manage.py runserver 
 ```
