@@ -52,6 +52,28 @@ function DashboardController($scope) {
 	$scope.new_hypothesis = function(){
 
 		$scope.show_form = true;
+		/*TODO*/
+		 $http.post(
+        '/api/v1/hypotheses',
+        JSON.stringify({name: $scope.name, twitter: $scope.twitter})
+        ).success(
+        function(data){
+          // if success
+          if (data['response']['user']){
+                 $location.path("/onboarding/stick");
+          }
+
+          else{
+            // TODO: brevity
+            var errors = data['response']['errors'];
+           }
+          }
+     	).error(
+        function(data){
+          console.log('registration error')
+          $scope.errorMsg = data.reason;
+        }
+      );
 	
 	}
 }

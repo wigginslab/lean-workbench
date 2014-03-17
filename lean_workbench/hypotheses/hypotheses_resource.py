@@ -43,7 +43,7 @@ class Hypothesis_DAO(object):
 
 	def add_user_hypothesis(self, **kwargs):
 		goal = kwargs.get('goal')
-		google_analytics = kwargs.get('google_analytics')
+		google_analytics = kwargs.get('google-analytics')
 		wufoo = kwargs.get('wufoo')
 		twitter = kwargs.get('twitter')
 		facebook = kwargs.get('twitter')

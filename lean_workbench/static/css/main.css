@@ -384,6 +384,10 @@ body {
     padding: 0;
     border: 0; }
 
+form#hypothesis-form {
+  width: 50%;
+  text-align: center;
+  margin: auto; }
 
 .border-button {
   background: none;
