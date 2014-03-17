@@ -234,7 +234,7 @@ function PayController($scope){
 }
 
 
-var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices', 'nvd3ChartDirectives'], 
+var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
 	function($interpolateProvider) {
 		$interpolateProvider.startSymbol('[[');
 		$interpolateProvider.endSymbol(']]');
