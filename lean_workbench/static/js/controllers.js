@@ -18,6 +18,9 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
 }
 
 function DashboardController($scope) {
+	$( ".datepicker" ).datepicker();
+
+	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
      $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
       $http.defaults.headers.common['Content-Type'] = 'application/json'
@@ -47,6 +50,8 @@ function DashboardController($scope) {
     }
 
 	$scope.new_hypothesis = function(){
+
+		$scope.show_form = true;
 	
 	}
 }

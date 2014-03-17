@@ -19,7 +19,7 @@
     <!--/span-->
     <div class="col-lg-10" id="content">
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-lg-10" ng-controller="HypothesesListController">
                 <h1>Ongoing Hypotheses</h1>
                 <!-- block -->
                 <div class="block">
@@ -28,6 +28,13 @@
                         <div class="navbar-right"><span class="badge badge-info">2</span>
                         </div>
                     </div>
+                    <button class="btn btn-primary btn-sm" ng-click="new_hypothesis()">Create new hypothesis</button>
+                    <form novalidate class="hypothesis-form" ng-show="show_form">
+                        <input name="title" placeholder="Hypothesis Title">
+                        <p><input type="text" class="datepicker" name="end-date" placeholder="Start Date"></p>
+                        <p><input type="text" class="datepicker" name="end-date" placeholder="End Date"></p>
+                        <p><button class="btn btn-primary btn-sm" ng-click="create_hypothesis()">Submit</button>
+                    </form>
                     <div class="block-content collapse in">
                         <table class="table table-striped">
                             <thead>

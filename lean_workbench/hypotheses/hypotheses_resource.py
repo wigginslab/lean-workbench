@@ -45,6 +45,8 @@ class Hypothesis_DAO(object):
 		goal = kwargs.get('goal')
 		google_analytics = kwargs.get('google_analytics')
 		wufoo = kwargs.get('wufoo')
+		twitter = kwargs.get('twitter')
+		facebook = kwargs.get('twitter')
 		event = kwargs.get('event')
 		hypothesis = Hypothesis_Model(username=self.username,
 				goal=goal,
@@ -77,5 +79,6 @@ class Hypothesis_resource(Resource):
 		print username
 		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
 		return {"status":200, "hypotheses":hypotheses, "onboarded":current_user.onboarded}	
+
 	def post(self, **kwargs):
 		return Hypothesis_DAO.add_user_hypothesis(kwargs)
