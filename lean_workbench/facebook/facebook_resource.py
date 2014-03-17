@@ -14,11 +14,13 @@ class Facebook_DAO(object):
 class Facebook_resource(Resource):
 	def get(self, **kwargs):
 		#fb = Facebook_DAO()
-		return jsonify(fb_authed=True)
+		facebook_user = Facebook_model.query.filter_by(username=current_user.email).first()
+		print facebook_user
+		if facebook_user:
+			return jsonify(fb_authed=True)
+		else:
+			return jsonify(fb_authed=False)
 		if fb.user_facebook:
 			return [fb.user_facebook]
 		else:
 			return []
-
-
-	

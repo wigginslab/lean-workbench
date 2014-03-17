@@ -101,7 +101,7 @@ function StickController($scope, $http, GoogleAnalytics){
 	$scope.submit_prof = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 		$http.post(
-			'/api/v1/google-analytics/',
+			'/api/v1/google-analytics',
 			JSON.stringify({metric:'profile-id', profile_id:$scope.user_profile})
 		).success(
 			function(data){
