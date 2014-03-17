@@ -8,7 +8,7 @@ def track_keywords(username = None):
 	app_key = os.getenv('twitter_app_key') 
 	app_secret = os.getenv('twitter_app_secret')
 	if username:
-		twitter_models = Twitter_model.query.filter_by(username=username)
+		twitter_models = Twitter_model.query.filter_by(username=username).first()
 	else:
 		twitter_models = Twitter_model.query.all()
 

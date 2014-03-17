@@ -32,6 +32,7 @@ class Dev(UserConfig):
     ]  # each as (blueprint_instance, url_preffix)
   
 	SQLALCHEMY_ECHO=True
+	
 class Testing(UserConfig):
     TESTING = True
     CSRF_ENABLED = False

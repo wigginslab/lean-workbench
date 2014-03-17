@@ -4,9 +4,11 @@ from google_analytics_models import Google_Analytics_Visitors, Google_Analytics_
 from google_analytics_client import Google_Analytics_API
 import json 
 
-def mine_visits():
-	ga_users = Google_Analytics_User_Model.query.all()
-	print ga_users
+def mine_visits(username=None):
+	if not username:
+		ga_users = Google_Analytics_User_Model.query.all()
+	else:
+		ga_users = Google_Analytics_User_Model.query.filter_by(username=username).first()
 	for ga_user in ga_users:
 		ga = Google_Analytics_User_Querier(username=ga_user.username)
 

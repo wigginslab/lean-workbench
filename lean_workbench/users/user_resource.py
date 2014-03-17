@@ -5,6 +5,7 @@ from user_model import User, db
 from flask.ext.restful import Resource, reqparse
 from flask import jsonify, request
 from flask.ext.security import auth_token_required, current_user
+from mine import mine_new_user
 
 path = os.getenv("path")
 sys.path.append(path)
@@ -26,5 +27,7 @@ class User_resource(Resource):
 			current_user.onboarded = True
 			db.session.commit()
 			db.session.close()
+			username = current_user.email
+			mine_new_user(username)
 		else:
 			print 'not onboarded'
