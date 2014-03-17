@@ -4,7 +4,16 @@
 function MyCtrl1(){
 }
 
-function MeasurementsController($scope, $http){
+function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twitter){
+	// Hypotheses query
+	var hyp = Hypotheses.get();
+	//GA query
+	var ga = GoogleAnalytics.get();
+	// Twitter Query
+	var twitter = Twitter.get();
+	// Quickbooks Query
+	//Wufoo Query
+
  
 }
 
@@ -78,7 +87,7 @@ function StickController($scope, $http, GoogleAnalytics){
 	}
 
 	var profiles =  $http.get(
-			'/api/v1/google-analytics/'
+			'/api/v1/google-analytics'
 			).success(
 			function(data){
 				$scope.GA_profiles = data;

@@ -185,5 +185,5 @@ def configure_views(app):
 	api.add_resource(Facebook_resource, '/api/v1/facebook')
 	api.add_resource(Twitter_resource, '/api/v1/twitter')
 	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
-	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics/')
+	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
 	api.add_resource(User_resource, '/api/v1/users')
