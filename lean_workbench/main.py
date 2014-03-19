@@ -159,6 +159,7 @@ def make_celery(app):
 	return celery
 
 def configure_views(app):
+	
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)

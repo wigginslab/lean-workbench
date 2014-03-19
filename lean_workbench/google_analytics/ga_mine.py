@@ -8,9 +8,11 @@ def mine_visits(username=None):
 	if not username:
 		ga_users = Google_Analytics_User_Model.query.all()
 	else:
-		ga_users = Google_Analytics_User_Model.query.filter_by(username=username).first()
-	for ga_user in ga_users:
-		ga = Google_Analytics_User_Querier(username=ga_user.username)
+		ga_users = [Google_Analytics_User_Model.query.filter_by(username=username).first()]
+	print ga_users
+	if ga_users:
+		for ga_user in ga_users:
+			ga = Google_Analytics_User_Querier(username=ga_user.username)
 
 class Google_Analytics_User_Querier:
 	"""

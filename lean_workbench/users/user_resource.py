@@ -29,5 +29,6 @@ class User_resource(Resource):
 			db.session.close()
 			username = current_user.email
 			mine_new_user(username)
+			return jsonify(status=200)
 		else:
 			print 'not onboarded'
