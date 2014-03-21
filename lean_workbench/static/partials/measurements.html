@@ -1,0 +1,107 @@
+<div ng-controller="MeasurementsController">
+<div class="container-fluid col-lg-2" >
+ 
+    <ul class="nav nav-pills nav-stacked">
+        <li>
+            <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
+        </li>
+        <li class="active">
+            <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
+        </li>
+                <li>
+            <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIS</a>
+        </li>
+        <li>
+            <a href="tables.html"><i class="icon-chevron-right"></i>Export Data</a>
+        </li>
+    </ul>
+</div>
+ 
+                <div class="col-lg-10" id="content">
+                      <!-- morris stacked chart -->
+                    <div class="row-fluid section">
+                         <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+								<div class="navbar-left"><h2>Hypothesis: Revamped Dashboard-Stickiness (Monthly)</h2></div>
+                                <div class="pull-right">
+                                    <span class="label label-info">Stick Engine</span>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="col-lg-12">
+                                    <div id="hero-graph" style="height: 230px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                    <div class="row-fluid">
+                        <!-- block -->
+                        <div class="block">
+                          <!-- morris graph chart -->
+
+                            <div class="navbar navbar-inner block-header">
+								<div class="pull-left"><h2>Hypothesis: Revamped Dashboard-Virality</h2></div>
+                                <div class="pull-right">
+                                    <span class="label label-info">Virality Engine</span>
+                                </div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="col-lg-7">
+									<h3>Twitter and Facebook Virality</h3>
+                                    <div id="hero-area" style="height: 250px;"></div>
+                                </div>
+                                <div class="col-lg-5 chart">
+                                    <h3>Traffic Sources</h3>
+                                    <div id="hero-donut" style="height: 250px;"></div>    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+
+        
+
+                    <!-- morris bar & donut charts -->
+                    <div class="row-fluid section">
+                         <!-- block -->
+                        <div class="block">
+                            <div class="navbar navbar-inner block-header">
+								<div class="muted pull-left"><h2>Hypothesis: VC-Matcher-Paid</h2></div>
+                            </div>
+                            <div class="block-content collapse in">
+                                <div class="col-lg-6 chart">
+                                    <h3>Subscriptions sold</h3>
+                                    <div id="hero-bar" style="height: 250px;"></div>
+                                </div>
+                                <div class="col-lg-5 chart">
+                                    <h3>Average Income</h3>
+                                    <div id="money-area" style="height: 250px;"></div>    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /block -->
+                    </div>
+                </div>
+            </div>
+			<hr>
+        </div>
+        <!--/.fluid-container-->
+        <link rel="stylesheet" href="/static/vendors/morris/morris.css">
+
+
+        <script src="/static/demo/vendors/jquery-1.9.1.min.js"></script>
+        <script src="/static/demo/vendors/jquery.knob.js"></script>
+        <script src="/static/demo/vendors/raphael-min.js"></script>
+        <script src="/static/demo/vendors/morris/morris.min.js"></script>
+
+        <script src="/static/demo/bootstrap/js/bootstrap.min.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.categories.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.pie.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.time.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.stack.js"></script>
+        <script src="/static/demo/vendors/flot/jquery.flot.resize.js"></script>
+		<script src="/static/demo/assets/scripts.js"></script>
+		<script src="/static/js/demo.js"></script>

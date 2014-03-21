@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+	ServerName http://107.170.121.6/ 
+	ServerAdmin admin@lwb.com
+	WSGIScriptAlias / /var/www/lean-workbench/lean_workbench/LWB.wsgi
+	<Directory /var/www/lean-workbench/lean_workbench/>
+		Order allow,deny
+		Allow from all
+	</Directory>
+	Alias /static /var/www/lean-workbench/lean_workbench/static
+	<Directory /var/www/lean-workbench/lean_workbench/static/>
+		Order allow,deny
+		Allow from all
+	</Directory>
+	ErrorLog error.log
+	LogLevel warn
+	CustomLog access.log combined
+</VirtualHost>
