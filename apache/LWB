@@ -1,7 +1,7 @@
 <VirtualHost *:80>
 	ServerName http://162.243.212.78 
 	ServerAdmin admin@lwb.com
-	WSGIScriptAlias / /var/www/lean-workbench/LWB.wsgi
+	WSGIScriptAlias / /var/www/lean-workbench/flaskapp.wsgi
 	<Directory /var/www/lean-workbench/lean_workbench/>
 		Order allow,deny
 		Allow from all

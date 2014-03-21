@@ -31,6 +31,7 @@ sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get install nodejs
+sudo apt-get install postgresql postgresql-contrib
 npm install -g grunt-cli
 mkdir /var/www
 cd /var/www
@@ -51,7 +52,8 @@ python lean_workbench/manage.py runserver
 
 ```
 sudo apt-get update
-sudo apt-get install libapache2-mod-wsgi 
+sudo apt-get install libapache2-mod-wsgi
+sudo apt-get install postgresql postgresql-contrib 
 sudo a2enmod wsgi 
 sudo apt-get install git
 sudo apt-get install -y python-software-properties python g++ make
