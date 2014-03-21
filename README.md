@@ -23,7 +23,10 @@ lean-workbench uses a number of open source projects to work properly:
  
 Installation
 --------------
-
+Note: You will need to have postgresql installed locally. On Ubuntu machines, this can be done with:
+```
+sudo apt-get install libpq-dev python-dev
+```
 ```
 git clone https://github.com/wigginslab/lean-workbench
 cd lean-workbench
