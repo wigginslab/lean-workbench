@@ -17,7 +17,7 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
  
 }
 
-function DashboardController($scope) {
+function DashboardController($scope, $http) {
 	$( ".datepicker" ).datepicker();
 
 	$scope.show_form = false;
@@ -49,35 +49,51 @@ function DashboardController($scope) {
       );
     }
 
+    $scope.create_hypothesis = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['Content-Type'] = 'application/json';
+		$http.defaults.headers.common['Accept'] = 'application/json';
+		alert('clicked create hytpothesis')
+		$http.post(
+			'/api/v1/hypotheses',
+
+			JSON.stringify({google_analytics:$scope.google_analytics,
+			 start_date:$scope.start_date, end_date:$scope.end_date, title:$scope.title})
+			).success(
+				function(data){
+				
+					// TODO: brevity
+					var errors = data['response']['errors'];
+					if (errors.hasOwnProperty('end_date')){
+						$scope.end_date_error = true;
+					}
+					if (errors.hasOwnProperty('start_date')){
+						$scope.start_date = true;
+					}
+					if (errors.hasOwnProperty('google_analytics')) {
+						$scope.google_analytics = true;
+					}            
+					if (errors.hasOwnProperty('title')){
+						$scope.title = true;
+					}
+				}
+
+			).error(
+				function(data){
+					console.log('hypothesis error')
+					alert(data)
+					$scope.errorMsg = data.reason;
+				}
+			);
+	};
+
+    
+
 	$scope.new_hypothesis = function(){
 
 		$scope.show_form = true;
-		/*TODO*/
-		 $http.post(
-        '/api/v1/hypotheses',
-        JSON.stringify({name: $scope.name, twitter: $scope.twitter})
-        ).success(
-        function(data){
-          // if success
-          if (data['response']['user']){
-                 $location.path("/onboarding/stick");
-          }
-
-          else{
-            // TODO: brevity
-            var errors = data['response']['errors'];
-           }
-          }
-     	).error(
-        function(data){
-          console.log('registration error')
-          $scope.errorMsg = data.reason;
-        }
-      );
-	
 	}
 }
-
 function CarouselController($scope, $location, $anchorScroll){
   $scope.scroll_to = function(id) {
       $location.hash(id);
@@ -274,7 +290,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 									}
 									if (errors.hasOwnProperty('company')){
 										// $scope.company_error = errors['company'][0];
-										$scope.comapany_error = true;
+										$scope.company_error = true;
 									}
 									if (errors.hasOwnProperty('password')) {
 										$scope.password_error = true;

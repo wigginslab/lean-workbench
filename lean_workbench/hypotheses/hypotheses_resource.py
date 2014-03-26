@@ -43,17 +43,21 @@ class Hypothesis_DAO(object):
 
 	def add_user_hypothesis(self, **kwargs):
 		goal = kwargs.get('goal')
-		google_analytics = kwargs.get('google-analytics')
+		google_analytics = kwargs.get('google_analytics')
 		wufoo = kwargs.get('wufoo')
 		twitter = kwargs.get('twitter')
-		facebook = kwargs.get('twitter')
+		facebook = kwargs.get('facebook')
 		event = kwargs.get('event')
+		start_date = kwargs.get('start_date')
+		end_date = kwargs.get('end_date')
 		hypothesis = Hypothesis_Model(username=self.username,
 				goal=goal,
 				wufoo=wufoo,
 				event=event,
 				twitter=twitter,
-				facebook=facebook
+				facebook=facebook,
+				start_date=start_date,
+				end_date=end_date
 		)
 		db.session.add(hypothesis)
 		db.session.commit()
@@ -76,9 +80,9 @@ class Hypothesis_resource(Resource):
 		args = parser.parse_args()
 		print current_user
 		username = current_user.email
-		print username
 		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
 		return {"status":200, "hypotheses":hypotheses, "onboarded":current_user.onboarded}	
 
 	def post(self, **kwargs):
-		return Hypothesis_DAO.add_user_hypothesis(kwargs)
+		hypothesis = Hypothesis_DAO(username)
+		return hypothesis.add_user_hypothesis(kwargs)
