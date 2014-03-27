@@ -57,7 +57,8 @@ class Hypothesis_DAO(object):
 				"twitter":twitter,
 				"facebook":facebook,
 				"creation_date":start_date,
-				"end_date":end_date
+				"end_date":end_date,
+				"goal":title
 			}
 		)
 		db.session.add(hypothesis)

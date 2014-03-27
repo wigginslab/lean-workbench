@@ -1,5 +1,4 @@
 <div class="dashboard clearfix">
-
 <div class="container-fluid col-lg-2" ng-controller="DashboardController">
     <ul class="nav nav-pills nav-stacked">
         <li class="active">
@@ -30,7 +29,6 @@
                     </div>
                     <button class="btn btn-primary btn-sm" ng-click="new_hypothesis()">Create new hypothesis</button>
                     <form novalidate id="hypothesis-form" ng-show="show_form" name="hypothesisForm">
-                        [[formData]]
                         [[errorMsg]]
                         <div class="form-group">
                             <input ng-model="formData.title" placeholder="Hypothesis Title" class="form-control">
