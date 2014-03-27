@@ -29,18 +29,20 @@
                         </div>
                     </div>
                     <button class="btn btn-primary btn-sm" ng-click="new_hypothesis()">Create new hypothesis</button>
-                    <form novalidate id="hypothesis-form" ng-show="show_form">
+                    <form novalidate id="hypothesis-form" ng-show="show_form" name="hypothesisForm">
+                        [[formData]]
+                        [[errorMsg]]
                         <div class="form-group">
-                            <input name="title" placeholder="Hypothesis Title" class="form-control">
+                            <input ng-model="formData.title" placeholder="Hypothesis Title" class="form-control">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="datepicker form-control" name="end-date" placeholder="Start Date"></p>
+                            <input type="text" class="datepicker form-control" ng-model="formData.start_date" placeholder="Start Date"></p>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="datepicker form-control" name="end-date" placeholder="End Date"></p>
+                            <input type="text" class="datepicker form-control" ng-model="formData.end_date" placeholder="End Date"></p>
                         </div>
                         <div class="form-group">
-                            <p><input type="text" class="form-control" name="google-analytics" placeholder="Feature endpoint (optional)"></p>
+                            <p><input type="text" class="form-control" ng-model="formData.google_analytics" placeholder="Feature endpoint (optional)"></p>
                         </div>
                         <p><button class="btn btn-primary btn-sm" ng-click="create_hypothesis()">Submit</button>
                     </form>

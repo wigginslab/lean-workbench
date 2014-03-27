@@ -49,17 +49,20 @@ function DashboardController($scope, $http) {
       );
     }
 
+    $scope.formData = {};
+
+
     $scope.create_hypothesis = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
 		$http.defaults.headers.common['Content-Type'] = 'application/json';
 		$http.defaults.headers.common['Accept'] = 'application/json';
-		alert('clicked create hytpothesis')
-		$http.post(
-			'/api/v1/hypotheses',
+		$http({
+			method: "POST",
+			url: '/api/v1/hypotheses',
+			data: $scope.formData,
+			headers : { 'Content-Type': 'application/json' }
 
-			JSON.stringify({google_analytics:$scope.google_analytics,
-			 start_date:$scope.start_date, end_date:$scope.end_date, title:$scope.title})
-			).success(
+			}).success(
 				function(data){
 				
 					// TODO: brevity
@@ -81,7 +84,6 @@ function DashboardController($scope, $http) {
 			).error(
 				function(data){
 					console.log('hypothesis error')
-					alert(data)
 					$scope.errorMsg = data.reason;
 				}
 			);

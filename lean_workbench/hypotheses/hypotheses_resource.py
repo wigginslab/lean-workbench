@@ -3,7 +3,7 @@ import sys
 import os
 from hypotheses_model import Hypothesis_model, db
 from flask.ext.restful import Resource, reqparse
-from flask import session, escape, abort, jsonify
+from flask import session, escape, abort, jsonify, request
 from flask.ext.security import auth_token_required, current_user
 from werkzeug.exceptions import Unauthorized
 
@@ -20,7 +20,8 @@ parser.add_argument('event', type=str)
 parser.add_argument('social', type=str)
 parser.add_argument('facebook', type=str)
 parser.add_argument('twitter', type=str)
-
+parser.add_argument('end_time', type=str)
+parser.add_argument('start_time', type=str)
 
 from werkzeug.exceptions import Unauthorized
 
@@ -41,31 +42,31 @@ class Hypothesis_DAO(object):
 		hypotheses = Hypothesis_model.query.filter_by(username=self.username).all()
 		return hypotheses
 
-	def add_user_hypothesis(self, **kwargs):
-		goal = kwargs.get('goal')
-		google_analytics = kwargs.get('google_analytics')
-		wufoo = kwargs.get('wufoo')
-		twitter = kwargs.get('twitter')
-		facebook = kwargs.get('facebook')
-		event = kwargs.get('event')
-		start_date = kwargs.get('start_date')
-		end_date = kwargs.get('end_date')
-		hypothesis = Hypothesis_Model(username=self.username,
-				goal=goal,
-				wufoo=wufoo,
-				event=event,
-				twitter=twitter,
-				facebook=facebook,
-				start_date=start_date,
-				end_date=end_date
+	def add_user_hypothesis(self, form_dict):
+		goal = form_dict.get('goal')
+		google_analytics = form_dict.get('google_analytics')
+		wufoo = form_dict.get('wufoo')
+		twitter = form_dict.get('twitter')
+		facebook = form_dict.get('facebook')
+		event = form_dict.get('event')
+		start_date = form_dict.get('start_date')
+		end_date = form_dict.get('end_date')
+		hypothesis = Hypothesis_model({"username":self.username,
+				"wufoo":wufoo,
+				"event":event,
+				"twitter":twitter,
+				"facebook":facebook,
+				"creation_date":start_date,
+				"end_date":end_date
+			}
 		)
 		db.session.add(hypothesis)
 		db.session.commit()
 		db.session.close()
-		return {"status":200}
+		return jsonify(status=200)
 
-	def get_a_hypothesis(self, **kwargs):
-		hyp_id = kwargs.get('id')
+	def get_a_hypothesis(self, **form_dict):
+		hyp_id = form_dict.get('id')
 		# TODO: make query better
 		return Hypothesis_Model.query.filter_by(username=self.username).get_all()[hyp_id]
 
@@ -76,13 +77,16 @@ class Hypothesis_resource(Resource):
 	def get(self, **kwargs):
 		if not current_user.is_authenticated():
 			return jsonify(message='Unauthorized', status_code=400)
-		print kwargs
+		print form_dict
 		args = parser.parse_args()
 		print current_user
 		username = current_user.email
 		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
 		return {"status":200, "hypotheses":hypotheses, "onboarded":current_user.onboarded}	
 
-	def post(self, **kwargs):
+	def post(self):
+		username = current_user.email
 		hypothesis = Hypothesis_DAO(username)
-		return hypothesis.add_user_hypothesis(kwargs)
+		print hypothesis
+		print request.json
+		return hypothesis.add_user_hypothesis(request.json)

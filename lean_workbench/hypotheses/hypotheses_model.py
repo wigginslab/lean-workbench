@@ -15,14 +15,15 @@ class Hypothesis_model(db.Model):
 	creation_date = db.Column(db.DateTime)
 	end_date = db.Column(db.DateTime)
 
-	def __init__(self, form_dict, username):
-		self.username = username
+	def __init__(self, form_dict):
+		self.username = form_dict.get('username')
 		self.goal = form_dict.get('title')
 		self.google_analytics = form_dict.get('google_analytics')
 		self.wufoo = form_dict.get('wufoo')
 		self.endpoint = form_dict.get('endpoint')
 		self.twitter_keyword = form_dict.get('twitter_keyword') 
-		self.event = db.Column(db.String)
+		self.event =form_dict.get('event')
+		self.end_date = form_dict.get('end_date')
 		self.creation_date = datetime.datetime.now()
 
 	def end(self):
