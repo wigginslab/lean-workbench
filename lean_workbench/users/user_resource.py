@@ -5,7 +5,7 @@ from user_model import User, db
 from flask.ext.restful import Resource, reqparse
 from flask import jsonify, request
 from flask.ext.security import auth_token_required, current_user
-from mine import mine_new_user
+from mine import *
 
 path = os.getenv("path")
 sys.path.append(path)

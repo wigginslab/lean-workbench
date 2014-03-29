@@ -13,7 +13,6 @@ from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
 from users.user_resource import User_resource
-from celery import Celery
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -52,7 +51,6 @@ def app_factory(config, app_name=None, blueprints=None):
 	configure_extensions(app)
 	configure_before_request(app)
 	configure_views(app)
-	make_celery(app)
 	return app
 
 def configure_app(app, config):
@@ -145,18 +143,6 @@ def configure_extensions(app):
 
 def configure_before_request(app):
 	pass
-
-def make_celery(app):
-	celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
-	celery.conf.update(app.config)
-	TaskBase = celery.Task
-	class ContextTask(TaskBase):
-	    abstract = True
-	    def __call__(self, *args, **kwargs):
-	        with app.app_context():
-	            return TaskBase.__call__(self, *args, **kwargs)
-	celery.Task = ContextTask
-	return celery
 
 def configure_views(app):
 	
