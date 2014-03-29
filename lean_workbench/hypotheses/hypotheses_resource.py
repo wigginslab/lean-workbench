@@ -6,6 +6,7 @@ from flask.ext.restful import Resource, reqparse
 from flask import session, escape, abort, jsonify, request
 from flask.ext.security import auth_token_required, current_user
 from werkzeug.exceptions import Unauthorized
+import json
 
 
 path = os.getenv("path")
@@ -40,10 +41,11 @@ class Hypothesis_DAO(object):
 		
 	def get_user_hypotheses(self):
 		hypotheses = Hypothesis_model.query.filter_by(username=self.username).all()
-		return hypotheses
+		hypotheses_list = [hyp.serialize for hyp in hypotheses]
+		return hypotheses_list
 
 	def add_user_hypothesis(self, form_dict):
-		goal = form_dict.get('goal')
+		title = form_dict.get('title')
 		google_analytics = form_dict.get('google_analytics')
 		wufoo = form_dict.get('wufoo')
 		twitter = form_dict.get('twitter')
@@ -51,6 +53,9 @@ class Hypothesis_DAO(object):
 		event = form_dict.get('event')
 		start_date = form_dict.get('start_date')
 		end_date = form_dict.get('end_date')
+		endpoint = os.getenv('endpoint')
+		print google_analytics
+		print title
 		hypothesis = Hypothesis_model({"username":self.username,
 				"wufoo":wufoo,
 				"event":event,
@@ -58,7 +63,9 @@ class Hypothesis_DAO(object):
 				"facebook":facebook,
 				"creation_date":start_date,
 				"end_date":end_date,
-				"goal":title
+				"title":title,
+				"endpoint":endpoint,
+				"google_analytics":google_analytics
 			}
 		)
 		db.session.add(hypothesis)
@@ -78,12 +85,11 @@ class Hypothesis_resource(Resource):
 	def get(self, **kwargs):
 		if not current_user.is_authenticated():
 			return jsonify(message='Unauthorized', status_code=400)
-		print form_dict
 		args = parser.parse_args()
 		print current_user
 		username = current_user.email
 		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
-		return {"status":200, "hypotheses":hypotheses, "onboarded":current_user.onboarded}	
+		return jsonify(status=200, hypotheses = hypotheses,onboarded=current_user.onboarded)
 
 	def post(self):
 		username = current_user.email

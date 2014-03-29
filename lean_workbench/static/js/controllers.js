@@ -17,8 +17,9 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
  
 }
 
-function DashboardController($scope, $http) {
+function DashboardController($scope, $http, Hypotheses) {
 	$( ".datepicker" ).datepicker();
+	$scope.hypotheses = Hypotheses.get();
 
 	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
@@ -67,17 +68,25 @@ function DashboardController($scope, $http) {
 				
 					// TODO: brevity
 					var errors = data['response']['errors'];
-					if (errors.hasOwnProperty('end_date')){
-						$scope.end_date_error = true;
+					if (typeof errors != "undefined")
+					{
+
+						$scope.hypotheses = Hypotheses.get();
+
 					}
-					if (errors.hasOwnProperty('start_date')){
-						$scope.start_date = true;
-					}
-					if (errors.hasOwnProperty('google_analytics')) {
-						$scope.google_analytics = true;
-					}            
-					if (errors.hasOwnProperty('title')){
-						$scope.title = true;
+					else{
+						if (errors.hasOwnProperty('end_date')){
+							$scope.end_date_error = true;
+						}
+						if (errors.hasOwnProperty('start_date')){
+							$scope.start_date = true;
+						}
+						if (errors.hasOwnProperty('google_analytics')) {
+							$scope.google_analytics = true;
+						}            
+						if (errors.hasOwnProperty('title')){
+							$scope.title = true;
+						}
 					}
 				}
 
