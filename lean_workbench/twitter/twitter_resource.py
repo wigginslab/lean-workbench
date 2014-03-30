@@ -29,7 +29,7 @@ class Twitter_resource(Resource):
 			print twitter.user_twitter
 			return jsonify(twitter_authed=True)
 		else:
-			return jsonify(twitter_authed=True)
+			return jsonify(twitter_authed=False)
 
 	def post(self):
 		args = request.args()
