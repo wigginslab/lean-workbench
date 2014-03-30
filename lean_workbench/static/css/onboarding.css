@@ -108,3 +108,7 @@
   .onboarding input::-moz-focus-inner {
     padding: 0;
     border: 0; }
+
+#google-prof-submit {
+  margin-top: 10px;
+  margin-bottom: 10px; }

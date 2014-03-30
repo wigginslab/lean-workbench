@@ -110,6 +110,10 @@
     padding: 0;
     border: 0; }
 
+#google-prof-submit {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+
 /* GLOBAL STYLES
     -------------------------------------------------- */
 /* Padding below the footer and lighter body text */
