@@ -16,3 +16,5 @@ facebook-sdk
 itsdangerous
 requests
 celery
+redis
+iron_worker

@@ -35,4 +35,8 @@ class Hypothesis_model(db.Model):
 		"""Return object data in easily serializeable format"""
 		return {
 			'id': self.id,
+			'title': self.title,
+			'endpoint': self.google_analytics,
+			'creation_date': str(self.creation_date),
+			'end_date':str(self.end_date)
 		}

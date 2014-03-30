@@ -14,8 +14,9 @@ def facebook_oauth_step_one():
 	app_key = current_app.config['FACEBOOK_APP_KEY']  
 	app_secret = current_app.config['FACEBOOK_APP_SECRET']
 	callback_url= current_app.config['FACEBOOK_CALLBACK_URL']
+	scope = "manage_pages"
 	args = dict(client_id=app_key,
-                    redirect_uri=callback_url)
+                    redirect_uri=callback_url, scope=scope)
 	session['redirect_uri'] = callback_url
 	return jsonify({"redirect_url": "https://graph.facebook.com/oauth/authorize?" +
                 urllib.urlencode(args), 'status':100})
@@ -27,6 +28,8 @@ def facebook_oauth_callback():
 	args["client_secret"] = current_app.config['FACEBOOK_APP_SECRET'] 
 	args["code"] = request.args.get("code")
 	args["redirect_uri"] = session.pop('redirect_uri', None)
+	args['scope'] = "manage_pages"
+
 	response = cgi.parse_qs(urllib.urlopen("https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(args)).read())
 	access_token = response["access_token"][-1]
 

@@ -34,8 +34,10 @@ class Mine(Command):
 	def run(self):
 		from twitter.twitter_mine import track_keywords
 		from google_analytics.ga_mine import mine_visits
-		mine_visits()
-		track_keywords()
+        #from facebook.fb_mine import mine_fb_page_data
+        #mine_fb_page_data()
+		#mine_visits()
+		#track_keywords()
 
 class Test(Command):
     """

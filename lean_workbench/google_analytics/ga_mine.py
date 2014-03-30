@@ -13,6 +13,8 @@ def mine_visits(username=None):
 	if ga_users:
 		for ga_user in ga_users:
 			ga = Google_Analytics_User_Querier(username=ga_user.username)
+			# get the latest visit data
+			ga.get_new_user_visit_data()
 
 class Google_Analytics_User_Querier:
 	"""

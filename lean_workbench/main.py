@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, current_app
 from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user, auth_token_required, current_user
 from users.user_model import User, Role
 from database import db
@@ -13,6 +13,7 @@ from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
 from users.user_resource import User_resource
+from celery import Celery
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -144,6 +145,20 @@ def configure_extensions(app):
 def configure_before_request(app):
 	pass
 
+
+
+def make_celery(app):
+    celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+    class ContextTask(TaskBase):
+        abstract = True
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
+    return celery
+
 def configure_views(app):
 	
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
@@ -164,8 +179,6 @@ def configure_views(app):
 	def sign():
 		return render_template('public.html', logged_in=current_user.is_authenticated())
 
-
-
 	@auth_token_required
 	@app.route('/stats', methods=['POST','GET'])
 	@app.route('/stats/1',methods=['POST','GET'])
@@ -185,3 +198,6 @@ def configure_views(app):
 	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
 	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
 	api.add_resource(User_resource, '/api/v1/users')
+
+	from facebook.fb_mine import mine_fb_page_data
+	mine_fb_page_data()

@@ -1,46 +1,49 @@
-<div class="dashboard clearfix">
-<div class="container-fluid col-lg-2" ng-controller="DashboardController">
-    <ul class="nav nav-pills nav-stacked">
-        <li class="active">
-            <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
-        </li>
-       <li>
-            <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
-        </li>
-       <li>
-            <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
-        </li>
-        <li>
-            <a href="/dashboard"><i class="icon-chevron-right"></i>Export Data</a>
-        </li>
-    </ul>
-</div>
+<div class="dashboard clearfix" ng-controller="DashboardController">
+    <div class="container-fluid col-lg-2" >
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active">
+                <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
+            </li>
+           <li>
+                <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
+            </li>
+           <li>
+                <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
+            </li>
+            <li>
+                <a href="/dashboard"><i class="icon-chevron-right"></i>Export Data</a>
+            </li>
+        </ul>
+    </div>
     <!--/span-->
     <div class="col-lg-10" id="content">
         <div class="row">
-            <div class="col-lg-10" ng-controller="HypothesesListController">
+            <div class="col-lg-10">
                 <h1>Ongoing Hypotheses</h1>
                 <!-- block -->
                 <div class="block">
                     <div class="navbar container block-header navbar-inverse col-lg-12">
                         <div class="navbar-left navbar-inverse"><a href="#" class="navbar-link">Hypotheses</a></div>
-                        <div class="navbar-right"><span class="badge badge-info">2</span>
+                        <div class="navbar-right"><span class="badge badge-info">[[hypotheses.length]]</span>
                         </div>
                     </div>
                     <button class="btn btn-primary btn-sm" ng-click="new_hypothesis()">Create new hypothesis</button>
-                    <form novalidate id="hypothesis-form" ng-show="show_form" name="hypothesisForm">
+                    <form validate id="hypothesis-form" ng-show="show_form" name="hypothesisForm">
                         [[errorMsg]]
                         <div class="form-group">
-                            <input ng-model="formData.title" placeholder="Hypothesis Title" class="form-control">
+                            <input ng-model="formData.title" placeholder="Hypothesis Title" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="datepicker form-control" ng-model="formData.start_date" placeholder="Start Date"></p>
+                            <input type="text" class="datepicker form-control" ng-model="formData.start_date" placeholder="Start Date" required></p>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="datepicker form-control" ng-model="formData.end_date" placeholder="End Date"></p>
+                            <input type="text" class="datepicker form-control" ng-model="formData.end_date" placeholder="End Date" required></p>
                         </div>
                         <div class="form-group">
                             <p><input type="text" class="form-control" ng-model="formData.google_analytics" placeholder="Feature endpoint (optional)"></p>
+                        </div>
+                        <div class="form-group">
+                            <p><input type="text" class="form-control" ng-model="formData.twitter" placeholder="Twitter keywords to track, separated by commas (optional)"></p>
                         </div>
                         <p><button class="btn btn-primary btn-sm" ng-click="create_hypothesis()">Submit</button>
                     </form>
@@ -51,22 +54,15 @@
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>Feature Endpoint</th>
-                                    <th>Engine</th>
+                                    <th>Twitter keywords</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td><a href="/stats/1">Revamped Dashboard-Stickiness</a></td>
-                                    <td>/dashboard</td>
-                                    <td>Stick, Virality, Paid</td>
-                                </tr>
-                                <tr>
-                               <tr>
-                                    <td>2</td>
-                                    <td><a href="#">VC-Matcher</a></td>
-                                    <td>/vcmatch</td>
-                                    <td>Paid</td>
+                                 <tr ng-repeat="hypothesis in hypotheses">
+                                    <td>[[hypothesis.id]]</td>
+                                    <td><a href="/hypotheses/[[hypothesis.id]]">[[hypothesis.title]]</a></td>
+                                    <td>[[hypothesis.endpoint]]</td>
+                                    <td>[[hypothesis.twitter]]</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -74,7 +70,6 @@
     			         </form>
                     </div>
                 </div>
-                [[hypotheses]]
                 <h3>Percent Completed</h3>
                     <div class="block-content collapse in">
                         <div class="col-lg-4">

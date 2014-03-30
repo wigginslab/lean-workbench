@@ -6,6 +6,8 @@ import commands
 
 from gunicorn_server import GunicornServer
 
+from celery import Celery
+
 if __name__ == "__main__":
 	from main import app_factory
 	import config

@@ -7,7 +7,10 @@ from flask import session, escape, abort, jsonify, request
 from flask.ext.security import auth_token_required, current_user
 from werkzeug.exceptions import Unauthorized
 import json
-
+import sys
+sys.path.append('..')
+from twitter.twitter_mine import *
+from google_analytics.ga_mine import *
 
 path = os.getenv("path")
 sys.path.append(path)
@@ -71,6 +74,14 @@ class Hypothesis_DAO(object):
 		db.session.add(hypothesis)
 		db.session.commit()
 		db.session.close()
+		# if twitter data exists
+		if twitter:
+			# mine it
+			pass
+
+		if google_analytics:
+			# mine it
+			pass
 		return jsonify(status=200)
 
 	def get_a_hypothesis(self, **form_dict):

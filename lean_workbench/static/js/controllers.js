@@ -17,9 +17,28 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
  
 }
 
-function DashboardController($scope, $http, Hypotheses) {
-	$( ".datepicker" ).datepicker();
-	$scope.hypotheses = Hypotheses.get();
+
+
+function DashboardController($scope, $http, Hypotheses, $resource) {
+
+	$( ".datepicker" ).datepicker({ minDate: 0 });
+  	/*$scope.hypotheses = Hypotheses.get(function(hypotheses){
+  		console.log(hypotheses.hypotheses)
+  		console.log(hypotheses.hypotheses[0])
+  		$scope.hypotheses = hypotheses.hypotheses;
+  	});*/
+	var hypotheses=  $http.get(
+			'/api/v1/hypotheses'
+			).success(
+			function(data){
+				console.log(data)
+				console.log(data.hypotheses)
+				$scope.hypotheses = data.hypotheses;
+			}
+		).error(function(data){
+				console.log(data)
+			}
+		)
 
 	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
@@ -77,15 +96,19 @@ function DashboardController($scope, $http, Hypotheses) {
 					else{
 						if (errors.hasOwnProperty('end_date')){
 							$scope.end_date_error = true;
+							$scope.errorMsg = "Improper end date.";
 						}
 						if (errors.hasOwnProperty('start_date')){
 							$scope.start_date = true;
+							$scope.errorMsg = "Improper start date";
 						}
-						if (errors.hasOwnProperty('google_analytics')) {
+						if (errors.hasOwnProperty('google_analytics.')) {
 							$scope.google_analytics = true;
+							$scope.errorMsg = "Improper endpoint";
 						}            
 						if (errors.hasOwnProperty('title')){
 							$scope.title = true;
+							$scope.errorMsg = "Improper title.";
 						}
 					}
 				}
