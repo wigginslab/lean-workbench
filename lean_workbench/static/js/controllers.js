@@ -429,7 +429,13 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
       }
     }
 
+
+    $scope.scroll_to = function(id) {
+      $location.hash(id);
+      $anchorScroll();
+   }
   }
+
 
 })
 .controller({

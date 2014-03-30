@@ -46,8 +46,7 @@
 	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 		<ul class="nav navbar-nav">
 			<li class="active"><a href="/">Home</a></li>
-			<li><a href="/features">Features</a></li>
-			<li><a href="https://github.com/wigginslab/lean-workbench">GitHub</a></li>
+			<li><a ng-click="scroll-to('features')">Features</a></li>
 			<li><a href="mailto:jen@leanworkbench.com">Contact Us</a></li>
 			 {% if not logged_in %}
 			  <li><a class="pointer" ng-click="click_login()">Login</a></li>
@@ -62,7 +61,7 @@
 
 	  <!-- FOOTER -->
 	  <footer>
-		<p>© 2014 Lean Workbench, Inc. <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+		<p>© 2014 Lean Workbench, Inc.</p>
 	  </footer>
 	</div><!-- /.container -->
 	<!-- Le javascript
