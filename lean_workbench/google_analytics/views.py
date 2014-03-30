@@ -40,7 +40,7 @@ def google_analytics_oauth():
 def google_analytics_success():
 	return render_template('public.html')
 
-@auth_token_required
+
 @app.route('/connect/google-analytics/callback/',methods=['GET', 'POST'])
 def google_analytics_callback():
 	google_analytics_callback_url = current_app.config['GOOGLE_ANALYTICS_CALLBACK_URL']
@@ -53,4 +53,3 @@ def google_analytics_callback():
 	else:
 		return redirect('/')
 	return redirect('/onboarding/virality')
-
