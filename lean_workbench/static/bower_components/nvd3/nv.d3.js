@@ -3,7 +3,7 @@
 var nv = window.nv || {};
 
 
-nv.version = '1.1.15b';
+nv.version = '1.1.14b';
 nv.dev = true //set false when in production
 
 window.nv = nv;
@@ -68,10 +68,7 @@ nv.render = function render(step) {
     nv.render.queue.splice(0, i);
 
     if (nv.render.queue.length) setTimeout(arguments.callee, 0);
-    else {
-      nv.dispatch.render_end();
-      nv.render.active = false;
-    }
+    else { nv.render.active = false; nv.dispatch.render_end(); }
   }, 0);
 };
 
@@ -971,16 +968,15 @@ nv.utils.pjax = function(links, content) {
 }
 
 /* For situations where we want to approximate the width in pixels for an SVG:text element.
-Most common instance is when the element is in a display:none; container.
+Most common instance is when the element is in a display:none; container. 
 Forumla is : text.length * font-size * constant_factor
 */
 nv.utils.calcApproxTextWidth = function (svgTextElem) {
-    if (typeof svgTextElem.style === 'function'
-        && typeof svgTextElem.text === 'function') {
+    if (svgTextElem instanceof d3.selection) {
         var fontSize = parseInt(svgTextElem.style("font-size").replace("px",""));
         var textLength = svgTextElem.text().length;
 
-        return textLength * fontSize * 0.5;
+        return textLength * fontSize * 0.5; 
     }
     return 0;
 };
@@ -988,8 +984,8 @@ nv.utils.calcApproxTextWidth = function (svgTextElem) {
 /* Numbers that are undefined, null or NaN, convert them to zeros.
 */
 nv.utils.NaNtoZero = function(n) {
-    if (typeof n !== 'number'
-        || isNaN(n)
+    if (typeof n !== 'number' 
+        || isNaN(n) 
         || n === null
         || n === Infinity) return 0;
 
@@ -1113,7 +1109,7 @@ nv.utils.optionsFunc = function(args) {
                   return 'translate(' + scale(d) + ',0)'
                 })
               .select('text')
-                .attr('dy', '-0.5em')
+                .attr('dy', '0em')
                 .attr('y', -axis.tickPadding())
                 .attr('text-anchor', 'middle')
                 .text(function(d,i) {
@@ -1271,7 +1267,7 @@ nv.utils.optionsFunc = function(args) {
               if (scale(d) < scale.range()[1] + 10 || scale(d) > scale.range()[0] - 10) { // 10 is assuming text height is 16... if d is 0, leave it!
                 if (d > 1e-10 || d < -1e-10) // accounts for minor floating point errors... though could be problematic if the scale is EXTREMELY SMALL
                   d3.select(this).attr('opacity', 0);
-
+                
                 d3.select(this).select('text').attr('opacity', 0); // Don't remove the ZERO line!!
               }
             });
@@ -1337,7 +1333,7 @@ nv.utils.optionsFunc = function(args) {
   d3.rebind(chart, scale, 'domain', 'range', 'rangeBand', 'rangeBands'); //these are also accessible by chart.scale(), but added common ones directly for ease of use
 
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if(!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -2520,7 +2516,6 @@ nv.models.cumulativeLineChart = function() {
     , average = function(d) { return d.average }
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState')
     , transitionDuration = 250
-    , noErrorCheck = false  //if set to TRUE, will bypass an error check in the indexify function.
     ;
 
   xAxis
@@ -2552,7 +2547,35 @@ nv.models.cumulativeLineChart = function() {
     nv.tooltip.show([left, top], content, null, null, offsetElement);
   };
 
+/*
+  //Moved to see if we can get better behavior to fix issue #315
+  var indexDrag = d3.behavior.drag()
+                    .on('dragstart', dragStart)
+                    .on('drag', dragMove)
+                    .on('dragend', dragEnd);
+
+  function dragStart(d,i) {
+    d3.select(chart.container)
+        .style('cursor', 'ew-resize');
+  }
+
+  function dragMove(d,i) {
+    d.x += d3.event.dx;
+    d.i = Math.round(dx.invert(d.x));
+
+    d3.select(this).attr('transform', 'translate(' + dx(d.i) + ',0)');
+    chart.update();
+  }
+
+  function dragEnd(d,i) {
+    d3.select(chart.container)
+        .style('cursor', 'auto');
+    chart.update();
+  }
+*/
+
   //============================================================
+
 
   function chart(selection) {
     selection.each(function(data) {
@@ -2690,7 +2713,7 @@ nv.models.cumulativeLineChart = function() {
       gEnter.append('g').attr('class', 'nv-avgLinesWrap').style("pointer-events","none");
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-controlsWrap');
-
+      
 
       //------------------------------------------------------------
       // Legend
@@ -2723,13 +2746,7 @@ nv.models.cumulativeLineChart = function() {
           { key: 'Re-scale y-axis', disabled: !rescaleY }
         ];
 
-        controls
-            .width(140)
-            .color(['#444', '#444', '#444'])
-            .rightAlign(false)
-            .margin({top: 5, right: 0, bottom: 5, left: 20})
-            ;
-
+        controls.width(140).color(['#444', '#444', '#444']);
         g.select('.nv-controlsWrap')
             .datum(controlsData)
             .attr('transform', 'translate(0,' + (-margin.top) +')')
@@ -2760,7 +2777,7 @@ nv.models.cumulativeLineChart = function() {
 
       //------------------------------------------------------------
       // Main Chart Component(s)
-
+      
       //------------------------------------------------------------
       //Set up interactive layer
       if (useInteractiveGuideline) {
@@ -2901,7 +2918,7 @@ nv.models.cumulativeLineChart = function() {
       function updateZero() {
         indexLine
           .data([index]);
-
+        
         //When dragging the index line, turn off line transitions.
         // Then turn them back on when done dragging.
         var oldDuration = chart.transitionDuration();
@@ -2933,7 +2950,7 @@ nv.models.cumulativeLineChart = function() {
         updateZero();
       });
 
-      controls.dispatch.on('legendClick', function(d,i) {
+      controls.dispatch.on('legendClick', function(d,i) { 
         d.disabled = !d.disabled;
         rescaleY = !d.disabled;
 
@@ -2944,7 +2961,7 @@ nv.models.cumulativeLineChart = function() {
 
 
       legend.dispatch.on('stateChange', function(newState) {
-        state.disabled = newState.disabled;
+        state.disabled = newState.disabled; 
         dispatch.stateChange(state);
         chart.update();
       });
@@ -2952,12 +2969,12 @@ nv.models.cumulativeLineChart = function() {
       interactiveLayer.dispatch.on('elementMousemove', function(e) {
           lines.clearHighlights();
           var singlePoint, pointIndex, pointXLocation, allData = [];
-
-
+          
+          
           data
-          .filter(function(series, i) {
+          .filter(function(series, i) { 
             series.seriesIndex = i;
-            return !series.disabled;
+            return !series.disabled; 
           })
           .forEach(function(series,i) {
               pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
@@ -3085,7 +3102,7 @@ nv.models.cumulativeLineChart = function() {
   d3.rebind(chart, lines, 'defined', 'isArea', 'x', 'y', 'xScale','yScale', 'size', 'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi','useVoronoi',  'id');
 
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if (!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -3203,12 +3220,6 @@ nv.models.cumulativeLineChart = function() {
     return chart;
   };
 
-  chart.noErrorCheck = function(_) {
-    if (!arguments.length) return noErrorCheck;
-    noErrorCheck = _;
-    return chart;
-  };
-
   //============================================================
 
 
@@ -3225,9 +3236,8 @@ nv.models.cumulativeLineChart = function() {
       var v = lines.y()(line.values[idx], idx);
 
       //TODO: implement check below, and disable series if series loses 100% or more cause divide by 0 issue
-      if (v < -.95 && !noErrorCheck) {
+      if (v < -.95) {
         //if a series loses more than 100%, calculations fail.. anything close can cause major distortion (but is mathematically correct till it hits 100)
-
         line.tempDisabled = true;
         return line;
       }
@@ -3720,10 +3730,7 @@ nv.models.discreteBarChart = function() {
       var g = wrap.select('g');
 
       gEnter.append('g').attr('class', 'nv-x nv-axis');
-      gEnter.append('g').attr('class', 'nv-y nv-axis')
-            .append('g').attr('class', 'nv-zeroLine')
-            .append('line');
-        
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
       gEnter.append('g').attr('class', 'nv-barsWrap');
 
       g.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
@@ -3797,14 +3804,6 @@ nv.models.discreteBarChart = function() {
           g.select('.nv-y.nv-axis').transition()
               .call(yAxis);
       }
-
-      // Zero line
-      g.select(".nv-zeroLine line")
-        .attr("x1",0)
-        .attr("x2",availableWidth)
-        .attr("y1", y(0))
-        .attr("y2", y(0))
-        ;
 
       //------------------------------------------------------------
 
@@ -4323,7 +4322,7 @@ nv.models.historicalBarChart = function() {
       // Event Handling/Dispatching (in chart's scope)
       //------------------------------------------------------------
 
-      legend.dispatch.on('legendClick', function(d,i) {
+      legend.dispatch.on('legendClick', function(d,i) { 
         d.disabled = !d.disabled;
 
         if (!data.filter(function(d) { return !d.disabled }).length) {
@@ -4345,7 +4344,7 @@ nv.models.historicalBarChart = function() {
           data.forEach(function(d) {
              d.disabled = true;
           });
-          d.disabled = false;
+          d.disabled = false;  
 
           state.disabled = data.map(function(d) { return !!d.disabled });
           dispatch.stateChange(state);
@@ -4367,7 +4366,7 @@ nv.models.historicalBarChart = function() {
           state.disabled = e.disabled;
         }
 
-        chart.update();
+        selection.call(chart);
       });
 
       //============================================================
@@ -4409,11 +4408,11 @@ nv.models.historicalBarChart = function() {
   chart.xAxis = xAxis;
   chart.yAxis = yAxis;
 
-  d3.rebind(chart, bars, 'defined', 'isArea', 'x', 'y', 'size', 'xScale', 'yScale',
+  d3.rebind(chart, bars, 'defined', 'isArea', 'x', 'y', 'size', 'xScale', 'yScale', 
     'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY', 'interactive', 'clipEdge', 'clipVoronoi', 'id', 'interpolate','highlightPoint','clearHighlights', 'interactive');
 
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if (!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -4922,7 +4921,7 @@ nv.models.indentedTree = function() {
                 data.forEach(function(series) {
                    series.disabled = true;
                 });
-                d.disabled = false;
+                d.disabled = false; 
                 dispatch.stateChange({
                     disabled: data.map(function(d) { return !!d.disabled })
                 });
@@ -4955,14 +4954,12 @@ nv.models.indentedTree = function() {
               var legendText = d3.select(this).select('text');
               var nodeTextLength;
               try {
-                nodeTextLength = legendText.getComputedTextLength();
-                // If the legendText is display:none'd (nodeTextLength == 0), simulate an error so we approximate, instead
-                if(nodeTextLength <= 0) throw Error();
+                nodeTextLength = legendText.node().getComputedTextLength();
               }
               catch(e) {
                 nodeTextLength = nv.utils.calcApproxTextWidth(legendText);
               }
-
+             
               seriesWidths.push(nodeTextLength + 28); // 28 is ~ the width of the circle plus some padding
             });
 
@@ -5053,7 +5050,7 @@ nv.models.indentedTree = function() {
 
   chart.dispatch = dispatch;
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if (!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -5144,7 +5141,7 @@ nv.models.line = function() {
     .size(16) // default size
     .sizeDomain([16,256]) //set to speed up calculation, needs to be unset if there is a custom size accessor
     ;
-
+    
   //============================================================
 
 
@@ -5212,7 +5209,7 @@ nv.models.line = function() {
 
       wrap.select('#nv-edge-clip-' + scatter.id() + ' rect')
           .attr('width', availableWidth)
-          .attr('height', (availableHeight > 0) ? availableHeight : 0);
+          .attr('height', availableHeight);
 
       g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + scatter.id() + ')' : '');
       scatterWrap
@@ -5226,9 +5223,11 @@ nv.models.line = function() {
       groups.enter().append('g')
           .style('stroke-opacity', 1e-6)
           .style('fill-opacity', 1e-6);
-
-      groups.exit().remove();
-
+      groups.exit()
+          .transition()
+          .style('stroke-opacity', 1e-6)
+          .style('fill-opacity', 1e-6)
+          .remove();
       groups
           .attr('class', function(d,i) { return 'nv-group nv-series-' + i })
           .classed('hover', function(d) { return d.hover })
@@ -5257,7 +5256,7 @@ nv.models.line = function() {
           });
       groups.exit().selectAll('path.nv-area')
            .remove();
-
+           
       areaPaths
           .transition()
           .attr('d', function(d) {
@@ -5284,7 +5283,15 @@ nv.models.line = function() {
               .x(function(d,i) { return nv.utils.NaNtoZero(x0(getX(d,i))) })
               .y(function(d,i) { return nv.utils.NaNtoZero(y0(getY(d,i))) })
           );
-
+      groups.exit().selectAll('path.nv-line')
+          .transition()
+          .attr('d',
+            d3.svg.line()
+              .interpolate(interpolate)
+              .defined(defined)
+              .x(function(d,i) { return nv.utils.NaNtoZero(x(getX(d,i))) })
+              .y(function(d,i) { return nv.utils.NaNtoZero(y(getY(d,i))) })
+          );
       linePaths
           .transition()
           .attr('d',
@@ -5314,11 +5321,11 @@ nv.models.line = function() {
   chart.dispatch = scatter.dispatch;
   chart.scatter = scatter;
 
-  d3.rebind(chart, scatter, 'id', 'interactive', 'size', 'xScale', 'yScale', 'zScale', 'xDomain', 'yDomain', 'xRange', 'yRange',
+  d3.rebind(chart, scatter, 'id', 'interactive', 'size', 'xScale', 'yScale', 'zScale', 'xDomain', 'yDomain', 'xRange', 'yRange', 
     'sizeDomain', 'forceX', 'forceY', 'forceSize', 'clipVoronoi', 'useVoronoi', 'clipRadius', 'padData','highlightPoint','clearHighlights');
 
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if (!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -5472,7 +5479,7 @@ nv.models.lineChart = function() {
       //set state.disabled
       state.disabled = data.map(function(d) { return !!d.disabled });
 
-
+    
       if (!defaultState) {
         var key;
         defaultState = {};
@@ -5531,9 +5538,7 @@ nv.models.lineChart = function() {
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-interactive');
 
-      g.select("rect")
-        .attr("width",availableWidth)
-        .attr("height",(availableHeight > 0) ? availableHeight : 0);
+      g.select("rect").attr("width",availableWidth).attr("height",availableHeight);
       //------------------------------------------------------------
       // Legend
 
@@ -5566,7 +5571,7 @@ nv.models.lineChart = function() {
       //------------------------------------------------------------
       // Main Chart Component(s)
 
-
+      
       //------------------------------------------------------------
       //Set up interactive layer
       if (useInteractiveGuideline) {
@@ -5639,9 +5644,9 @@ nv.models.lineChart = function() {
           lines.clearHighlights();
           var singlePoint, pointIndex, pointXLocation, allData = [];
           data
-          .filter(function(series, i) {
+          .filter(function(series, i) { 
             series.seriesIndex = i;
-            return !series.disabled;
+            return !series.disabled; 
           })
           .forEach(function(series,i) {
               pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
@@ -5697,7 +5702,7 @@ nv.models.lineChart = function() {
 
       dispatch.on('changeState', function(e) {
 
-        if (typeof e.disabled !== 'undefined' && data.length === e.disabled.length) {
+        if (typeof e.disabled !== 'undefined') {
           data.forEach(function(series,i) {
             series.disabled = e.disabled[i];
           });
@@ -8528,7 +8533,6 @@ nv.models.multiBarHorizontal = function() {
     , disabled // used in conjunction with barColor to communicate from multiBarHorizontalChart what series are disabled
     , stacked = false
     , showValues = false
-    , showBarLabels = false
     , valuePadding = 60
     , valueFormat = d3.format(',.2f')
     , delay = 1200
@@ -8741,21 +8745,6 @@ nv.models.multiBarHorizontal = function() {
         bars.selectAll('text').text('');
       }
 
-      if (showBarLabels && !stacked) {
-        barsEnter.append('text').classed('nv-bar-label',true);
-        bars.select('text.nv-bar-label')
-            .attr('text-anchor', function(d,i) { return getY(d,i) < 0 ? 'start' : 'end' })
-            .attr('y', x.rangeBand() / (data.length * 2))
-            .attr('dy', '.32em')
-            .text(function(d,i) { return getX(d,i) });
-        bars.transition()
-          .select('text.nv-bar-label')
-            .attr('x', function(d,i) { return getY(d,i) < 0 ? y(0) - y(getY(d,i)) + 4 : -4 });
-      }
-      else {
-        bars.selectAll('text.nv-bar-label').text('');
-      }
-
       bars
           .attr('class', function(d,i) { return getY(d,i) < 0 ? 'nv-bar negative' : 'nv-bar positive'})
 
@@ -8930,13 +8919,6 @@ nv.models.multiBarHorizontal = function() {
     return chart;
   };
 
-  chart.showBarLabels = function(_) {
-    if (!arguments.length) return showBarLabels;
-    showBarLabels = _;
-    return chart;
-  };
-
-
   chart.valueFormat= function(_) {
     if (!arguments.length) return valueFormat;
     valueFormat = _;
@@ -8974,8 +8956,6 @@ nv.models.multiBarHorizontalChart = function() {
     , color = nv.utils.defaultColor()
     , showControls = true
     , showLegend = true
-    , showXAxis = true
-    , showYAxis = true
     , stacked = false
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
@@ -9096,9 +9076,7 @@ nv.models.multiBarHorizontalChart = function() {
       var g = wrap.select('g');
 
       gEnter.append('g').attr('class', 'nv-x nv-axis');
-      gEnter.append('g').attr('class', 'nv-y nv-axis')
-            .append('g').attr('class', 'nv-zeroLine')
-            .append('line');
+      gEnter.append('g').attr('class', 'nv-y nv-axis');
       gEnter.append('g').attr('class', 'nv-barsWrap');
       gEnter.append('g').attr('class', 'nv-legendWrap');
       gEnter.append('g').attr('class', 'nv-controlsWrap');
@@ -9179,40 +9157,30 @@ nv.models.multiBarHorizontalChart = function() {
       //------------------------------------------------------------
       // Setup Axes
 
-      if (showXAxis) {
-          xAxis
-            .scale(x)
-            .ticks( availableHeight / 24 )
-            .tickSize(-availableWidth, 0);
+      xAxis
+        .scale(x)
+        .ticks( availableHeight / 24 )
+        .tickSize(-availableWidth, 0);
 
-          g.select('.nv-x.nv-axis').transition()
-              .call(xAxis);
+      g.select('.nv-x.nv-axis').transition()
+          .call(xAxis);
 
-          var xTicks = g.select('.nv-x.nv-axis').selectAll('g');
+      var xTicks = g.select('.nv-x.nv-axis').selectAll('g');
 
-          xTicks
-              .selectAll('line, text');
-      }
+      xTicks
+          .selectAll('line, text')
+          .style('opacity', 1)
 
-      if (showYAxis) {
-          yAxis
-            .scale(y)
-            .ticks( availableWidth / 100 )
-            .tickSize( -availableHeight, 0);
 
-          g.select('.nv-y.nv-axis')
-              .attr('transform', 'translate(0,' + availableHeight + ')');
-          g.select('.nv-y.nv-axis').transition()
-              .call(yAxis);
-      }
+      yAxis
+        .scale(y)
+        .ticks( availableWidth / 100 )
+        .tickSize( -availableHeight, 0);
 
-      // Zero line
-      g.select(".nv-zeroLine line")
-        .attr("x1", y(0))
-        .attr("x2", y(0))
-        .attr("y1", 0)
-        .attr("y2", -availableHeight)
-        ;
+      g.select('.nv-y.nv-axis')
+          .attr('transform', 'translate(0,' + availableHeight + ')');
+      g.select('.nv-y.nv-axis').transition()
+          .call(yAxis);
 
       //------------------------------------------------------------
 
@@ -9222,7 +9190,7 @@ nv.models.multiBarHorizontalChart = function() {
       // Event Handling/Dispatching (in chart's scope)
       //------------------------------------------------------------
 
-      legend.dispatch.on('stateChange', function(newState) {
+      legend.dispatch.on('stateChange', function(newState) { 
         state = newState;
         dispatch.stateChange(state);
         chart.update();
@@ -9271,7 +9239,7 @@ nv.models.multiBarHorizontalChart = function() {
           state.stacked = e.stacked;
         }
 
-        chart.update();
+        selection.call(chart);
       });
       //============================================================
 
@@ -9312,11 +9280,10 @@ nv.models.multiBarHorizontalChart = function() {
   chart.xAxis = xAxis;
   chart.yAxis = yAxis;
 
-  d3.rebind(chart, multibar, 'x', 'y', 'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY',
-    'clipEdge', 'id', 'delay', 'showValues','showBarLabels', 'valueFormat', 'stacked', 'barColor');
+  d3.rebind(chart, multibar, 'x', 'y', 'xDomain', 'yDomain', 'xRange', 'yRange', 'forceX', 'forceY', 'clipEdge', 'id', 'delay', 'showValues', 'valueFormat', 'stacked', 'barColor');
 
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  
   chart.margin = function(_) {
     if (!arguments.length) return margin;
     margin.top    = typeof _.top    != 'undefined' ? _.top    : margin.top;
@@ -9354,18 +9321,6 @@ nv.models.multiBarHorizontalChart = function() {
   chart.showLegend = function(_) {
     if (!arguments.length) return showLegend;
     showLegend = _;
-    return chart;
-  };
-
-  chart.showXAxis = function(_) {
-    if (!arguments.length) return showXAxis;
-    showXAxis = _;
-    return chart;
-  };
-
-  chart.showYAxis = function(_) {
-    if (!arguments.length) return showYAxis;
-    showYAxis = _;
     return chart;
   };
 
@@ -10297,11 +10252,9 @@ nv.models.pie = function() {
       var g = wrap.select('g');
 
       gEnter.append('g').attr('class', 'nv-pie');
-      gEnter.append('g').attr('class', 'nv-pieLabels');
 
       wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
       g.select('.nv-pie').attr('transform', 'translate(' + availableWidth / 2 + ',' + availableHeight / 2 + ')');
-      g.select('.nv-pieLabels').attr('transform', 'translate(' + availableWidth / 2 + ',' + availableHeight / 2 + ')');
 
       //------------------------------------------------------------
 
@@ -10332,11 +10285,7 @@ nv.models.pie = function() {
       var slices = wrap.select('.nv-pie').selectAll('.nv-slice')
           .data(pie);
 
-      var pieLabels = wrap.select('.nv-pieLabels').selectAll('.nv-label')
-          .data(pie);
-
       slices.exit().remove();
-      pieLabels.exit().remove();
 
       var ae = slices.enter().append('g')
               .attr('class', 'nv-slice')
@@ -10392,92 +10341,78 @@ nv.models.pie = function() {
             .each(function(d) { this._current = d; });
             //.attr('d', arc);
 
-        slices.select('path')
-          .transition()
+        d3.transition(slices.select('path'))
             .attr('d', arc)
             .attrTween('d', arcTween);
 
         if (showLabels) {
           // This does the normal label
           var labelsArc = d3.svg.arc().innerRadius(0);
-
+          
           if (pieLabelsOutside){ labelsArc = arc; }
 
           if (donutLabelsOutside) { labelsArc = d3.svg.arc().outerRadius(arc.outerRadius()); }
 
-          pieLabels.enter().append("g").classed("nv-label",true)
-            .each(function(d,i) {
-                var group = d3.select(this);
+          ae.append("g").classed("nv-label", true)
+            .each(function(d, i) {
+              var group = d3.select(this);
 
-                group
-                  .attr('transform', function(d) {
-                       if (labelSunbeamLayout) {
-                         d.outerRadius = arcRadius + 10; // Set Outer Coordinate
-                         d.innerRadius = arcRadius + 15; // Set Inner Coordinate
-                         var rotateAngle = (d.startAngle + d.endAngle) / 2 * (180 / Math.PI);
-                         if ((d.startAngle+d.endAngle)/2 < Math.PI) {
-                           rotateAngle -= 90;
-                         } else {
-                           rotateAngle += 90;
-                         }
-                         return 'translate(' + labelsArc.centroid(d) + ') rotate(' + rotateAngle + ')';
+              group
+                .attr('transform', function(d) {
+                     if (labelSunbeamLayout) {
+                       d.outerRadius = arcRadius + 10; // Set Outer Coordinate
+                       d.innerRadius = arcRadius + 15; // Set Inner Coordinate
+                       var rotateAngle = (d.startAngle + d.endAngle) / 2 * (180 / Math.PI);
+                       if ((d.startAngle+d.endAngle)/2 < Math.PI) {
+                       	 rotateAngle -= 90;
                        } else {
-                         d.outerRadius = radius + 10; // Set Outer Coordinate
-                         d.innerRadius = radius + 15; // Set Inner Coordinate
-                         return 'translate(' + labelsArc.centroid(d) + ')'
+                       	 rotateAngle += 90;
                        }
-                  });
+                       return 'translate(' + labelsArc.centroid(d) + ') rotate(' + rotateAngle + ')';
+                     } else {
+                       d.outerRadius = radius + 10; // Set Outer Coordinate
+                       d.innerRadius = radius + 15; // Set Inner Coordinate
+                       return 'translate(' + labelsArc.centroid(d) + ')'
+                     }
+                });
 
-                group.append('rect')
-                    .style('stroke', '#fff')
-                    .style('fill', '#fff')
-                    .attr("rx", 3)
-                    .attr("ry", 3);
+              group.append('rect')
+                  .style('stroke', '#fff')
+                  .style('fill', '#fff')
+                  .attr("rx", 3)
+                  .attr("ry", 3);
 
-                group.append('text')
-                    .style('text-anchor', labelSunbeamLayout ? ((d.startAngle + d.endAngle) / 2 < Math.PI ? 'start' : 'end') : 'middle') //center the text on it's origin or begin/end if orthogonal aligned
-                    .style('fill', '#000')
+              group.append('text')
+                  .style('text-anchor', labelSunbeamLayout ? ((d.startAngle + d.endAngle) / 2 < Math.PI ? 'start' : 'end') : 'middle') //center the text on it's origin or begin/end if orthogonal aligned
+                  .style('fill', '#000')
 
+
+          });
+
+          slices.select(".nv-label").transition()
+            .attr('transform', function(d) {
+            	if (labelSunbeamLayout) {
+                  d.outerRadius = arcRadius + 10; // Set Outer Coordinate
+                  d.innerRadius = arcRadius + 15; // Set Inner Coordinate
+                  var rotateAngle = (d.startAngle + d.endAngle) / 2 * (180 / Math.PI);
+                  if ((d.startAngle+d.endAngle)/2 < Math.PI) {
+                    rotateAngle -= 90;
+                  } else {
+                    rotateAngle += 90;
+                  }
+                  return 'translate(' + labelsArc.centroid(d) + ') rotate(' + rotateAngle + ')';
+                } else {
+                  d.outerRadius = radius + 10; // Set Outer Coordinate
+                  d.innerRadius = radius + 15; // Set Inner Coordinate
+                  return 'translate(' + labelsArc.centroid(d) + ')'
+                }
             });
 
-          var labelLocationHash = {};
-          var avgHeight = 14;
-          var avgWidth = 140;
-          var createHashKey = function(coordinates) {
+          slices.each(function(d, i) {
+            var slice = d3.select(this);
 
-              return Math.floor(coordinates[0]/avgWidth) * avgWidth + ',' + Math.floor(coordinates[1]/avgHeight) * avgHeight;
-          };
-          pieLabels.transition()
-                .attr('transform', function(d) {
-                  if (labelSunbeamLayout) {
-                      d.outerRadius = arcRadius + 10; // Set Outer Coordinate
-                      d.innerRadius = arcRadius + 15; // Set Inner Coordinate
-                      var rotateAngle = (d.startAngle + d.endAngle) / 2 * (180 / Math.PI);
-                      if ((d.startAngle+d.endAngle)/2 < Math.PI) {
-                        rotateAngle -= 90;
-                      } else {
-                        rotateAngle += 90;
-                      }
-                      return 'translate(' + labelsArc.centroid(d) + ') rotate(' + rotateAngle + ')';
-                    } else {
-                      d.outerRadius = radius + 10; // Set Outer Coordinate
-                      d.innerRadius = radius + 15; // Set Inner Coordinate
-
-                      /*
-                      Overlapping pie labels are not good. What this attempts to do is, prevent overlapping.
-                      Each label location is hashed, and if a hash collision occurs, we assume an overlap.
-                      Adjust the label's y-position to remove the overlap.
-                      */
-                      var center = labelsArc.centroid(d);
-                      var hashKey = createHashKey(center);
-                      if (labelLocationHash[hashKey]) {
-                        center[1] -= avgHeight;
-                      }
-                      labelLocationHash[createHashKey(center)] = true;
-                      return 'translate(' + center + ')'
-                    }
-                });
-          pieLabels.select(".nv-label text")
+            slice
+              .select(".nv-label text")
                 .style('text-anchor', labelSunbeamLayout ? ((d.startAngle + d.endAngle) / 2 < Math.PI ? 'start' : 'end') : 'middle') //center the text on it's origin or begin/end if orthogonal aligned
                 .text(function(d, i) {
                   var percent = (d.endAngle - d.startAngle) / (2 * Math.PI);
@@ -10488,6 +10423,15 @@ nv.models.pie = function() {
                   };
                   return (d.value && percent > labelThreshold) ? labelTypes[labelType] : '';
                 });
+
+            var textBox = slice.select('text').node().getBBox();
+            slice.select(".nv-label rect")
+              .attr("width", textBox.width + 10)
+              .attr("height", textBox.height + 10)
+              .attr("transform", function() {
+                return "translate(" + [textBox.x - 5, textBox.y - 5] + ")";
+              });
+          });
         }
 
 
@@ -10566,7 +10510,7 @@ nv.models.pie = function() {
     getY = d3.functor(_);
     return chart;
   };
-
+  
   chart.description = function(_) {
     if (!arguments.length) return getDescription;
     getDescription = _;
@@ -10578,7 +10522,7 @@ nv.models.pie = function() {
     showLabels = _;
     return chart;
   };
-
+  
   chart.labelSunbeamLayout = function(_) {
     if (!arguments.length) return labelSunbeamLayout;
     labelSunbeamLayout = _;
@@ -10590,7 +10534,7 @@ nv.models.pie = function() {
     donutLabelsOutside = _;
     return chart;
   };
-
+  
   chart.pieLabelsOutside = function(_) {
     if (!arguments.length) return pieLabelsOutside;
     pieLabelsOutside = _;
@@ -10609,7 +10553,7 @@ nv.models.pie = function() {
     donut = _;
     return chart;
   };
-
+  
   chart.donutRatio = function(_) {
     if (!arguments.length) return donutRatio;
     donutRatio = _;
@@ -11096,7 +11040,7 @@ nv.models.scatter = function() {
 
       wrap.select('#nv-edge-clip-' + id + ' rect')
           .attr('width', availableWidth)
-          .attr('height', (availableHeight > 0) ? availableHeight : 0);
+          .attr('height', availableHeight);
 
       g   .attr('clip-path', clipEdge ? 'url(#nv-edge-clip-' + id + ')' : '');
 
@@ -13521,7 +13465,7 @@ nv.models.stackedArea = function() {
               point: d,
               series: d.key,
               pos: [d3.event.pageX, d3.event.pageY],
-              seriesIndex: d.seriesIndex
+              seriesIndex: i
             });
           })
           .on('mouseout', function(d,i) {
@@ -13530,7 +13474,7 @@ nv.models.stackedArea = function() {
               point: d,
               series: d.key,
               pos: [d3.event.pageX, d3.event.pageY],
-              seriesIndex: d.seriesIndex
+              seriesIndex: i
             });
           })
           .on('click', function(d,i) {
@@ -13539,12 +13483,12 @@ nv.models.stackedArea = function() {
               point: d,
               series: d.key,
               pos: [d3.event.pageX, d3.event.pageY],
-              seriesIndex: d.seriesIndex
+              seriesIndex: i
             });
           })
-
-      path.exit().remove();
-
+      path.exit().transition()
+          .attr('d', function(d,i) { return zeroArea(d.values,i) })
+          .remove();
       path
           .style('fill', function(d,i){
             return d.color || color(d, d.seriesIndex)
@@ -13906,28 +13850,28 @@ nv.models.stackedAreaChart = function() {
       if (showControls) {
         var controlsData = [
           {
-            key: controlLabels.stacked || 'Stacked',
-            metaKey: 'Stacked',
-            disabled: stacked.style() != 'stack',
-            style: 'stack'
+            key: controlLabels.stacked || 'Stacked', 
+            metaKey: 'Stacked', 
+            disabled: stacked.style() != 'stack', 
+            style: 'stack' 
           },
           {
-            key: controlLabels.stream || 'Stream',
-            metaKey: 'Stream',
-            disabled: stacked.style() != 'stream',
-            style: 'stream'
+            key: controlLabels.stream || 'Stream', 
+            metaKey: 'Stream', 
+            disabled: stacked.style() != 'stream', 
+            style: 'stream' 
           },
           {
-            key: controlLabels.expanded || 'Expanded',
-            metaKey: 'Expanded',
-            disabled: stacked.style() != 'expand',
-            style: 'expand'
+            key: controlLabels.expanded || 'Expanded', 
+            metaKey: 'Expanded', 
+            disabled: stacked.style() != 'expand', 
+            style: 'expand' 
           },
           {
-            key: controlLabels.stack_percent || 'Stack %',
-            metaKey: 'Stack_Percent',
-            disabled: stacked.style() != 'stack_percent',
-            style: 'stack_percent'
+            key: controlLabels.stack_percent || 'Stack %', 
+            metaKey: 'Stack_Percent', 
+            disabled: stacked.style() != 'stack_percent', 
+            style: 'stack_percent' 
           }
         ];
 
@@ -14016,7 +13960,7 @@ nv.models.stackedAreaChart = function() {
           .scale(y)
           .ticks(stacked.offset() == 'wiggle' ? 0 : availableHeight / 36)
           .tickSize(-availableWidth, 0)
-          .setTickFormat( (stacked.style() == 'expand' || stacked.style() == 'stack_percent')
+          .setTickFormat( (stacked.style() == 'expand' || stacked.style() == 'stack_percent') 
                 ? d3.format('%') : yAxisTickFormat);
 
         g.select('.nv-y.nv-axis')
@@ -14063,7 +14007,7 @@ nv.models.stackedAreaChart = function() {
         d.disabled = false;
 
         stacked.style(d.style);
-
+    
 
         state.style = stacked.style();
         dispatch.stateChange(state);
@@ -14105,13 +14049,7 @@ nv.models.stackedAreaChart = function() {
             var yValue = chart.yScale().invert(e.mouseY);
             var yDistMax = Infinity, indexToHighlight = null;
             allData.forEach(function(series,i) {
-
-               //To handle situation where the stacked area chart is negative, we need to use absolute values
-               //when checking if the mouse Y value is within the stack area.
-               yValue = Math.abs(yValue);
-               var stackedY0 = Math.abs(series.stackedValue.y0);
-               var stackedY = Math.abs(series.stackedValue.y);
-               if ( yValue >= stackedY0 && yValue <= (stackedY + stackedY0))
+               if ( yValue >= series.stackedValue.y0 && yValue <= (series.stackedValue.y0 + series.stackedValue.y))
                {
                   indexToHighlight = i;
                   return;
@@ -14124,7 +14062,7 @@ nv.models.stackedAreaChart = function() {
           var xValue = xAxis.tickFormat()(chart.x()(singlePoint,pointIndex));
 
           //If we are in 'expand' mode, force the format to be a percentage.
-          var valueFormatter = (stacked.style() == 'expand') ?
+          var valueFormatter = (stacked.style() == 'expand') ? 
                function(d,i) {return d3.format(".1%")(d);} :
                function(d,i) {return yAxis.tickFormat()(d); };
           interactiveLayer.tooltip
@@ -14156,7 +14094,7 @@ nv.models.stackedAreaChart = function() {
       // Update chart from a state object passed to event handler
       dispatch.on('changeState', function(e) {
 
-        if (typeof e.disabled !== 'undefined' && data.length === e.disabled.length) {
+        if (typeof e.disabled !== 'undefined') {
           data.forEach(function(series,i) {
             series.disabled = e.disabled[i];
           });
