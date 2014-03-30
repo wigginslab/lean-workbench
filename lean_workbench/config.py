@@ -27,7 +27,8 @@ class Dev(UserConfig):
 	'google_analytics.app',
     'hypotheses.app',
     'twitter.app',
-    'facebook.app'
+    'facebook.app',
+    'quickbooks.app'
         # or ('blog.views.app', {'url_prefix':'/blog'})
     ]  # each as (blueprint_instance, url_preffix)
   

@@ -281,6 +281,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 
 function PayController($scope){
 
+
 }
 
 

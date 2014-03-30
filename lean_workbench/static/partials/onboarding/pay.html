@@ -15,8 +15,9 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js"></script>
-<script>intuit.ipp.anywhere.setup({
-    menuProxy: '/BlueDotMenu',
-    grantUrl: '/connect/quickbooks/callback'
-});</script>
+<ipp:connectToIntuit></ipp:connectToIntuit> 
+<script>
+  intuit.ipp.anywhere.setup({          menuProxy: 'http://mtvl07ef11ee586.corp.intuit.net:8080/HelloWorldIA/BlueDotMenuServlet',         grantUrl: 'http://127.0.0.1:5000/connect/quickbooks'            })
+</script>  
+</body>
+</html>  
