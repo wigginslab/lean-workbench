@@ -42,7 +42,7 @@ function DashboardController($scope, $http, Hypotheses, $resource) {
 
 	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
-     $http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+     $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
       $http.defaults.headers.common['Content-Type'] = 'application/json'
       $http.defaults.headers.common['Accept'] = 'application/json'
 
@@ -73,7 +73,7 @@ function DashboardController($scope, $http, Hypotheses, $resource) {
 
 
     $scope.create_hypothesis = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.defaults.headers.common['Content-Type'] = 'application/json';
 		$http.defaults.headers.common['Accept'] = 'application/json';
 		$http({
@@ -146,7 +146,7 @@ function StickController($scope, $http, GoogleAnalytics){
 	$scope.has_GA = false;
 
 	$scope.GA_auth = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		console.log('ga auth');
 		$http.post(
 				'/connect/google-analytics'
@@ -176,7 +176,7 @@ function StickController($scope, $http, GoogleAnalytics){
 		)
 	
 	$scope.submit_prof = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 			'/api/v1/google-analytics',
 			JSON.stringify({metric:'profile-id', profile_id:$scope.user_profile})
@@ -191,7 +191,7 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 function ViralityController($scope, $http, Facebook, Twitter){
-	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	var FBQuery = Facebook.get();
 
 	if (FBQuery.length > 0){
@@ -205,7 +205,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 
 	$scope.fb_auth = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 				'/connect/facebook'
 		).success(
@@ -247,7 +247,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
    
 	
 	$scope.twitter_auth = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 			'/connect/twitter'
 			).success(
@@ -266,7 +266,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 
 	$scope.done_onboarding = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 			'/api/v1/users',
 			JSON.stringify({'onboarded':true})
@@ -298,7 +298,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                 };
 
                 $scope.submit = function() {
-                	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+                	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 					console.log(csrf_token);
 					$http.defaults.headers.common['Content-Type'] = 'application/json';
 					$http.defaults.headers.common['Accept'] = 'application/json';
@@ -403,7 +403,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	  }
     
      $scope.click_logout = function() {
-      $http.defaults.headers.post['X-CSRFToken'] = csrf_token;
+      $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
 
       $http.get('/logout').success(function() {
         $scope.restrictedContent = [];
