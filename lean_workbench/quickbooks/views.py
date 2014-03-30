@@ -6,7 +6,7 @@ import time
 import oauth2 as oauth
 from quickbooks_model import *
 from flask.ext.security import current_user
-from quickbooks import QUICKBOOKS_APP_CALLBACK_URL
+from quickbooks import QuickBooks
 
 app = Blueprint('quickbooks', __name__, template_folder='templates')
 
