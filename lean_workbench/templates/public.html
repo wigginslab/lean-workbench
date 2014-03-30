@@ -103,6 +103,7 @@
 	<script type="text/javascript" src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js">
 
 <script>
+ csrf_token = "{{csrf_token()}}";
 	  !function ($) {
 		$(function(){
 		  // carousel demo
@@ -111,5 +112,6 @@
 	  }(window.jQuery)
 	  csrf_token = "{{csrf_token()}}";
 	</script>
+	<input id="csrf" type="hidden" value="{{csrf_token()}}">
   </body>
 </html>
