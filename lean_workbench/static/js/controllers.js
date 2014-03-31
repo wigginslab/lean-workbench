@@ -435,12 +435,12 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	        $.cookie('email',null);
 	        $http.defaults.headers.common['Authorization'] = null;
 	        $http.defaults.headers.common['Authentication-Token'] = null;
-
+	        window.location = "/";
 	      }).error(function() {
 	        // This should happen after the .post call either way.
 	        $.cookie('auth_token', null);
 	        $http.defaults.headers.common['Authorization'] = null;
-	          $location.path("/");
+	        window.location = "/";
 	      }); 
 	    };
 
