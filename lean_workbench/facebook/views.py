@@ -47,4 +47,4 @@ def facebook_oauth_callback():
 	db.session.commit()
 	db.session.close()
 
-	return "OK"
+	return render_template("oauth_success.html", service="Facebook")

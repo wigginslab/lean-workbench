@@ -41,4 +41,4 @@ def twitter_oauth_callback():
 	db.session.add(twitter_row)
 	db.session.commit()
 	db.session.close()
-	return "Success!"
+	return render_template("oauth_success.html", service="Twitter")
