@@ -66,36 +66,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div ng-show="[[hypotheses.length == 0]]">
+                            You have on hypotheses yet. To make one, click the "Create new hypothesis" above.
+                        </div>
 			             <form novalidate role="form" ng-show="make_hyp()" form-submit="submit_hyp()" name="hypothesis-form">
     			         </form>
                     </div>
                 </div>
-                <h3>Percent Completed</h3>
-                    <div class="block-content collapse in">
-                        <div class="col-lg-4">
-                            <div class="chart" data-percent="73">73%</div>
-                            <div class="chart-bottom-heading"><span class="label label-info">Revamped Dashboard-Stickiness</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="chart" data-percent="53">73%</div>
-                            <div class="chart-bottom-heading"><span class="label label-info">Revamped Dashboard-Virality</span>
-
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="chart" data-percent="83">83%</div>
-                            <div class="chart-bottom-heading"><span class="label label-info">VC-Matcher</span>
-                            </div>
-                           </div>
-    				       <script>
-    				        $(function() {
-    				        	console.log('making pie charts')
-    				            // Easy pie charts
-    				            $('.chart').easyPieChart({animate: 1000});
-    				        });
-    				        </script>
-                    </div>
                 </div>
                 <!-- /block -->
             </div>
