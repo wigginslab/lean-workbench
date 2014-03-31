@@ -38,6 +38,15 @@ class Mine(Command):
         #mine_fb_page_data()
 		#mine_visits()
 		#track_keywords()
+class PrintUsers(Command):
+	"""
+	Mines the data sources
+	"""
+	def run(self):
+		from users.user_model import User
+		users = User.query.all()
+		for user in users:
+			print users
 
 class Test(Command):
     """

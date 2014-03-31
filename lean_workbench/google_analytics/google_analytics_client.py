@@ -22,7 +22,7 @@ class Google_Analytics_API:
 		# get latest credentials
 		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).all()
 		print self.credentials
-		if self.credentials:
+		if self.credentials != []:
 			self.credentials = self.credentials[-1]
 			expires_on = self.credentials.as_dict()['token_expiry']
 			current_time = datetime.now().isoformat()
@@ -33,11 +33,14 @@ class Google_Analytics_API:
 				print 'expires on is greater than the current time'
 				self.client = self.build_client(self.credentials)
 			else:
-				print 'credentials expired'
-				print self.credentials
-				credentials_dict = self.credentials.as_dict()
-				self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
-				self.client = self.build_client(self.credentials)
+				try:
+					print 'credentials expired'
+					print self.credentials
+					credentials_dict = self.credentials.as_dict()
+					self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+					self.client = self.build_client(self.credentials)
+				except:
+					return None
 		else:
 			print "no credentials"
 			return None

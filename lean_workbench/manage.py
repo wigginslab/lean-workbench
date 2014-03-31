@@ -19,5 +19,5 @@ if __name__ == "__main__":
 	manager.add_command("create_db", commands.CreateDB())
 	manager.add_command("drop_db", commands.DropDB())
 	manager.add_command("mine", commands.Mine())
-
+	manager.add_command("users", commands.PrintUsers())
 	manager.run()
