@@ -162,12 +162,13 @@ function StickController($scope, $http, GoogleAnalytics){
 					var status = data['status'];
 					console.log(data);
 					console.log(status);
-					if (status == 100){
+					
 						var redirect_url = data['redirect_url'];
 						window.location = redirect_url;
 					}
-				}
+			
 			)
+
 	}
 
 	var profiles =  $http.get(
@@ -489,7 +490,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
-	.when('/stats', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+	.when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
 	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
 	
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})

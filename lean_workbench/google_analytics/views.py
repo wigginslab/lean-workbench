@@ -29,7 +29,7 @@ def google_analytics_oauth():
 			print "credentials expired, start oauth process"
 			# start OAuth process
 			redirect_url = GA_API.step_one(google_analytics_callback_url, google_analytics_client_id)
-			return redirect(redirect_url)
+			return jsonify(redirect_url=redirect_url, status=100)
 	else:
 		print "start oauth process"
 		# start OAuth process
