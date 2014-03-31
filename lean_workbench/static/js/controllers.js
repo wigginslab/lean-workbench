@@ -20,6 +20,9 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
 
 
 function DashboardController($scope, $http, Hypotheses, $resource) {
+	$("#login").hide();
+   	$("#logout").show();
+
 
 	$( ".datepicker" ).datepicker({ minDate: 0 });
   	/*$scope.hypotheses = Hypotheses.get(function(hypotheses){
@@ -54,6 +57,7 @@ function DashboardController($scope, $http, Hypotheses, $resource) {
           // if success
           if (data['response']['user']){
                  $location.path("/onboarding/stick");
+
           }
 
           else{
@@ -73,6 +77,7 @@ function DashboardController($scope, $http, Hypotheses, $resource) {
 
 
     $scope.create_hypothesis = function(){
+
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.defaults.headers.common['Content-Type'] = 'application/json';
 		$http.defaults.headers.common['Accept'] = 'application/json';
@@ -143,6 +148,8 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
+	$("#login").hide();
+   	$("#logout").show();
 	$scope.has_GA = false;
 
 	$scope.GA_auth = function(){
@@ -191,6 +198,8 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 function ViralityController($scope, $http, Facebook, Twitter){
+	$("#login").hide();
+    $("#logout").show();
 	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	var FBQuery = Facebook.get();
 
@@ -291,6 +300,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 		$interpolateProvider.endSymbol(']]');
 }).controller({
  	RegistrationController: function($scope, $http, authService, $location) {
+ 				$("#login").show();
+ 				$('#logout').hide();
 
                 $scope.showModal = false;
                 $scope.toggleModal = function() {
@@ -312,7 +323,9 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 								// if success
 								console.log(data['response']['user']);
 								if (data['response']['user']){
-										$location.path("/onboarding/stick");
+									$("#login").hide();
+    								$("#logout").show();
+									$location.path("/onboarding/stick");
 								}
 
 								else{
@@ -348,9 +361,11 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
 }).controller({
   LoginController: function ($scope, $http, authService, $location) {
-    $scope.submit = function() {
-      console.log('in logincontroller')
+  	     $("#logout").hide();
+    	$("#login").show();
 
+    $scope.submit = function() {
+   
       $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
       console.log( $("#csrf").val())
       $http.defaults.headers.common['Content-Type'] = 'application/json'
@@ -373,17 +388,22 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
             $.cookie('auth_token', data.authentication_token, { expires: 7 });
             $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
             authService.loginConfirmed();
-            $location.path("/dashboard");
+            $("#login").hide();
+    		$("#logout").show();
+            window.location = "/dashboard";
           }
           else{
-            var errors = data['response']['errors'];
-            if (errors.hasOwnProperty('email')){
-              $scope.email_error = errors['email'][0];
-            }
-            if (errors.hasOwnProperty('password')){
-              $scope.password_error = errors['password'][0];
-            }            
-          }
+          	if (data.hasOwnProperty('response')){
+	            var errors = data['response']['errors'];
+	            if (errors.hasOwnProperty('email')){
+	              $scope.email_error = errors['email'][0];
+	            }
+	            if (errors.hasOwnProperty('password')){
+	              $scope.password_error = errors['password'][0];
+	            }            
+	          }
+
+	        }
         }
         ).error(
         function(data) {
@@ -397,44 +417,38 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 })
 .controller({
   NavController: function ($scope, $http, authService, $location) {
+  	 
       $scope.click_login = function(){
 		$location.path('/signin');  
 	  }
-    
+
+
+
      $scope.click_logout = function() {
-      $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
+    	$("#logout").hide();
+    	$("#login").show();
+	      $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
+	      $scope.logged_in = false;
+	      $http.get('/logout').success(function() {
+	        $scope.restrictedContent = [];
+	        $.cookie('auth_token', null);
+	        $.cookie('email',null);
+	        $http.defaults.headers.common['Authorization'] = null;
+	        $http.defaults.headers.common['Authentication-Token'] = null;
 
-      $http.get('/logout').success(function() {
-        $scope.restrictedContent = [];
-        $.cookie('auth_token', null);
-        $.cookie('email', null);
-        $http.defaults.headers.common['Authorization'] = null;
-        $http.defaults.headers.common['Authentication-Token'] = null;
+	      }).error(function() {
+	        // This should happen after the .post call either way.
+	        $.cookie('auth_token', null);
+	        $http.defaults.headers.common['Authorization'] = null;
+	          $location.path("/");
+	      }); 
+	    };
 
-      }).error(function() {
-        // This should happen after the .post call either way.
-        $.cookie('auth_token', null);
-        $http.defaults.headers.common['Authorization'] = null;
-          $location.path("/");
-      }); 
-    };
-
-    $scope.logged_in = function(){
-      if ($.cookie('auth_token')){
-        return True;
-      }
-
-      else{
-        return False;
-      }
-    }
-
-
-    $scope.scroll_to = function(id) {
-      $location.hash(id);
-      $anchorScroll();
-   }
-  }
+	    $scope.scroll_to = function(id) {
+	      $location.hash(id);
+	      $anchorScroll();
+	   }
+	  }
 
 
 })

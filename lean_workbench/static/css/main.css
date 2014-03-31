@@ -670,3 +670,10 @@ form .btn {
     .signin .btn:hover, .registration .btn:hover {
       border: none;
       background: #2CA387; }
+
+#linkedin-button-container {
+  text-align: center;
+  margin-top: 30px; }
+
+#linkedin-button {
+  height: 50px; }
