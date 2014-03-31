@@ -22,7 +22,7 @@ class Hypothesis_model(db.Model):
 		self.google_analytics = form_dict.get('google_analytics')
 		self.wufoo = form_dict.get('wufoo')
 		self.endpoint = form_dict.get('endpoint')
-		self.twitter_keyword = form_dict.get('twitter_keyword') 
+		self.twitter_keyword = form_dict.get('twitter') 
 		self.event =form_dict.get('event')
 		self.end_date = form_dict.get('end_date')
 		self.creation_date = datetime.datetime.now()
@@ -38,5 +38,6 @@ class Hypothesis_model(db.Model):
 			'title': self.title,
 			'endpoint': self.google_analytics,
 			'creation_date': str(self.creation_date),
-			'end_date':str(self.end_date)
+			'end_date':str(self.end_date),
+			'twitter_keyword':self.twitter_keyword
 		}

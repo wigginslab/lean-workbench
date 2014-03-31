@@ -11,7 +11,7 @@
                 <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
             </li>
             <li>
-                <a href="/dashboard"><i class="icon-chevron-right"></i>Export Data</a>
+                <a href="/export"><i class="icon-chevron-right"></i>Export Data</a>
             </li>
         </ul>
     </div>
@@ -60,9 +60,9 @@
                             <tbody>
                                  <tr ng-repeat="hypothesis in hypotheses">
                                     <td>[[hypothesis.id]]</td>
-                                    <td><a href="/hypotheses/[[hypothesis.id]]">[[hypothesis.title]]</a></td>
+                                    <td><a href="/stats">[[hypothesis.title]]</a></td>
                                     <td>[[hypothesis.endpoint]]</td>
-                                    <td>[[hypothesis.twitter]]</td>
+                                    <td>[[hypothesis.twitter_keyword]]</td>
                                 </tr>
                             </tbody>
                         </table>

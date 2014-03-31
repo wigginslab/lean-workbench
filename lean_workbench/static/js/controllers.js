@@ -17,9 +17,11 @@ function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twit
  
 }
 
+function ExportController(){
 
+}
 
-function DashboardController($scope, $http, Hypotheses, $resource) {
+function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 	$("#login").hide();
    	$("#logout").show();
 
@@ -91,32 +93,47 @@ function DashboardController($scope, $http, Hypotheses, $resource) {
 				function(data){
 				
 					// TODO: brevity
-					var errors = data['response']['errors'];
-					if (typeof errors != "undefined")
-					{
+					if (data.hasOwnProperty('response')){
+						if (data['response'].hasOwnProperty('errors')){
+							var errors = data['response']['errors'];
+							if (typeof errors == "undefined")
+							{
 
-						$scope.hypotheses = Hypotheses.get();
+								$location.path = "/dashboard";
 
-					}
-					else{
-						if (errors.hasOwnProperty('end_date')){
-							$scope.end_date_error = true;
-							$scope.errorMsg = "Improper end date.";
+							}
+							else{
+								if (errors.hasOwnProperty('end_date')){
+									$scope.end_date_error = true;
+									$scope.errorMsg = "Improper end date.";
+								}
+								if (errors.hasOwnProperty('start_date')){
+									$scope.start_date = true;
+									$scope.errorMsg = "Improper start date";
+								}
+								if (errors.hasOwnProperty('google_analytics.')) {
+									$scope.google_analytics = true;
+									$scope.errorMsg = "Improper endpoint";
+								}            
+								if (errors.hasOwnProperty('title')){
+									$scope.title = true;
+									$scope.errorMsg = "Improper title.";
+								}
+							}
 						}
-						if (errors.hasOwnProperty('start_date')){
-							$scope.start_date = true;
-							$scope.errorMsg = "Improper start date";
-						}
-						if (errors.hasOwnProperty('google_analytics.')) {
-							$scope.google_analytics = true;
-							$scope.errorMsg = "Improper endpoint";
-						}            
-						if (errors.hasOwnProperty('title')){
-							$scope.title = true;
-							$scope.errorMsg = "Improper title.";
-						}
+						else{
+						
+						$scope.show_form = false;
+						window.location = '/dashboard';
 					}
 				}
+					else{
+						
+						$scope.show_form = false;
+						window.location = '/dashboard';
+					}
+					
+			}
 
 			).error(
 				function(data){
@@ -492,7 +509,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	.when('/signin', {templateUrl: 'static/partials/signin.html'})
 	.when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
 	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
-	
+	.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
     // enable push state
     $locationProvider.html5Mode(true);
