@@ -179,11 +179,14 @@ function StickController($scope, $http, GoogleAnalytics){
 					var status = data['status'];
 					console.log(data);
 					console.log(status);
-			if (data.hasOwnProperty('redirect_url')){
+					if (data.hasOwnProperty('redirect_url')){
 
-						var redirect_url = data['redirect_url'];
-						window.location = redirect_url;
-				}
+								var redirect_url = data['redirect_url'];
+								window.location = redirect_url;
+						}
+					if (status == 200){
+						$scope.has_GA = true;
+					}
 				}
 			)
 
