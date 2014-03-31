@@ -24,7 +24,7 @@ def google_analytics_oauth():
 			print GA_API.credentials.as_dict()
 			# you shouldn't have hit this link
 			print "you have credentials for GA"
-			return redirect('/onboarding/stick')
+			return jsonify(status=200, credentials=True)
 		else:
 			print "credentials expired, start oauth process"
 			# start OAuth process
