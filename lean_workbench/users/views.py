@@ -4,6 +4,5 @@ import json
 import calendar
 import time
 import oauth2 as oauth
-from quickbooks_model import *
 
 app = Blueprint('users', __name__, template_folder='templates')
