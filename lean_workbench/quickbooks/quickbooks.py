@@ -42,7 +42,7 @@ class QuickBooks():
     consumer_key = ''
     consumer_secret = ''
     company_id = 0
-    callback_url = 'http://127.0.0.1:5000/connect/quickbooks/callback/'
+    callback_url = ''
     session = None
 
     base_url_v3 =  "https://quickbooks.api.intuit.com/v3"
