@@ -300,7 +300,20 @@ function PayController($scope, $http, Quickbooks){
 				}
 			}
 		)
+
+
+	$scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
+			}
+		)
 	}
+}
 
 
 var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 

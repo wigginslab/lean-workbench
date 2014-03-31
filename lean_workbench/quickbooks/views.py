@@ -29,7 +29,7 @@ def quickbooks_callback():
 	db.session.add(qbm)
 	db.session.commit()
 	db.session.close()
-	return render_template('oauth_success.html')
+	return render_template('oauth_success.html', service="Quickbooks")
 
 def sign_request(consumer_secret, app_key):
     from hashlib import sha1
