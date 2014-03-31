@@ -236,6 +236,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				'/api/v1/twitter'
 		).success(
 			function(data){
+				console.log(data)
 				if (data['twitter_authed']){
 					$scope.has_twitter = true;
 				}
@@ -352,7 +353,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 						).error(
 							function(data){
 								console.log('registration error')
-								alert(data)
+						
 								$scope.errorMsg = data.reason;
 							}
 						);

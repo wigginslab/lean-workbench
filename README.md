@@ -101,7 +101,8 @@ For each of these APIs you want to use
 * TWITTER_APP_CALLBACK_URL
 * FACEBOOK_APP_ID
 * FACEBOOK_APP_SECRET
-
+* GOOGLE_ANALYTICS_KEY_LOCATION
+* GOOGLE_ANALYTICS_CLIENT_ID
 Example lean_workbench/user_config.py
 ```
 class UserConfig(object):

@@ -8,6 +8,7 @@ from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
 from datetime import datetime, timedelta 
 from database import db
+from flask import current_app
 
 class Google_Analytics_API:
 
@@ -88,7 +89,7 @@ class Google_Analytics_API:
 		"""
 		Handle callback information
 		"""
-		client_secrets = os.getenv('GOOGLE_ANALYTICS_KEY_LOCATION')
+		client_secrets = "/var/www/lean-workbench/lean_workbench/google_analytics/ga_client_secrets.json"
 		flow = flow_from_clientsecrets(client_secrets,
 						scope='https://www.googleapis.com/auth/analytics.readonly',
 								message='%s is missing' % client_secrets, redirect_uri=google_analytics_callback_url)

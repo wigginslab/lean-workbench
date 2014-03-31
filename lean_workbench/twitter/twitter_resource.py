@@ -12,6 +12,7 @@ class Twitter_DAO(object):
 
 	def __init__(self):
 		self.user_twitter = Twitter_model.query.filter_by(username=current_user.email).first()
+		print self.user_twitter
 		try:
 			self.twitter_handle = self.user_twitter.twitter_handle
 		except:
@@ -22,12 +23,11 @@ class Twitter_DAO(object):
 
 class Twitter_resource(Resource):
 	def get(self, **kwargs):
-		return jsonify(twitter_authed=True)
-		args = request.args()
+		#return jsonify(twitter_authed=True)
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print twitter.user_twitter
-			return jsonify(twitter_authed=True)
+			return jsonify(twitter_authed=True, user=twitter.user_twitter)
 		else:
 			return jsonify(twitter_authed=False)
 
