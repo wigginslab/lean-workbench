@@ -289,10 +289,18 @@ function ViralityController($scope, $http, Facebook, Twitter){
 }
 
 
-function PayController($scope){
-
-
-}
+function PayController($scope, $http, Quickbooks){
+	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+	$http.get(
+		'/api/v1/quickbooks'
+		).success(
+			function(data){
+				if (data['qb_authed']){
+					$scope.has_qb = true;
+				}
+			}
+		)
+	}
 
 
 var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 

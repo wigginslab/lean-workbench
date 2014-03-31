@@ -26,6 +26,14 @@ angular.module('LWBServices', ['ngResource'])
 			}
 		})
 	})
+	.factory('Quickbooks', function($resource){
+		return $resource('/api/v1/quickbooks', {}, {
+			query:{
+				method: 'POST',
+				isArray: true
+			}
+		})
+	})
 	.factory('Twitter', function($resource){
 		return $resource('/api/v1/twitter', {},{
 			query:{

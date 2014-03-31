@@ -7,15 +7,18 @@
       <img class="social-icon" src='/static/img/icons/quickbooks.png' style="width:128px;height:130px"></img>
       </div>
        <p style="font-size:20px">The paid engine thrives on focuses on making money. The key performance indicators are <u>customer lifetime value</u>, and <u>customer acquisition cost</u>. This can be measured using the Quickbooks Online API.
-	   <p><b>Your Quickbooks Online account is connected.</b></p>
-              <div class="center">
+	   <p ng-show="has_qb"><b>Your Quickbooks Online account is connected.</b></p>
+     <div ng-hide="has_qb" class="center">
+        <ipp:connectToIntuit></ipp:connectToIntuit> 
+      </div>
+      <div class="center">
           <ul class="pager">
             <li><a ng-click="done_onboarding()">Next</a></li>
           </ul>
         </div>
     </div>
 </div>
-<ipp:connectToIntuit></ipp:connectToIntuit> 
+
 <script>
   intuit.ipp.anywhere.setup({          menuProxy: 'http://mtvl07ef11ee586.corp.intuit.net:8080/HelloWorldIA/BlueDotMenuServlet',         grantUrl: 'http://127.0.0.1:5000/connect/quickbooks'            })
 </script>  

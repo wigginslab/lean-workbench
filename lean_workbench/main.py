@@ -7,6 +7,7 @@ import os
 from werkzeug import SharedDataMiddleware
 from flask.ext import restful
 from hypotheses.hypotheses_resource import Hypothesis_resource
+from quickbooks.quickbooks_resource import Quickbooks_resource
 from facebook.facebook_resource import Facebook_resource
 from twitter.twitter_resource import Twitter_resource
 from wufoo.wufoo_resource import Wufoo_resource
@@ -197,6 +198,7 @@ def configure_views(app):
 	api.add_resource(Twitter_resource, '/api/v1/twitter')
 	api.add_resource(Wufoo_resource, '/api/v1/wufoo')
 	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
+	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(User_resource, '/api/v1/users')
 
 	#from facebook.fb_mine import mine_fb_page_data

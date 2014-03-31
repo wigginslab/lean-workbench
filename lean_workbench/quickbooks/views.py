@@ -17,7 +17,7 @@ def quickbooks():
 	app_key = current_app.config['QUICKBOOKS_APP_KEY']  
 	consumer_secret = current_app.config['QUICKBOOKS_APP_SECRET']
 	callback_url= current_app.config['QUICKBOOKS_APP_CALLBACK_URL']
-	qb = QuickBooks({'consumer_key':app_key, 'consumer_secret':consumer_secret})
+	qb = QuickBooks(consumer_key=app_key, consumer_secret=consumer_secret)
 	oauth_path = qb.get_authorize_url()
 	return redirect(oauth_path)
 	
