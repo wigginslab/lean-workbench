@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" id="ng-app" ng-app="LWBApp">
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	  <meta charset="utf-8">
+	  <title>Lean Workbench</title>
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	  <meta name="description" content="">
+	  <meta name="author" content="">
+	  <!-- Le styles -->
+	  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+	  <link href="/static/vendors/easypiechart/jquery.easy-pie-chart.css" rel="stylesheet" media="screen">
+	  <link rel="stylesheet" href="/static/css/main.css">
+	<link rel="stylesheet" href="/static/vendors/morris/morris.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" href="/static/demo/vendors/float/examples/shared/jquery-ui/jquery-ui.min.css">
+	  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+	  <!--[if lt IE 9]>
+		<script src="../assets/js/html5shiv.js"></script>
+	  <![endif]-->
+	  <!-- Fav and touch icons -->
+	  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-144-precomposed.png">
+	  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-114-precomposed.png">
+	  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-72-precomposed.png">
+	  <link rel="apple-touch-icon-precomposed" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-57-precomposed.png">
+	  <link rel="shortcut icon" href="http://getbootstrap.com/2.3.2/assets/ico/favicon.png">
+	<style type="text/css"></style><style id="holderjs-style" type="text/css">.holderjs-fluid {font-size:16px;font-weight:bold;text-align:center;font-family:sans-serif;margin:0}</style><style>[touch-action="none"]{ -ms-touch-action: none; touch-action: none; }[touch-action="pan-x"]{ -ms-touch-action: pan-x; touch-action: pan-x; }[touch-action="pan-y"]{ -ms-touch-action: pan-y; touch-action: pan-y; }[touch-action="scroll"],[touch-action="pan-x pan-y"],[touch-action="pan-y pan-x"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }</style>
+
+	  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab:300' rel='stylesheet' type='text/css'>
+	  <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="/static/bower_components/nvd3/nv.d3.css"/>
+  </head>
+  <body class="auth-application waiting-for-angular">
+	<nav class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation" ng-controller="NavController">
+	  <!-- Brand and toggle get grouped for better mobile display -->
+	  <div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		  <span class="sr-only">Toggle navigation</span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		  <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/dashboard">Lean Workbench</a>
+	  </div>
+	  <!-- Collect the nav links, forms, and other content for toggling -->
+	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li class="active"><a href="/">Home</a></li>
+			<li><a ng-click="scroll-to('features')">Features</a></li>
+			<li><a href="mailto:jen@leanworkbench.com">Contact Us</a></li>
+		</ul>
+	  </div><!-- /.navbar-collapse -->
+	</nav>
+
+!-- features -->
+
+<div class="features clearfix" >
+	<div class="col-lg-8"  style="margin:auto;padding-left:20%;padding-bottom:700px;font-size:29px;">
+		Connect here using Linkedin to search for possible mentors within your extended Linkedin Network using your Lean Workbench and LinkedIn profile.
+		<div id="linkedin-button-container">
+			<img id="linkedin-button" src="/static/img/linkedin.png"></img>
+		</div>
+
+</div>
+	
+</div>
+
+	  <!-- FOOTER -->
+	  <footer>
+		<p>© 2014 Lean Workbench, Inc.</p>
+	  </footer>
+	</div><!-- /.container -->
+	<!-- Le javascript
+	================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	  <!--[if lte IE 8]>
+	  <script src="/static/js/lib/json2.js"></script>
+	   <script>
+		document.createElement('ng-include');
+		document.createElement('ng-pluralize');
+		document.createElement('ng-view');
+ 
+		// Optionally these for CSS
+		document.createElement('ng:include');
+		document.createElement('ng:pluralize');
+		document.createElement('ng:view');
+	  </script>
+	<![endif]-->
+	<script src="/static/js/lib/jquery.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0rc1/angular-route.min.js"></script>
+	<script src="/static/js/lib/angular-resource.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script src="/static/js/lib/jquery.cookie.js"></script>
+	<script src="/static/js/lib/http-auth-interceptor.js"></script>
+	<script src="/static/js/app.js"></script>
+	<script src="/static/js/services.js"></script>
+	<script src="/static/js/controllers.js"></script>
+	<script src="/static/js/resources.js"></script>
+	<script src="/static/js/filters.js"></script>
+	<script src="/static/js/directives.js"></script>
+	<script src="/static/js/lib/anchorScroll.js"></script>
+	<script src="/static/vendors/easypiechart/jquery.easy-pie-chart.js"></script>
+	<script src="/static/vendors/jquery-ui-1.10.3.js"></script>
+	<script src="/static/bower_components/d3/d3.js"></script>
+	<script src="/static/bower_components/nvd3/nv.d3.js"></script>
+	<script src="/static/bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
+	<script type="text/javascript" src="https://appcenter.intuit.com/Content/IA/intuit.ipp.anywhere.js">
+
+  </body>
+</html>
