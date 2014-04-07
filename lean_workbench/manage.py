@@ -4,8 +4,6 @@ from flask.ext import script
 
 import commands
 
-from gunicorn_server import GunicornServer
-
 from celery import Celery
 
 if __name__ == "__main__":
