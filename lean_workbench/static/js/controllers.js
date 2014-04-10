@@ -36,8 +36,6 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 			'/api/v1/hypotheses'
 			).success(
 			function(data){
-				console.log(data)
-				console.log(data.hypotheses)
 				$scope.hypotheses = data.hypotheses;
 			}
 		).error(function(data){
@@ -171,14 +169,11 @@ function StickController($scope, $http, GoogleAnalytics){
 
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-		console.log('ga auth');
 		$http.post(
 				'/connect/google-analytics'
 				).success(
 				function(data){
 					var status = data['status'];
-					console.log(data);
-					console.log(status);
 					if (data.hasOwnProperty('redirect_url')){
 
 								var redirect_url = data['redirect_url'];
@@ -200,7 +195,6 @@ function StickController($scope, $http, GoogleAnalytics){
 				$scope.has_GA = true;	
 			}
 		).error(function(data){
-				console.log(data)
 			}
 		)
 	
@@ -411,7 +405,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     $scope.submit = function() {
    
       $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
-      console.log( $("#csrf").val())
       $http.defaults.headers.common['Content-Type'] = 'application/json'
       $http.defaults.headers.common['Accept'] = 'application/json'
 
