@@ -191,7 +191,7 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 function ViralityController($scope, $http, Facebook, Twitter){
-	$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	var FBQuery = Facebook.get();
 
 	if (FBQuery.length > 0){
@@ -205,7 +205,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 
 	$scope.fb_auth = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = csrf_token;
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 				'/connect/facebook'
 		).success(
