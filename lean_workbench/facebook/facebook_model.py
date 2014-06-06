@@ -10,6 +10,7 @@ class Facebook_model(db.Model):
 	profile_url = db.Column(db.String)
 	access_token = db.Column(db.String)
 	key_name = db.Column(db.String)
+	expired = db.Column(db.Boolean)
 
 	def __init__(self, name, username, profile_url, access_token, key_name):
 		self.created = datetime.datetime.now()
@@ -19,6 +20,7 @@ class Facebook_model(db.Model):
 		self.profile_url = profile_url
 		self.access_token = access_token
 		self.key_name = key_name
+		self.expired = False
 
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

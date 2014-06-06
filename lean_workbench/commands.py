@@ -5,6 +5,8 @@ from flask.ext.script import Command, Option, prompt_bool
 import os
 import config
 
+from main import app_factory
+import config
 
 class CreateDB(Command):
     """
@@ -28,16 +30,21 @@ class DropDB(Command):
         drop_all()
 
 class Mine(Command):
-	"""
-	Mines the data sources
-	"""
-	def run(self):
-		from twitter.twitter_mine import track_keywords
-		from google_analytics.ga_mine import mine_visits
-        #from facebook.fb_mine import mine_fb_page_data
-        #mine_fb_page_data()
-		#mine_visits()
-		#track_keywords()
+    """
+    Mines the data sources
+    """
+    def run(self):
+        
+    	from twitter.twitter_mine import track_keywords
+    	from google_analytics.ga_mine import mine_visits
+        from facebook.fb_mine import mine_fb_page_data
+        app = app_factory(config.Dev)
+        with app.app_context():
+            mine_fb_page_data()
+            mine_visits()
+            track_keywords()
+        pass
+
 class PrintUsers(Command):
 	"""
 	Mines the data sources
