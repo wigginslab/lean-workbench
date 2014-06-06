@@ -3,12 +3,11 @@ import datetime
 from twitter_model import Twitter_model, Date_count
 from twython import Twython
 from database import db
+from flask import current_app
 
 def track_keywords(username = None):
-	app_key = os.getenv('TWITTER_APP_KEY') 
-	app_secret = os.getenv('TWITTER_APP_SECRET')
-	print app_key
-	print app_secret
+	app_key = current_app.config['TWITTER_APP_KEY']
+	app_secret = current_app.config['TWITTER_APP_SECRET']
 	if username:
 		twitter_models = Twitter_model.query.filter_by(username=username).first()
 	else:
