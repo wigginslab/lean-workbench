@@ -5,7 +5,6 @@ from google_analytics.ga_mine import *
 from flask import current_app
 import os
 
-
 def mine_new_user(username):
 	# get twitter keyword tracking
 	track_keywords(username=username)

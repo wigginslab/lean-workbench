@@ -43,28 +43,13 @@ class Google_Analytics_DAO(object):
 		else:
 			return None
 
-	def get_user_profile_visits(self, start_date, profile_id):
+	def get_user_profile_visits(self, username):
 		"""
 		Go as far back as you can go, then check daily
 		"""
-		g = Google_Analytics_API(username=self.username)
-		user_profiles = g.get_user_accounts().get('items')
-		profile = user_profiles[-1]
-		# convert date from isoformat to GA query format
-		date_created = profile.get('created').split('T')[0]
-		current_date = datetime.now().timetuple()
-		print current_date
-		current_year = str(current_date[0])
-		current_month = str(current_date[1])
-		if len(current_month) < 2: current_month = '0'+current_month
-		current_day = str(current_date[2])
-		if len(current_day) < 2: current_day = '0'+current_day
-		current_date_string = current_year + '-' +  current_month + '-' + current_day
-		g.client.data().ga().get(
-					  ids='ga:' + profile_id,
-							start_date=start_date,
-								  end_date=end_date,
-										metrics='ga:visits').execute()
+		user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
+		user_visitors_dict_list = [x.as_dict() for x in user_visitors]
+		return jsonify(visitors=user_visitors_dict_list)
 
 class Google_analytics_resource(Resource):
 	"""
@@ -72,10 +57,17 @@ class Google_analytics_resource(Resource):
 	"""
 	def get(self, **kwargs):
 		print 'ga get'
-		profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email)
-		if profile:
+		args =  request.args
+		metric = args.get('metric')
+
+		profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+		profile_id = profile.id
+		if profile :
 			GA = Google_Analytics_DAO(username = current_user.email)
-			return GA.get_user_profiles()
+			if not metric:
+				return GA.get_user_profiles()
+			elif metric == "visits":
+				return GA.get_user_profile_visits(username = current_user.email)
 		else:
 			return jsonify(status=333)
 
@@ -84,6 +76,7 @@ class Google_analytics_resource(Resource):
 		"""
 		Get profile-id
 		"""
+		print 'GA post'
 		args = request.json 
 		username = current_user.email
 		metric = args.get('metric')
@@ -93,7 +86,7 @@ class Google_analytics_resource(Resource):
 		print args
 		print profile_id
 		# if just posting profile id
-		if metric == 'profile-id':
+		if metric == 'profile_id':
 			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
 			print ga_cred.profile_id
 			ga_cred.profile_id = profile_id
@@ -103,5 +96,3 @@ class Google_analytics_resource(Resource):
 			return jsonify(status=200,message="success!")
 		if metric == "visits":
 			return GA.get_user_profile_visits()
-
-

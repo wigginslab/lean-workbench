@@ -66,3 +66,15 @@ class Google_Analytics_Visitors(db.Model):
 		self.visitors=visitors
 		self.new_visits = new_visits
 		self.percent_new_visits = percent_new_visits
+
+
+	def as_dict(self):
+		return {
+			'id': self.id,
+			'username': self.username,
+			'profile_id': self.profile_id,
+			'date': str(self.date),
+			'visitors':self.visitors,
+			'new_visits':self.new_visits,
+			'percent_new_visits':self.percent_new_visits
+		}
