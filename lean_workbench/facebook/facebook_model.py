@@ -25,12 +25,24 @@ class Facebook_model(db.Model):
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime)
-	likes = db.Column(db.String)
+	likes = db.Column(db.Integer)
 	posts = db.Column(db.String)
 	username = db.Column(db.String)
+	page_name = db.Column(db.String)
 
-	def __init__(self, likes=None, posts=None, username=username):
-		self.date= datetime.datetime.now()
+	def __init__(self, likes=None, posts=None, username=username, page_name=None):
+		self.date = datetime.datetime.now()
 		self.likes = likes
 		self.posts = posts
 		self.username = username
+		self.page_name = page_name
+
+	def as_dict(self):
+		return {
+			"id": self.id,
+			"page_name": self.page_name,
+			"date": str(self.date),
+			"likes": self.likes,
+			"posts": self.posts,
+			"username": self.username
+		}

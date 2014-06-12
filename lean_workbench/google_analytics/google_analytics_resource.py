@@ -78,7 +78,6 @@ class Google_analytics_resource(Resource):
 			return GA.get_user_profiles()
 		else:
 			return jsonify(status=333)
-		#	GA = Google_Analytics_DAO(username = current_user.email, profile=profile.profile_id)
 
 			
 	def post(self, **kwargs):

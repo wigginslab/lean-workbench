@@ -41,8 +41,8 @@ class Mine(Command):
         app = app_factory(config.Dev)
         with app.app_context():
             mine_fb_page_data()
-            mine_visits()
-            track_keywords()
+            #mine_visits()
+            #track_keywords()
         pass
 
 class PrintUsers(Command):
