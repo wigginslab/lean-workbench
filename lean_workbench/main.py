@@ -201,6 +201,3 @@ def configure_views(app):
 	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(User_resource, '/api/v1/users')
-
-	#from facebook.fb_mine import mine_fb_page_data
-	#mine_fb_page_data()

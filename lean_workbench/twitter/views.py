@@ -36,8 +36,13 @@ def twitter_oauth_callback():
 	final_step = twitter.get_authorized_tokens(oauth_verifier)
 	user_oauth_token = final_step['oauth_token']
 	user_oauth_token_secret = final_step['oauth_token_secret']
+	twitter_username = final_step['screen_name']
 	twitter_row = Twitter_model({'username':current_user.email,
-		'oauth_token':user_oauth_token,'oauth_token_secret':user_oauth_token_secret, 'company':current_user.company})
+		'twitter_handle':twitter_username,
+		'oauth_token':user_oauth_token,
+		'oauth_token_secret':user_oauth_token_secret, 
+		'company':current_user.company
+	})
 	db.session.add(twitter_row)
 	db.session.commit()
 	db.session.close()

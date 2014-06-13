@@ -23,11 +23,15 @@ class Twitter_DAO(object):
 
 class Twitter_resource(Resource):
 	def get(self, **kwargs):
+		if current_user.is_anonymous():
+			return jsonify(status=400)
 		#return jsonify(twitter_authed=True)
 		twitter = Twitter_DAO()
 		if twitter.user_twitter:
 			print twitter.user_twitter
-			return jsonify(twitter_authed=True)
+			#return jsonify(twitter_authed=True)
+			tracked_words = twitter.user_twitter.words
+			return jsonify(words=[x.as_dict() for x in tracked_words])
 		else:
 			return jsonify(twitter_authed=False)
 

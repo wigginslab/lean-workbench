@@ -40,9 +40,9 @@ class Mine(Command):
         from facebook.fb_mine import mine_fb_page_data
         app = app_factory(config.Dev)
         with app.app_context():
-            mine_fb_page_data()
+            #mine_fb_page_data()
             #mine_visits()
-            #track_keywords()
+            track_keywords()
         pass
 
 class PrintUsers(Command):

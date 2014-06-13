@@ -4,28 +4,40 @@ import os
 from database import db
 import datetime
 
-counts = db.Table('tweet_counts',
-		db.Column('date_count_id', db.Integer, db.ForeignKey('date_count.id')),
-		db.Column('word_id', db.Integer, db.ForeignKey('word.id'))
-)
-
-tracked_twitter_words = db.Table('tracked_twitter_words',
-	db.Column('word_id', db.Integer, db.ForeignKey('word.id')),
+tracked_twitter_words = db.Table('twitter_tracked_words',
+	db.Column('twitter_word_id', db.Integer, db.ForeignKey('twitter_word.id')),
 	db.Column('twitter_id', db.Integer, db.ForeignKey('twitter.id'))
 )
 
 class Date_count(db.Model):
 
-	__tablename__ = "date_count"
+	__tablename__ = "twitter_date_count"
 	id = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime, default=datetime.datetime.now())
-	count = db.Integer()
+	count = db.Column(db.Integer)
+	word_id = db.Column(db.Integer, db.ForeignKey('twitter_word.id'))
+
+	def as_dict(self):
+		return {
+			'id':self.id,
+			'date':str(self.date),
+			'count':self.count
+		}
 
 class Word(db.Model):
-
+	__tablename__ = "twitter_word"
 	id = db.Column(db.Integer, primary_key=True)
 	word = db.Column(db.String(140))
-	counts = db.relationship('Date_count', secondary =counts, backref=db.backref('words', lazy='dynamic'))
+	counts = db.relationship('Date_count',  backref='twitter_word', lazy='dynamic')
+	
+
+
+	def as_dict(self):
+		return {
+			'id': self.id,
+			'word': self.word,
+			'counts': [c.as_dict() for c in self.counts]
+		}
 
 class Twitter_model(db.Model):
 
