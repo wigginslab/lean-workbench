@@ -2,11 +2,11 @@ import sys
 import os
 from twitter_model import Twitter_model
 from flask.ext.restful import Resource, reqparse
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 import os
 from database import db
 from flask.ext.security import current_user
-
+from json import dumps
 
 class Twitter_DAO(object):
 
@@ -31,7 +31,27 @@ class Twitter_resource(Resource):
 			print twitter.user_twitter
 			#return jsonify(twitter_authed=True)
 			tracked_words = twitter.user_twitter.words
-			return jsonify(words=[x.as_dict() for x in tracked_words])
+			counts = [x.as_dict() for x in tracked_words]
+			date_count = {}
+			for word in counts:
+				counts_list = word['counts']
+				for count in counts_list:
+					date = count['date']
+					count_at_date = count['count']
+					try:
+						date_count[date] = date_count[date] + count_at_date
+					except:
+						date_count[date] = count_at_date
+
+			values = []
+			print date_count
+			for key in date_count:
+				print key
+				print date_count[key]
+				values.append([key,date_count[key]])
+
+			return make_response(dumps([{'values':values, key:"Twitter series"}]))
+			return jsonify(values=values, key="Twitter Series")
 		else:
 			return jsonify(twitter_authed=False)
 

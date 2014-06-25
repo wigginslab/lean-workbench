@@ -3,6 +3,8 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import os
 from database import db
 import datetime
+import time
+
 
 tracked_twitter_words = db.Table('twitter_tracked_words',
 	db.Column('twitter_word_id', db.Integer, db.ForeignKey('twitter_word.id')),
@@ -20,7 +22,7 @@ class Date_count(db.Model):
 	def as_dict(self):
 		return {
 			'id':self.id,
-			'date':str(self.date),
+			'date': time.mktime(datetime.datetime.timetuple(self.date))*1000,
 			'count':self.count
 		}
 

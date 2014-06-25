@@ -188,6 +188,7 @@ def configure_views(app):
 	@app.route('/onboarding/pay', methods=['POST','GET'])
 	@app.route('/export', methods=['POST','GET'])
 	@app.route('/dashboard', methods=['POST', 'GET'])    
+	@app.route('/dashboard2', methods=['POST', 'GET'])    
 	def dashboard():
 		"""
 		"""
