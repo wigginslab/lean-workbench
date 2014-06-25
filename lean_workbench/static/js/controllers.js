@@ -29,20 +29,11 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
                 }
    ];
 
-  /* $scope.twitterData=[
-   {
-		values: [
-		[
-		1402697654000,
-		6
-		],
-		[
-		1403709996000,
-		2
-		]
-		],
-		key: "Twitter Series"
-}]*/
+	  $scope.xAxisTickFormat = function(){
+                return function(d){
+                    return d3.time.format('%x')(new Date(d));  //uncomment for date format
+                }
+            }
 
 	 $http.get(
         '/api/v1/twitter'
