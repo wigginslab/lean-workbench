@@ -325,6 +325,11 @@ class QuickBooks():
                                      data = request_body)
 
             if accept == "json":
+                print headers
+                print header_auth 
+                # if unauthorized
+                if r.status_code == 401:
+                    raise Exception('Query object is not authorized to make that request.')
                 result = r.json()
                 
                 if "Fault" in result and result["Fault"]\

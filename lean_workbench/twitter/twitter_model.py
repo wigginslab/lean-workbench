@@ -58,7 +58,13 @@ class Twitter_model(db.Model):
 		self.username = cred_dict.get('username')
 		self.twitter_handle = cred_dict.get('twitter_handle')
 		self.company_name = cred_dict.get('company')
-		words = [self.company_name.replace(" ",""), self.company_name, self.company_name.lower(), "#"+self.company_name.replace(" ","").lower(), '#'+self.company_name.replace(" ","")]
+		words = [
+		self.company_name.replace(" ",""), 
+		self.company_name,
+		self.company_name.lower(),
+		"#"+self.company_name.replace(" ","").lower(),
+		'#'+self.company_name.replace(" ","")
+		 ]
 		self.words = [Word(word=x) for x in words]
 
 	def as_dict(self):

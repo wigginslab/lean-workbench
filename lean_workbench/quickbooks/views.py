@@ -16,7 +16,8 @@ def quickbooks():
 	
 	app_key = current_app.config['QUICKBOOKS_APP_KEY']  
 	consumer_secret = current_app.config['QUICKBOOKS_APP_SECRET']
-	callback_url= current_app.config['QUICKBOOKS_APP_CALLBACK_URL']
+	callback_url= current_app.config['QUICKBOOKS_CALLBACK_URL']
+	print callback_url
 	qb = QuickBooks(consumer_key=app_key, consumer_secret=consumer_secret, callback_url=callback_url)
 	oauth_path = qb.get_authorize_url()
 	return redirect(oauth_path)
@@ -25,7 +26,9 @@ def quickbooks():
 def quickbooks_callback():
 
 	token = request.args.get('oauth_token')
-	qbm = Quickbooks_model(username = current_user.email, access_token=token)
+	oauth_verifier = request.args.get('oauth_verifier')
+	realm_id = request.args.get('realmId')
+	qbm = Quickbooks_model(oauth_verifier=oauth_verifier, realm_id=realm_id,username = current_user.email, access_token=token)
 	db.session.add(qbm)
 	db.session.commit()
 	db.session.close()

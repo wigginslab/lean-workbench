@@ -38,11 +38,16 @@ class Mine(Command):
     	from twitter.twitter_mine import track_keywords
     	from google_analytics.ga_mine import mine_visits
         from facebook.fb_mine import mine_fb_page_data
+        from quickbooks.qb_mine import mine_qb_data
         app = app_factory(config.Dev)
         with app.app_context():
             #mine_fb_page_data()
             #mine_visits()
-            track_keywords()
+            #track_keywords()
+            app_key = app.config.get('QUICKBOOKS_APP_KEY')
+            app_secret = app.config.get('QUICKBOOKS_APP_SECRET')
+            app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
+            mine_qb_data(app_key,app_secret,app_token)
         pass
 
 class PrintUsers(Command):

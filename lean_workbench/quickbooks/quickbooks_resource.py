@@ -20,6 +20,8 @@ class Quickbooks_DAO(object):
 class Quickbooks_resource(Resource):
 	def get(self, **kwargs):
 		#return jsonify(twitter_authed=True)
+		if current_user.is_anonymous():
+			return jsonify(qb_authed=False)
 		qb = Quickbooks_DAO()
 		if qb.user_qb:
 			print qb.user_qb
