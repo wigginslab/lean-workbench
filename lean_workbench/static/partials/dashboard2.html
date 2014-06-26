@@ -23,13 +23,12 @@
                 <!-- block -->
                 <div class="block">
                     <div class="navbar container block-header navbar-inverse col-lg-12">
-                      content 
-              
                         <h2>Twitter Data</h2>
                         <nvd3-line-chart
                             data="twitterData"
                             width="600"
                             height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
                             yAxisLabel="Company Mentions"
                             xAxisLabel="Date"
                             showXAxis="true"
@@ -42,6 +41,7 @@
                             data="googleData"
                             width="600"
                             height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
                             yAxisLabel="Number of visitors"
                             xAxisLabel="Date"
                             showXAxis="true"
@@ -54,6 +54,7 @@
                             data="facebookData"
                             width="600"
                             height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
                             yAxisLabel="Number of likes"
                             xAxisLabel="Date"
                             showXAxis="true"
@@ -61,11 +62,7 @@
                             xAxisTickFormat="xAxisTickFormat()"
                             yAxisTickFormat="yAxisFormatFunction()">
                         </nvd3-line-chart>
-
-
                     </div>
-                    </div>
-                    
                     <div class="block-content collapse in">
                     </div>
                 </div>
