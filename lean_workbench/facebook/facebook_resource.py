@@ -1,10 +1,12 @@
 import sys
 import os
-from flask import jsonify
+from flask import jsonify, make_response
+from json import loads
 from facebook_model import Facebook_model,Facebook_page_data
 from database import db
 from flask.ext.restful import Resource, reqparse, fields, marshal_with, abort
 from flask.ext.security import current_user
+from json import dumps
 
 class Facebook_DAO(object):
 
@@ -23,6 +25,6 @@ class Facebook_resource(Resource):
 			facebook_page = Facebook_page_data.query.filter_by(username=current_user.email).all()
 			print facebook_page
 			if hasattr(facebook_page, "__iter__"):
-				return jsonify(facebook_page=[x.as_dict() for x in facebook_page])
+				return make_response(dumps([{'values':[x.as_count() for x in facebook_page]}]))
 			else:
 				return jsonify(facebook_page=facebook_page.as_dict)

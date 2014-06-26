@@ -1,5 +1,6 @@
 from database import db
 import datetime
+import time
 
 class Facebook_model(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
@@ -46,3 +47,6 @@ class Facebook_page_data(db.Model):
 			"posts": self.posts,
 			"username": self.username
 		}
+
+	def as_count(self):
+		return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.likes]

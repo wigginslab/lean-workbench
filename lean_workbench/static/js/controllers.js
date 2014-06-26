@@ -56,6 +56,17 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	      	alert(data)
 	     }
       )
+
+        $http.get(
+        '/api/v1/facebook'
+      ).success(
+        function(data) {
+          $scope.facebookData = data;
+        }
+      ).error(function(data){
+	      	alert(data)
+	     }
+      )
 }
 
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {
