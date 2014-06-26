@@ -5,8 +5,9 @@ from google_analytics_models import *
 from google_analytics_client import Google_Analytics_API
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
-from flask import session, escape, request, jsonify
+from flask import session, escape, request, jsonify, make_response
 from database import db
+from json import dumps
 
 path = os.getenv("path")
 sys.path.append(path)
@@ -49,7 +50,12 @@ class Google_Analytics_DAO(object):
 		"""
 		user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
 		user_visitors_dict_list = [x.as_dict() for x in user_visitors]
-		return jsonify(visitors=user_visitors_dict_list)
+		visits = []
+		for visit_dict in user_visitors_dict_list:
+			date = visit_dict['date']
+			count = visit_dict['visitors']
+			visits.append([date,count])
+		return make_response(dumps([{'values':visits}]))
 
 class Google_analytics_resource(Resource):
 	"""
@@ -95,4 +101,4 @@ class Google_analytics_resource(Resource):
 			db.session.close()
 			return jsonify(status=200,message="success!")
 		if metric == "visits":
-			return GA.get_user_profile_visits()
+			visits =  GA.get_user_profile_visits()

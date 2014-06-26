@@ -45,6 +45,17 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	      	alert(data)
 	     }
       )
+
+       $http.get(
+        '/api/v1/google-analytics?metric=visits'
+      ).success(
+        function(data) {
+          $scope.googleData = data;
+        }
+      ).error(function(data){
+	      	alert(data)
+	     }
+      )
 }
 
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {

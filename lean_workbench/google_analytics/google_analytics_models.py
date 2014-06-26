@@ -1,4 +1,6 @@
 from database import db
+import time
+import datetime
 
 ga_profiles_association = db.Table('user_profiles_association',
     db.Column('user_id', db.Integer, db.ForeignKey('google_analytics_oauth_credentials.id')),
@@ -73,7 +75,7 @@ class Google_Analytics_Visitors(db.Model):
 			'id': self.id,
 			'username': self.username,
 			'profile_id': self.profile_id,
-			'date': str(self.date),
+			'date': time.mktime(datetime.datetime.timetuple(self.date))*1000,
 			'visitors':self.visitors,
 			'new_visits':self.new_visits,
 			'percent_new_visits':self.percent_new_visits
