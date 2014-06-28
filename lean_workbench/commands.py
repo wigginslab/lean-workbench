@@ -44,19 +44,20 @@ class Mine(Command):
         args:
             new- if true, check for users that haven't been mined yet and mine only their data.
         """
-        from twitter.twitter_model import *
-        from quickbooks.quickbooks_model import *
-        from facebook.facebook_model import *
+        from twitter.twitter_model import Twitter_model
+        from quickbooks.quickbooks_model import Quickbooks_model
+        from facebook.facebook_model import Facebook_model
+        from google_analytics.google_analytics_models import Google_Analytics_User_Model
     	from twitter.twitter_mine import track_keywords
     	from google_analytics.ga_mine import mine_visits
         from facebook.fb_mine import mine_fb_page_data
         from quickbooks.qb_mine import mine_qb_data
         app = app_factory(config.Dev)
         with app.app_context():
-           consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
+            consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
             consumer_secret = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
             app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
-                  
+              
             if new:
                 new_twitters = Twitter_model.query.filter_by(active=False).all()
                 new_qbs = Quickbooks_model.query.filter_by(active=False).all()

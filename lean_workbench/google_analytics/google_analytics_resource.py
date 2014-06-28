@@ -19,86 +19,88 @@ parser.add_argument('dimension', type=str)
 parser.add_argument('metric', type=str)
 
 class Google_Analytics_DAO(object):
-	"""
-	Google Analytics Data Access Object
-	used to query the GA models for the Resource
+    """
+    Google Analytics Data Access Object
+    used to query the GA models for the Resource
 
-	args:
-		username: required
-		profile_id: id of specific GA profile to query
-	"""
-	def __init__(self, username, profile_id=None, metric=None, dimension=None):
-		self.username = username
-		self.profile_id = profile_id
-		self.metric = metric
-		self.dimension = dimension
+    args:
+        username: required
+        profile_id: id of specific GA profile to query
+    """
+    def __init__(self, username, profile_id=None, metric=None, dimension=None):
+        self.username = username
+        self.profile_id = profile_id
+        self.metric = metric
+        self.dimension = dimension
 
-	def get_user_profiles(self):
-		"""
-		Retrieve all userprofiles of a user
-		"""
-		g = Google_Analytics_API(self.username)
-		if g:
-			user_accounts = g.get_user_accounts()
-			return user_accounts.get('items')
-		else:
-			return None
+    def get_user_profiles(self):
+        """
+        Retrieve all userprofiles of a user
+        """
+        g = Google_Analytics_API(self.username)
+        if g:
+            user_accounts = g.get_user_accounts()
+            return user_accounts.get('items')
+        else:
+            return None
 
-	def get_user_profile_visits(self, username):
-		"""
-		Go as far back as you can go, then check daily
-		"""
-		user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
-		user_visitors_dict_list = [x.as_dict() for x in user_visitors]
-		visits = []
-		for visit_dict in user_visitors_dict_list:
-			date = visit_dict['date']
-			count = visit_dict['visitors']
-			visits.append([date,count])
-		return make_response(dumps([{'values':visits}]))
+    def get_user_profile_visits(self, username):
+        """
+        Go as far back as you can go, then check daily
+        """
+        user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
+        user_visitors_dict_list = [x.as_dict() for x in user_visitors]
+        visits = []
+        for visit_dict in user_visitors_dict_list:
+                date = visit_dict['date']
+                count = visit_dict['visitors']
+                visits.append([date,count])
+        return make_response(dumps([{'values':visits}]))
 
 class Google_analytics_resource(Resource):
-	"""
-	Handles requests and returns the resources they ask for
-	"""
-	def get(self, **kwargs):
-		print 'ga get'
-		args =  request.args
-		metric = args.get('metric')
+    """
+    Handles requests and returns the resources they ask for
+    """
+    def get(self, **kwargs):
+        print 'ga get'
+        args =  request.args
+        metric = args.get('metric')
 
-		profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
-		profile_id = profile.id
-		if profile :
-			GA = Google_Analytics_DAO(username = current_user.email)
-			if not metric:
-				return GA.get_user_profiles()
-			elif metric == "visits":
-				return GA.get_user_profile_visits(username = current_user.email)
-		else:
-			return jsonify(status=333)
+        profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+        profile_id = profile.id
+        if profile :
+                GA = Google_Analytics_DAO(username = current_user.email)
+                if not metric:
+                        return GA.get_user_profiles()
+                elif metric == "visits":
+                        return GA.get_user_profile_visits(username = current_user.email)
+        else:
+                return jsonify(status=333)
 
-			
-	def post(self, **kwargs):
-		"""
-		Get profile-id
-		"""
-		print 'GA post'
-		args = request.json 
-		username = current_user.email
-		metric = args.get('metric')
-		profile_id = args.get('profile_id')
-		dimension = args.get('dimension')
-		print 'args'	
-		print args
-		print profile_id
-		# if just posting profile id
-		if metric == 'profile_id':
-			ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
-			print ga_cred.profile_id
-			ga_cred.profile_id = profile_id
-			db.session.commit()
-			print ga_cred.profile_id
-			db.session.close()
-			return jsonify(status=200,message="success!")
-		if metric == "visits":
-			visits =  GA.get_user_profile_visits()
+                        
+    def post(self, **kwargs):
+        """
+        Get profile-id
+        """
+        print 'GA post'
+        args = request.json 
+        username = current_user.email
+        metric = args.get('metric')
+        profile_id = args.get('profile_id')
+        dimension = args.get('dimension')
+        print 'args'    
+        print args
+        print profile_id
+        # if just posting profile id
+        if metric == 'profile-id':
+            print 'inside profile id'
+            ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+            print ga_cred.profile_id
+            ga_cred.profile_id = profile_id
+            db.session.add(ga_cred)
+            db.session.commit()
+            print 'committed data' 
+            db.session.close()
+            return jsonify(status=200,message="success!")
+            if metric == "visits":
+                visits =  GA.get_user_profile_visits()
