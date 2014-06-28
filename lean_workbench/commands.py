@@ -53,18 +53,25 @@ class Mine(Command):
         from quickbooks.qb_mine import mine_qb_data
         app = app_factory(config.Dev)
         with app.app_context():
+           consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
+            consumer_secret = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
+            app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
+                  
             if new:
                 new_twitters = Twitter_model.query.filter_by(active=False).all()
                 new_qbs = Quickbooks_model.query.filter_by(active=False).all()
                 new_fbs = Facebook_model.query.filter_by(active=False).all()
                 new_gas = Google_Analytics_User_Model.query.filter_by(active=False).all()
-
+                for user in new_twitters:
+                    track_keywords(username=user.username)
+                for user in new_fbs:
+                    mine_fb_page_data(username=user.username)   
+                for user in new_gas:
+                    mine_visits(username=user.username)
+                    
             mine_fb_page_data()
             mine_visits()
             track_keywords()
-            consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-            consumer_secret = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-            app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
             mine_qb_data(consumer_key,consumer_secret,app_token)
         pass
 
