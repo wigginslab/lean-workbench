@@ -16,7 +16,7 @@ class Dev(UserConfig):
 	SECURITY_RECOVERABLE = True
 	SECURITY_REGISTER_URL = "/registration"
 
-	SQL_ALCHEMY_ECHO=True
+	SQL_ALCHEMY_ECHO=False
 	# Setup Flask-Security email
 	MAIL_SERVER = 'smtp.gmail.com'
 	MAIL_PORT = 465

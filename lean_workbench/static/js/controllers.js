@@ -285,23 +285,23 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 	
 	$scope.has_twitter = false;
-		$http.get(
-				'/api/v1/twitter'
+		$http.post('/api/v1/twitter?metric=authed'
 		).success(
 			function(data){
 				console.log(data)
-				if (data['twitter_authed']){
+                                console.log(data[0])
+				if (data[0]['twitter_authed']){
 					$scope.has_twitter = true;
 				}
 			}
 		)
 
 		$scope.has_fb = false;
-		$http.get(
-				'/api/v1/facebook'
+		$http.post(
+				'/api/v1/facebook?metric=authed'
 		).success(
 			function(data){
-				if (data['fb_authed']){
+				if (data[0]['fb_authed']){
 					$scope.has_fb = true;
 				}
 			}
