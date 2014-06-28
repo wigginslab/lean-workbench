@@ -53,6 +53,8 @@ class Twitter_model(db.Model):
 	company_name = db.Column(db.String)
 	words =  db.relationship('Word', secondary=tracked_twitter_words,
 		backref=db.backref('twitter'))
+        # mined once?
+        active = db.Column(db.Boolean)
 
 	def __init__(self, cred_dict):
 		self.oauth_token =  cred_dict.get('oauth_token')

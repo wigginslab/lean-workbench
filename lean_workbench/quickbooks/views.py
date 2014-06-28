@@ -9,43 +9,48 @@ from flask.ext.security import current_user
 from quickbooks import QuickBooks
 
 app = Blueprint('quickbooks', __name__, template_folder='templates')
-
 @app.route('/connect/quickbooks')
 def quickbooks():
-	print 'inside quickbooks granturl'
-	
-	app_key = current_app.config['QUICKBOOKS_APP_KEY']  
-	consumer_secret = current_app.config['QUICKBOOKS_APP_SECRET']
-	callback_url= current_app.config['QUICKBOOKS_CALLBACK_URL']
-	print callback_url
-	qb = QuickBooks(consumer_key=app_key, consumer_secret=consumer_secret, callback_url=callback_url)
-	oauth_path = qb.get_authorize_url()
-	return redirect(oauth_path)
+    print 'inside quickbooks granturl'
+    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
+    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
+    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
+    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
+    qb = QuickBooks(
+             consumer_key=consumer_key, 
+             consumer_secret=consumer_secret, 
+             callback_url=callback_url)
+    global_qb = qb
+    oauth_path = qb.get_authorize_url()
+    return redirect(oauth_path)
 	
 @app.route('/connect/quickbooks/callback/')
 def quickbooks_callback():
 
-	token = request.args.get('oauth_token')
-	oauth_verifier = request.args.get('oauth_verifier')
-	realm_id = request.args.get('realmId')
-	qbm = Quickbooks_model(oauth_verifier=oauth_verifier, realm_id=realm_id,username = current_user.email, access_token=token)
-	db.session.add(qbm)
-	db.session.commit()
-	db.session.close()
-	return render_template('oauth_success.html', service="Quickbooks")
+    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
+    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
+    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
+    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
+    qb = QuickBooks(
+             consumer_key=consumer_key, 
+             consumer_secret=consumer_secret, 
+             callback_url=callback_url)
+    qb.get_authorize_url()
+     
+    token = request.args.get('oauth_token')
+    oauth_verifier = request.args.get('oauth_verifier')
+    print oauth_verifier
+    print qb.qbService.get_auth_session(qb.request_token, qb.request_token_secret, data={'oauth_verifier':oauth_verifier})
+    print 'oauth_verifier %s' %(oauth_verifier)
+    realm_id = request.args.get('realmId')
 
-def sign_request(consumer_secret, app_key):
-    from hashlib import sha1
-    import hmac
-    import binascii
-
-    # If you dont have a token yet, the key should be only "CONSUMER_SECRET&"
-    key = consumer_secret+"&"+app_key
-
-    # The Base String as specified here: 
-    raw = "https://oauth.intuit.com/oauth/v1/get_request_token" # as specified by oauth
-
-    hashed = hmac.new(key, raw, sha1)
-
-    # The signature
-    return binascii.b2a_base64(hashed.digest())[:-1]
+    qb.get_access_tokens(oauth_verifier)
+    access_token = qb.access_token
+    access_token_secret = qb.access_token_secret
+    print 'access token: %s' %(access_token)
+    print 'access token secret %s' %(access_token_secret)
+    qbm = Quickbooks_model(oauth_verifier=oauth_verifier, realm_id=realm_id,username = current_user.email, access_token=access_token, access_token_secret=access_token_secret)
+    db.session.add(qbm)
+    db.session.commit()
+    db.session.close()
+    return render_template('oauth_success.html', service="Quickbooks")

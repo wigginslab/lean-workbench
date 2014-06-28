@@ -7,8 +7,11 @@ class Quickbooks_model(db.Model):
 	updated = db.Column(db.DateTime)
 	username = db.Column(db.String)
 	access_token = db.Column(db.String)
-	oauth_verifier = db.Column(db.String)
+	access_token_secret = db.Column(db.String)
+        # company identifier
 	realm_id = db.Column(db.String)
+        # already mined once?
+        active = db.Column(db.Boolean)
 
 	def __init__(self, username, access_token, oauth_verifier, realm_id):
 		self.created = datetime.datetime.now()

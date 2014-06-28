@@ -35,7 +35,7 @@ class Google_Analytics_User_Querier:
 		g = Google_Analytics_API(self.username)
 		user_visitor_data = Google_Analytics_Visitors.query.filter_by(username=self.username).all()
 		
-		# if already mined, just do yesterday
+        # if already mined, just do yesterday
 		if user_visitor_data:
 			date = datetime.now()-timedelta(days=1)
 			google_date = Google_Time_String(str(date))

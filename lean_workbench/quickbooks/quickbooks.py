@@ -9,30 +9,17 @@ import xml.etree.ElementTree as ET
 
 import json
 
-try:
 
-    """
-    This main module is for talking to the QBOv3 API. There are other
-    supporting modules for doing stuff with the results or read and query
-    operations and for getting stuff ready for update, delete,
-    and create operations
-    """
+"""
+This main module is for talking to the QBOv3 API. There are other
+supporting modules for doing stuff with the results or read and query
+operations and for getting stuff ready for update, delete,
+and create operations
+"""
 
-    import massage
-    import reference
-    import report
-
-except ImportError:
-
-    print "You won't be able to run some of the additional methods"
-
-    """
-    There are convenience-function calls to these companion modules, all
-    listed at the bottom here, and obvi those won't work alone, but
-    the rest of this module should be standalone
-    """
-
-    pass
+import massage
+import reference
+import report
 
 class QuickBooks():
     """A wrapper class around Python's Rauth module for Quickbooks the API"""
@@ -125,6 +112,8 @@ class QuickBooks():
         access_token and access_token_secret on the QB Object.
         :param oauth_verifier: the oauth_verifier as specified by OAuth 1.0a
         """
+        print self.request_token
+        print self.request_token_secret
         session = self.qbService.get_auth_session(
                 self.request_token, 
                 self.request_token_secret,
@@ -326,12 +315,9 @@ class QuickBooks():
 
             if accept == "json":
                 print headers
-                print header_auth 
-
                 # if unauthorized
                 if r.status_code == 401:
                     print r.text
-                    print dir(r)
                     raise Exception('Query object is not authorized to make that request.')
                 result = r.json()
                 
@@ -449,8 +435,6 @@ class QuickBooks():
         #CAN ONE SESSION USE MULTIPLE COMPANIES?
         #IF NOT, REMOVE THE COMPANY OPTIONALITY
         url = self.base_url_v3 + "/company/%s/query" % self.company_id
-
-        #print query_string
 
         results = self.query_fetch_more(r_type="POST",
                                         header_auth=True,
