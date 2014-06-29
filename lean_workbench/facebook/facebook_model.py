@@ -25,6 +25,7 @@ class Facebook_model(db.Model):
 		self.access_token = access_token
 		self.key_name = key_name
 		self.expired = False
+                self.active = False
 
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

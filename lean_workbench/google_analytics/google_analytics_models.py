@@ -36,6 +36,7 @@ class Google_Analytics_User_Model(db.Model):
 		self.token_expiry = credentials_dict.get("token_expiry")
 		self.token_uri = credentials_dict.get("token_uri")
 		self.user_agent = credentials_dict.get("user_agent")
+                self.active = False
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

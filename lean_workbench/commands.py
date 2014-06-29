@@ -69,12 +69,11 @@ class Mine(Command):
                     mine_fb_page_data(username=user.username)   
                 for user in new_gas:
                     mine_visits(username=user.username)
-                    
-            mine_fb_page_data()
-            mine_visits()
-            track_keywords()
-            mine_qb_data(consumer_key,consumer_secret,app_token)
-        pass
+            else:        
+                mine_fb_page_data()
+                mine_visits()
+                track_keywords()
+                mine_qb_data(consumer_key,consumer_secret,app_token)
 
 class PrintUsers(Command):
 	"""

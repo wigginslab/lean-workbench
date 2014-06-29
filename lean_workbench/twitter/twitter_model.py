@@ -70,6 +70,7 @@ class Twitter_model(db.Model):
 		'#'+self.company_name.replace(" ","")
 		 ]
 		self.words = [Word(word=x) for x in words]
+                self.active = False
 
 	def as_dict(self):
 		return {c.name: getattr(self, c.name) for c in self.__table__.columns}
