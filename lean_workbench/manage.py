@@ -6,6 +6,10 @@ import commands
 
 from celery import Celery
 
+from main import app_factory
+import config
+
+
 if __name__ == "__main__":
 	from main import app_factory
 	import config
@@ -18,4 +22,5 @@ if __name__ == "__main__":
 	manager.add_command("drop_db", commands.DropDB())
 	manager.add_command("mine", commands.Mine())
 	manager.add_command("users", commands.PrintUsers())
+
 	manager.run()

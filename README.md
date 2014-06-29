@@ -48,7 +48,9 @@ grunt sass
 python lean_workbench/manage.py create_db
 python lean_workbench/manage.py runserver 
 ```
+Open your browser to http://127.0.0.1:5000/
 
+For the productive server.
 
 ```
 sudo apt-get update

@@ -32,15 +32,16 @@ class Google_Analytics_API:
 			if expires_on > current_time:
 				print 'expires on is greater than the current time'
 				self.client = self.build_client(self.credentials)
+                                credentials_dict = self.credentials.as_dict()
+                                self.credentials_dict = credentials_dict
+
 			else:
-				try:
-					print 'credentials expired'
-					print self.credentials
-					credentials_dict = self.credentials.as_dict()
-					self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
-					self.client = self.build_client(self.credentials)
-				except:
-					return None
+                            print 'credentials expired'
+                            print self.credentials
+                            credentials_dict = self.credentials.as_dict()
+                            self.credentials_dict = credentials_dict
+                            self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+                            self.client = self.build_client(self.credentials)
 		else:
 			print "no credentials"
 			return None
@@ -119,8 +120,8 @@ class Google_Analytics_API:
 		db.session.close()
 
 	def get_user_accounts(self):
-		accounts = self.client.management().accounts().list().execute()
-		return accounts
+            accounts = self.client.management().accounts().list().execute()
+            return accounts
 
 	def get_profile_id(self):
 		account_id = self.get_user_accounts().get('items')[-1].get('id')

@@ -1,0 +1,75 @@
+<div class="dashboard clearfix">
+    <div class="container-fluid col-lg-2" >
+        <ul class="nav nav-pills nav-stacked">
+            <li class="active">
+                <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
+            </li>
+           <li>
+                <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
+            </li>
+           <li>
+                <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
+            </li>
+            <li>
+                <a href="/export"><i class="icon-chevron-right"></i>Export Data</a>
+            </li>
+        </ul>
+    </div>
+    <!--/span-->
+    <div class="col-lg-10" id="content">
+        <div class="row">
+            <div class="col-lg-10">
+                <h1>Ongoing Hypotheses</h1>
+                <!-- block -->
+                <div class="block">
+                    <div class="navbar container block-header navbar-inverse col-lg-12">
+                        <h2>Twitter Data</h2>
+                        <nvd3-line-chart
+                            data="twitterData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
+                            yAxisLabel="Company Mentions"
+                            xAxisLabel="Date"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+                        </nvd3-line-chart>
+                          <h2>Google Analytics Data</h2>
+                        <nvd3-line-chart
+                            data="googleData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
+                            yAxisLabel="Number of visitors"
+                            xAxisLabel="Date"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+                        </nvd3-line-chart>
+                        <h2>Facebook Data</h2>
+                           <nvd3-line-chart
+                            data="facebookData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 30}"
+                            yAxisLabel="Number of likes"
+                            xAxisLabel="Date"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+                        </nvd3-line-chart>
+                    </div>
+                    <div class="block-content collapse in">
+                    </div>
+                </div>
+                </div>
+                <!-- /block -->
+            </div>
+        </div>
+    </div>
+</div>
+

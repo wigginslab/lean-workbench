@@ -21,17 +21,54 @@ function ExportController(){
 
 }
 
+function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
+	  $scope.xAxisTickFormat = function(){
+                return function(d){
+                    return d3.time.format('%x')(new Date(d));  //uncomment for date format
+                }
+            }
+
+	 $http.get(
+        '/api/v1/twitter'
+      ).success(
+        function(data) {
+          $scope.twitterData = data;
+        }
+      ).error(function(data){
+	      	alert(data)
+	     }
+      )
+
+       $http.get(
+        '/api/v1/google-analytics?metric=visits'
+      ).success(
+        function(data) {
+          $scope.googleData = data;
+        }
+      ).error(function(data){
+	      	alert(data)
+	     }
+      )
+
+        $http.get(
+        '/api/v1/facebook'
+      ).success(
+        function(data) {
+          $scope.facebookData = data;
+        }
+      ).error(function(data){
+	      	alert(data)
+	     }
+      )
+}
+
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 	$("#login").hide();
    	$("#logout").show();
 
 
 	$( ".datepicker" ).datepicker({ minDate: 0 });
-  	/*$scope.hypotheses = Hypotheses.get(function(hypotheses){
-  		console.log(hypotheses.hypotheses)
-  		console.log(hypotheses.hypotheses[0])
-  		$scope.hypotheses = hypotheses.hypotheses;
-  	});*/
+
 	var hypotheses=  $http.get(
 			'/api/v1/hypotheses'
 			).success(
@@ -248,23 +285,23 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 	
 	$scope.has_twitter = false;
-		$http.get(
-				'/api/v1/twitter'
+		$http.post('/api/v1/twitter?metric=authed'
 		).success(
 			function(data){
 				console.log(data)
-				if (data['twitter_authed']){
+                                console.log(data[0])
+				if (data[0]['twitter_authed']){
 					$scope.has_twitter = true;
 				}
 			}
 		)
 
 		$scope.has_fb = false;
-		$http.get(
-				'/api/v1/facebook'
+		$http.post(
+				'/api/v1/facebook?metric=authed'
 		).success(
 			function(data){
-				if (data['fb_authed']){
+				if (data[0]['fb_authed']){
 					$scope.has_fb = true;
 				}
 			}
@@ -332,7 +369,7 @@ function PayController($scope, $http, Quickbooks){
 }
 
 
-var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
+var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices', 'nvd3ChartDirectives'], 
 	function($interpolateProvider) {
 		$interpolateProvider.startSymbol('[[');
 		$interpolateProvider.endSymbol(']]');
@@ -499,6 +536,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+    .when('/dashboard2', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
