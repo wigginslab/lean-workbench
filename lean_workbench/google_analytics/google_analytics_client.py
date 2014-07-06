@@ -68,7 +68,7 @@ class Google_Analytics_API:
 		credential_dict = ga_user_credentials.as_dict()
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
-		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token"
+		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
@@ -114,6 +114,7 @@ class Google_Analytics_API:
 		"""
 		print 'saving credentials'
 		# store information necessary for building client
+                print credentials_dict
 		GAUM = Google_Analytics_User_Model(credentials_dict)
 		db.session.add(GAUM)
 		db.session.commit()

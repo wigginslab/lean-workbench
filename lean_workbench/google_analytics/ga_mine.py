@@ -9,6 +9,9 @@ def mine_visits(username=None):
 		ga_users = Google_Analytics_User_Model.query.all()
 	else:
 		ga_users = [Google_Analytics_User_Model.query.filter_by(username=username).first()]
+                ga_users[0].active = True
+                db.session.add(ga_users[0])
+                db.session.commit()
 	print ga_users
 	if ga_users:
 		for ga_user in ga_users:

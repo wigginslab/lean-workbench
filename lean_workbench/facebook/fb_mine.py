@@ -7,6 +7,9 @@ def mine_fb_page_data(username=None):
 	if username:
 		fb_user = Facebook_model.query.filter_by(username=username).order_by('-id').first()
 		users = [fb_user]
+                fb_user.active = True
+                db.session.add(fb_user)
+                db.session.commit()
 
 	else:
 		users = Facebook_model.query.all()
@@ -36,5 +39,3 @@ def mine_fb_page_data(username=None):
 			page_today = Facebook_page_data(username = username, likes=likes, page_name=page_name)
 			db.session.add(page_today)
 			db.session.commit()
-			
-	db.session.close()

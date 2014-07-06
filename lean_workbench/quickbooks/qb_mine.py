@@ -5,6 +5,9 @@ import sys
 def mine_qb_data(consumer_key,consumer_secret, access_token, username=None):
 	if username:
 		qb_users = [Quickbooks_model.query.filter_by(username=username)].last()
+                qb_users[0].active = True
+                db.session.add(qb_users[0])
+                db.session.commit()
 	else:
 		qb_users = Quickbooks_model.query.all()
 

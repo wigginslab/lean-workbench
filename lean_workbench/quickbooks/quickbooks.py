@@ -1,9 +1,11 @@
-
-try:
-    from rauth import OAuth1Session, OAuth1Service
-except:
-    print "Please import Rauth:\n\n"
-    print "http://rauth.readthedocs.org/en/latest/\n"
+import requests
+import time
+import random
+from hashlib import sha1
+import hmac
+import binascii
+import urllib
+from rauth import OAuth1Session, OAuth1Service
 
 import xml.etree.ElementTree as ET
 
@@ -87,11 +89,14 @@ class QuickBooks():
         ]
 
 
+
+
     def get_authorize_url(self):
         """Returns the Authorize URL as returned by QB, 
         and specified by OAuth 1.0a.
         :return URI:
         """
+        print 'inside get_authorize_url'
         self.qbService = OAuth1Service(
                 name = None,
                 consumer_key = self.consumer_key,
@@ -105,6 +110,9 @@ class QuickBooks():
                 params={'oauth_callback':self.callback_url}
             )
 
+        print self.qbService.get_request_token(
+                params={'oauth_callback':self.callback_url}
+        )
         return self.qbService.get_authorize_url(self.request_token)
 
     def get_access_tokens(self, oauth_verifier):
@@ -123,6 +131,60 @@ class QuickBooks():
         self.access_token_secret = session.access_token_secret
 
         return session
+    def my_get_access_tokens(self, oauth_token, oauth_verifier, oauth_token_secret, consumer_secret):
+        self.access_token_url = "https://oauth.intuit.com/oauth/v1/get_access_token"
+        # length of nonce
+        length = 36 
+        payload = {
+            'oauth_verifier': oauth_verifier,
+            'oauth_token': oauth_token,
+            'oauth_signature_method':'HMAC-SHA1',
+            'oauth_timestamp': str(int(time.time())),
+            'oauth_nonce':''.join([str(random.randint(0, 9)) for i in range(length)]),
+            'oauth_version':'1.0',
+            'oauth_consumer_key':self.consumer_key,
+            'oauth_consumer_secret':self.consumer_secret
+
+        }
+
+        encoded_keys = [urllib.quote(x) for x in payload.keys()]
+        print encoded_keys
+        encoded_dict = {}
+        for key in encoded_keys:
+            unencoded_value = payload[key]
+            encoded_value = urllib.quote(unencoded_value)
+            encoded_dict[key] = encoded_value
+        
+        
+        val_string = ""
+        print encoded_keys
+        sorted_enc_keys = sorted(encoded_keys)
+        print sorted_enc_keys
+        for i in range(len(sorted_enc_keys)):
+            key = encoded_keys[i]
+            value = encoded_dict[key]
+            substring = key+"="+value
+            if i < len(sorted_enc_keys)-1:
+                substring = substring+"&"
+            val_string = val_string+substring
+
+
+
+        raw = "GET&"+urllib.quote(self.access_token_url)+val_string
+        hash_key = consumer_secret + "&" +self.request_token_secret 
+
+        hashed = hmac.new(key, raw, sha1)
+        signature = binascii.b2a_base64(hashed.digest()).rstrip('\n')
+
+        payload['oauth_signature'] = signature
+        print payload
+
+        r = requests.get(self.access_token_url, params=payload)
+
+        print r.url
+        print r.text
+        print r.json
+        return r.json
 
     def create_session(self):
         if (self.consumer_secret and 

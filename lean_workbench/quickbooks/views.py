@@ -31,20 +31,16 @@ def quickbooks_callback():
     consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
     app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
     callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
-    qb = QuickBooks(
-             consumer_key=consumer_key, 
-             consumer_secret=consumer_secret, 
-             callback_url=callback_url)
-    qb.get_authorize_url()
-     
-    token = request.args.get('oauth_token')
+    print request.args
+    oauth_token = request.args.get('oauth_token')
     oauth_verifier = request.args.get('oauth_verifier')
-    print oauth_verifier
-    print qb.qbService.get_auth_session(qb.request_token, qb.request_token_secret, data={'oauth_verifier':oauth_verifier})
-    print 'oauth_verifier %s' %(oauth_verifier)
-    realm_id = request.args.get('realmId')
+    oauth_token_secret = request.args.get('oauth_token_secret')
+    qb = QuickBooks(
+         consumer_key=consumer_key, 
+         consumer_secret=consumer_secret, 
+         callback_url=callback_url)
 
-    qb.get_access_tokens(oauth_verifier)
+    qb.my_get_access_tokens(oauth_token, oauth_verifier, oauth_token_secret, consumer_secret)
     access_token = qb.access_token
     access_token_secret = qb.access_token_secret
     print 'access token: %s' %(access_token)
