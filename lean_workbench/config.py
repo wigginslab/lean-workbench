@@ -29,14 +29,15 @@ class Dev(UserConfig):
 	QUICKBOOKS_APP_TOKEN="e31e4187b9e5bb4bd2b94bdb9546dc76394a"
 	BLUEPRINTS = [
 	'google_analytics.app',
-    'hypotheses.app',
-    'twitter.app',
-    'facebook.app',
-    'quickbooks.app',
-    'users.app'
-        # or ('blog.views.app', {'url_prefix':'/blog'})
-    ]  # each as (blueprint_instance, url_preffix)
-  
+        'hypotheses.app',
+        'twitter.app',
+        'facebook.app',
+        'quickbooks.app',
+        'users.app',
+        'ghosting.app'
+            # or ('blog.views.app', {'url_prefix':'/blog'})
+        ]  # each as (blueprint_instance, url_preffix)
+      
 	SQLALCHEMY_ECHO=True
 	
 class Testing(UserConfig):

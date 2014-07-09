@@ -13,6 +13,7 @@ from twitter.twitter_resource import Twitter_resource
 from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
+from ghosting.ghosting_resource import Ghosting_resource
 from users.user_resource import User_resource
 from celery import Celery
 
@@ -202,3 +203,4 @@ def configure_views(app):
 	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(User_resource, '/api/v1/users')
+        api.add_resource(Ghosting_resource, '/api/v1/ghosting')

@@ -5,16 +5,14 @@ function MyCtrl1(){
 }
 
 function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twitter){
-	// Hypotheses query
-	var hyp = Hypotheses.get();
-	//GA query
-	var ga = GoogleAnalytics.get();
-	// Twitter Query
-	var twitter = Twitter.get();
-	// Quickbooks Query
-	//Wufoo Query
-
- 
+    // Hypotheses query
+    var hyp = Hypotheses.get();
+    //GA query
+    var ga = GoogleAnalytics.get();
+    // Twitter Query
+    var twitter = Twitter.get();
+    // Quickbooks Query
+    //Wufoo Query
 }
 
 function ExportController(){
@@ -82,9 +80,9 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 
 	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
-     $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-      $http.defaults.headers.common['Content-Type'] = 'application/json'
-      $http.defaults.headers.common['Accept'] = 'application/json'
+        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+        $http.defaults.headers.common['Content-Type'] = 'application/json'
+        $http.defaults.headers.common['Accept'] = 'application/json'
 
       $http.post(
         '/api/v1/hypotheses',
@@ -341,8 +339,9 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 }
 
+function PayController($scope, $http){
+    $scope.ghosting_clicked = false;
 
-function PayController($scope, $http, Quickbooks){
 	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	$http.get(
 		'/api/v1/quickbooks'
@@ -354,8 +353,18 @@ function PayController($scope, $http, Quickbooks){
 			}
 		)
 
+    $scope.qb_ghost = function(){
+        $http.post(
+	    '/api/v1/ghosting',
+	    JSON.stringify({'feature':"quickbooks"})
+	).success(
+	    function(data){
+                $scope.ghosting_clicked = true;
+	    }
+	)
+    }
 
-	$scope.done_onboarding = function(){
+    $scope.done_onboarding = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 			'/api/v1/users',
