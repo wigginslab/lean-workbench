@@ -114,9 +114,13 @@ and uncomment it and restart logging:
 ```
 sudo service rsyslog restart
 ```
-Now crontab logs are stored in
+Now crontab logs are stored in:
 ```
 /var/log/cron.log
+```
+Crontab program logs are stored in:
+```
+/var/mail/root
 ```
 
 

@@ -1,4 +1,4 @@
 # check for new API keys every minute
-*/1 * * * * /usr/bin/python /var/www/lean-workbench/leanworkbench/manage.py mine new=True
+*/1 * * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py mine --new=True
 # mine existing users daily
-20 0 * * * /usr/bin/python /var/www/lean-workbench/leanworkbench/manage.py
+20 0 * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py
