@@ -78,6 +78,56 @@ grunt sass
 cp apache/LWB  /etc/apache2/sites-available/LWB
 sudo service apache2 restart 
 ```
+
+For the cronjob server:
+```
+sudo apt-get update
+sudo apt-get install libapache2-mod-wsgi
+sudo apt-get install postgresql postgresql-contrib 
+sudo a2enmod wsgi 
+sudo apt-get install git
+sudo apt-get install -y python-software-properties python g++ make
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install postfix
+sudo apt-get install nodejs
+npm install -g grunt-cli
+mkdir /var/www
+cd /var/www
+git clone https://github.com/wigginslab/lean-workbench
+cd lean-workbench
+sudo apt-get install libpq-dev python-dev
+sudo pip install virtualenv
+virtualenv venv
+ . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
+ pip install -r "requirements.txt"
+```
+Open the file
+```
+/etc/rsyslog.d/50-default.conf
+```
+Find the line that starts with:
+```
+#cron.*
+```
+and uncomment it and restart logging:
+```
+sudo service rsyslog restart
+```
+Now crontab logs are stored in
+```
+/var/log/cron.log
+```
+
+
+copy crontab contents to crontab 
+```
+crontab -e
+```
+
+to run cronjobs.
+
+
 Configuration
 --------------------
 The following variables must be set in an object called UserConfig in lean_workbench/user_config.py
