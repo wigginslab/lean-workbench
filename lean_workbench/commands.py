@@ -33,7 +33,10 @@ class Mine(Command):
     """
     Mines the data sources
     """
-
+    
+    # allow user to enter 
+    # python manage.py mine --new=True
+    # to mine only new API keys
     option_list = (
         Option('--new', '-n', dest='new'),
     ) 
@@ -51,7 +54,7 @@ class Mine(Command):
     	from twitter.twitter_mine import track_keywords
     	from google_analytics.ga_mine import mine_visits
         from facebook.fb_mine import mine_fb_page_data
-        from quickbooks.qb_mine import mine_qb_data
+        #from quickbooks.qb_mine import mine_qb_data
         app = app_factory(config.Dev)
         with app.app_context():
             consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
@@ -60,7 +63,7 @@ class Mine(Command):
               
             if new:
                 new_twitters = Twitter_model.query.filter_by(active=False).all()
-                new_qbs = Quickbooks_model.query.filter_by(active=False).all()
+                #new_qbs = Quickbooks_model.query.filter_by(active=False).all()
                 new_fbs = Facebook_model.query.filter_by(active=False).all()
                 new_gas = Google_Analytics_User_Model.query.filter_by(active=False).all()
                 for user in new_twitters:
@@ -73,7 +76,7 @@ class Mine(Command):
                 mine_fb_page_data()
                 mine_visits()
                 track_keywords()
-                mine_qb_data(consumer_key,consumer_secret,app_token)
+                #mine_qb_data(consumer_key,consumer_secret,app_token)
 
 class PrintUsers(Command):
 	"""
