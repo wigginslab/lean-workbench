@@ -24,12 +24,6 @@ class User_resource(Resource):
 		args = request.json
 		onboarded = args.get('onboarded')
 		if onboarded:
-			#print 'onboarded'
-			#current_user.onboarded = True
-			#db.session.commit()
-			#db.session.close()
-			#username = current_user.email
-			#mine_new_user(username)
 			return jsonify(status=200)
 		else:
 			print 'not onboarded'

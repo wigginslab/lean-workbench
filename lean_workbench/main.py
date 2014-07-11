@@ -166,8 +166,8 @@ def configure_views(app):
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)
-
-	@app.route('/')
+	
+        @app.route('/')
 	def index():
 		if current_user.is_authenticated():
 			logged_in = True
