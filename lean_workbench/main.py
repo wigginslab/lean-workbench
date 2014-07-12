@@ -193,6 +193,9 @@ def configure_views(app):
 	def dashboard():
 		"""
 		"""
+
+                 
+                return 'current_user.is_anonymous():'+ str(current_user.email)+" roles: " +str(current_user.roles)
 		return render_template('public.html', logged_in=True)
 	
 	api = restful.Api(app)

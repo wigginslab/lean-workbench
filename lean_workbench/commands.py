@@ -108,7 +108,7 @@ class Test(Command):
         if os.path.exists(start_discovery):
             argv = [config.project_name, "discover"]
             argv += ["-s", start_discovery]
-
+            print argv
             unittest.main(argv=argv)
         else:
             print("Directory '%s' was not found in project root." % start_discovery)

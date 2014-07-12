@@ -33,7 +33,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           $scope.twitterData = data;
         }
       ).error(function(data){
-	      	alert(data)
 	     }
       )
 
@@ -44,7 +43,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           $scope.googleData = data;
         }
       ).error(function(data){
-	      	alert(data)
 	     }
       )
 
@@ -55,7 +53,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           $scope.facebookData = data;
         }
       ).error(function(data){
-	      	alert(data)
 	     }
       )
 }
@@ -91,6 +88,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
         function(data){
           // if success
           if (data['response']['user']){
+                 
                  $location.path("/onboarding/stick");
 
           }
@@ -393,53 +391,58 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                 };
 
                 $scope.submit = function() {
-                	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-					$http.defaults.headers.common['Content-Type'] = 'application/json';
-					$http.defaults.headers.common['Accept'] = 'application/json';
+                        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+                        $http.defaults.headers.common['Content-Type'] = 'application/json';
+                        $http.defaults.headers.common['Accept'] = 'application/json';
 
-					$http.post(
-						'/registration',
+                        $http.post(
+                            '/registration',
 
-						JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
-						).success(
-							function(data){
-								console.log(data);
-								// if success
-								console.log(data['response']['user']);
-								if (data['response']['user']){
-									$("#login").hide();
-    								$("#logout").show();
-									$location.path("/onboarding/stick");
-								}
+                            JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
+                            ).success(
+                                function(data){
+                                    console.log(data);
+                                    // if success
+                                    console.log(data['response']['user']);
+                                    if (data['response']['user']){
+                                        $("#login").hide();
+                                        $("#logout").show();
+                                        $http.post(
+                                                '/api/v1/users',
+                                                JSON.stringify({'cohort':$scope.cohort})
+                                         ).success(
+                                               function(data){
+                                                        console.log(data);
+                                                }
+                                        )
+                                        $location.path("/onboarding/stick");
+                                        }
 
-								else{
-									// TODO: brevity
-									var errors = data['response']['errors'];
-									if (errors.hasOwnProperty('email')){
-										// $scope.email_error = errors['email'][0];
-										$scope.email_error = true;
+                                    else{
+                                        // TODO: brevity
+                                        var errors = data['response']['errors'];
+                                        if (errors.hasOwnProperty('email')){
+                                                // $scope.email_error = errors['email'][0];
+					        $scope.email_error = true;
+                        									}
+					if (errors.hasOwnProperty('company')){
+					        $scope.company_error = true;
 									}
-									if (errors.hasOwnProperty('company')){
-										// $scope.company_error = errors['company'][0];
-										$scope.company_error = true;
-									}
-									if (errors.hasOwnProperty('password')) {
-										$scope.password_error = true;
-										// $scope.password_error = errors['password'][0];
-									}            
-									if (errors.hasOwnProperty('password_confirm')){
-										$scope.password_confirm_error = true;
-										// $scope.password_confirm_error = errors['password_confirm'][0];
-									}
-								}
-							}
-						).error(
-							function(data){
-								console.log('registration error')
-						
-								$scope.errorMsg = data.reason;
-							}
-						);
+					if (errors.hasOwnProperty('password')) {
+						$scope.password_error = true;
+				        }            
+				        if (errors.hasOwnProperty('password_confirm')){
+					        $scope.password_confirm_error = true;
+				        }
+				    }
+				}
+                                    ).error(
+                                            function(data){
+                                                    console.log('registration error')
+                                    
+                                                    $scope.errorMsg = data.reason;
+                                            }
+                                    );
 				};
 		}
 
