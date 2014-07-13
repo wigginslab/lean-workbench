@@ -30,7 +30,11 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/twitter'
       ).success(
         function(data) {
-          $scope.twitterData = data;
+          if (data.hasOwnProperty('twitter_authed')){
+             $scope.has_twitterData = false; 
+        }
+          $scope.twitterData = data;        
+          $scope.has_twitterData = true;
         }
       ).error(function(data){
 	     }
@@ -41,8 +45,11 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
       ).success(
         function(data) {
           $scope.googleData = data;
+          $scope.has_ga_data = true;
         }
       ).error(function(data){
+          $scope.has_ga_data = false;
+
 	     }
       )
 
@@ -50,7 +57,13 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/facebook'
       ).success(
         function(data) {
-          $scope.facebookData = data;
+          if (data.hasOwnProperty('fb_authed')){
+              $scope.has_fb_data = false;
+          }
+          else{
+            $scope.has_fb_data = true;
+            $scope.facebookData = data;
+          }
         }
       ).error(function(data){
 	     }
