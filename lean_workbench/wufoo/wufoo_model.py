@@ -11,9 +11,8 @@ class Wufoo_Survey_Model(db.Model):
     # responses to survey
     entries = db.relationship('Wufoo_Entry_Model', backref='wufoo_survey', lazy='dynamic')
 
-    def __init__(self, name=None, fields=None, url=None, username=None):
-        self.name = name
-        self.fields = fields
+    def __init__(self, name=None, url=None, username=None):
+        self.name = name 
         self.url = url
         self.username = username
     

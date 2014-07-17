@@ -30,8 +30,6 @@ function WufooController($scope, $http){
         JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
         ).success(
         function(data){
-                 
-                 $location.path("/onboarding/stick");
 
           }
      	).error(

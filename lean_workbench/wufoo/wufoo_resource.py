@@ -2,7 +2,7 @@ import sys
 import os
 from wufoo_model import Wufoo_Survey_Model
 from flask.ext.restful import Resource, reqparse
-from flask import Flask
+from flask import Flask, request, make_response
 from flask.ext.sqlalchemy import SQLAlchemy
 from database import db
 from json import dumps
@@ -15,15 +15,18 @@ class Wufoo_DAO(object):
 class Wufoo_resource(Resource):
 
     def get(self, **kwargs):
+        print 'inside wufoo  get'
         if current_user.is_anonymous():
-            return dumps([{"status":400}])
+            return make_response(dumps([{"status":400}]))
+        else:
+            return make_response(dumps({"status":200}))
 
     def post(self, **kwargs):
         """
         Get wufoo data from webhook
         """
         # get json data
-        data = request.args
+        data = request.json
         create = data.get("create")
         # if creating/registering survey to user
         if create:
@@ -37,8 +40,11 @@ class Wufoo_resource(Resource):
                     new_survey = Wufoo_Survey_Model(username=current_user.email, url=url)
                     db.session.add(new_survey)
                     db.session.commit()
+                    return make_response(dumps({"status":200, "msg":"Survey successfully added"}))
+
         # if webhook and not the user registering the survey for the first time
         if not create:
+            print 'not create'
             # parse json load
             created_by = data.get("CreatedBy")
             entry_id = data.get("EntryId")
