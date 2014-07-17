@@ -42,26 +42,7 @@ For the production server:
 
 For the cronjob server:
 ```
-sudo apt-get update
-sudo apt-get install libapache2-mod-wsgi
-sudo apt-get install postgresql postgresql-contrib 
-sudo a2enmod wsgi 
-sudo apt-get install git
-sudo apt-get install -y python-software-properties python g++ make
-sudo add-apt-repository ppa:chris-lea/node.js
-sudo apt-get update
-sudo apt-get install postfix
-sudo apt-get install nodejs
-npm install -g grunt-cli
-mkdir /var/www
-cd /var/www
-git clone https://github.com/wigginslab/lean-workbench
-cd lean-workbench
-sudo apt-get install libpq-dev python-dev
-sudo pip install virtualenv
-virtualenv venv
- . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
- pip install -r "requirements.txt"
+./setup-deploy-cronjob.sh
 ```
 Open the file
 ```
