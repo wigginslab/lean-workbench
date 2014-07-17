@@ -24,7 +24,6 @@ class Twitter_DAO(object):
 
 class Twitter_resource(Resource):
     def get(self, **kwargs):
-        print 'inside twitter get\n'
         metric = request.args.get('metric')
         if current_user.is_anonymous():
             return jsonify(status=400)
