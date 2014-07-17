@@ -12,7 +12,7 @@ Version
 Requirements
 ------------
 
-lean-workbench works best with Ubuntu 13/14. 
+lean-workbench works best with Ubuntu 13/14. All installations and deploys must be run from a user with sudo access.
 
 Tech
 -----------
