@@ -38,8 +38,8 @@ class Wufoo_Field_Model(db.Model):
     # survey question text
     title  = db.Column(db.String)
     field_type = db.Column(db.String)
-    values = db.relationship("Wufoo_Values", backref="field", lazy="dynamic")
-    entries =  db.relationship("Wufoo_Entry_Model", backref="subfields", lazy="dynamic")
+    values = db.relationship("Wufoo_Value", backref="wufoo_field", lazy="dynamic")
+    entries =  db.relationship("Wufoo_Entry_Model", backref="wufoo_field", lazy="dynamic")
 
     def __init__(self, survey_id=None, value=None, label=None):
         self.survey_id = survey_id
@@ -66,6 +66,7 @@ class Wufoo_Entry_Model(db.Model):
     entry_id = db.Column(db.String)
     survey_id = db.Column(db.ForeignKey('wufoo_survey.id'))
     values = db.relationship("Wufoo_Value", backref="values", lazy="dynamic")
+    field_id = db.Column(db.ForeignKey('wufoo_field.id'))
 
 class Wufoo_Value(db.Model):
     """
@@ -75,3 +76,4 @@ class Wufoo_Value(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     value = db.Column(db.String)
     entry_id = db.Column(db.Integer, db.ForeignKey('wufoo_entry.id'))
+    wufoo_field_id = db.Column(db.Integer, db.ForeignKey('wufoo_field.id'))
