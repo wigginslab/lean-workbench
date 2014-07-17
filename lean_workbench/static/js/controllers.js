@@ -19,6 +19,31 @@ function ExportController(){
 
 }
 
+function WufooController($scope, $http){
+	$scope.add_survey = function(){
+        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+        $http.defaults.headers.common['Content-Type'] = 'application/json'
+        $http.defaults.headers.common['Accept'] = 'application/json'
+
+      $http.post(
+        '/api/v1/wufoo',
+        JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
+        ).success(
+        function(data){
+                 
+                 $location.path("/onboarding/stick");
+
+          }
+     	).error(
+        function(data){
+          $scope.survey_url_error = data.error;
+        }
+      );
+    }
+
+
+}
+
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
 	  $scope.xAxisTickFormat = function(){
                 return function(d){

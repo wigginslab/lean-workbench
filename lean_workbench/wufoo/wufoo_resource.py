@@ -29,7 +29,14 @@ class Wufoo_resource(Resource):
         if create:
             if current_user.is_anonymous():
                 return dumps([{"status":400}])
-
+            else:
+                url = data.get("url")
+                if not url:
+                    return jsonify(error="No url given")
+                else:
+                    new_survey = Wufoo_Survey_Model(username=current_user.email, url=url)
+                    db.session.add(new_survey)
+                    db.session.commit()
         # if webhook and not the user registering the survey for the first time
         if not create:
             # parse json load
