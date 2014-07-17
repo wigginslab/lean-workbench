@@ -34,33 +34,10 @@ For developing locally:
 ```
 Open your browser to http://127.0.0.1:5000/
 
-For the productive server.
+For the production server:
 
 ```
-sudo apt-get update
-sudo apt-get install libapache2-mod-wsgi
-sudo apt-get install postgresql postgresql-contrib 
-sudo a2enmod wsgi 
-sudo apt-get install git
-sudo apt-get install -y python-software-properties python g++ make
-sudo add-apt-repository ppa:chris-lea/node.js
-sudo apt-get update
-sudo apt-get install nodejs
-npm install -g grunt-cli
-mkdir /var/www
-cd /var/www
-git clone https://github.com/wigginslab/lean-workbench
-cd lean-workbench
-sudo apt-get install libpq-dev python-dev
-sudo pip install virtualenv
-virtualenv venv
- . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
- pip install -r "requirements.txt"
-sudo apt-get install npm
-npm install .
-grunt sass
-cp apache/LWB  /etc/apache2/sites-available/LWB
-sudo service apache2 restart 
+./setup-deploy.sh 
 ```
 
 For the cronjob server:
