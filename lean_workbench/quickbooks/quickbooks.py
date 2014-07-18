@@ -19,10 +19,6 @@ operations and for getting stuff ready for update, delete,
 and create operations
 """
 
-import massage
-import reference
-import report
-
 class QuickBooks():
     """A wrapper class around Python's Rauth module for Quickbooks the API"""
 
