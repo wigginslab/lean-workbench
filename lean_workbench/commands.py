@@ -50,13 +50,20 @@ class Scale(Command):
             from scale.scale_mine import get_vcs
             users = Startup_data_model.query.filter_by(vc_matcher_done=False).filter(Startup_data_model.description != None).all()
             if users:
-                print 'there are users to vc mine'
                 get_vcs(users)
 
 class Cohort(Command):
     """
-    
+    Aggregate cohort stats (daily) 
     """
+    def run(self):
+        app = app_factory(config.Dev)
+        with app.app_context():
+            from database import db
+            from users.user_model import Role 
+
+        cohorts = db.session.query(Role.name.distinct()).all()
+        print cohorts
 
 class Mine(Command):
     """
