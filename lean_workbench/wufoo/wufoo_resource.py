@@ -7,6 +7,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from database import db
 from json import dumps
 from flask.ext.security import current_user
+import traceback
 
 class Wufoo_DAO(object):
     def __init__(self, username):
@@ -27,6 +28,7 @@ class Wufoo_resource(Resource):
         """
         # get json data
         data = request.json
+        print data
         create = data.get("create")
         # if creating/registering survey to user
         if create:
@@ -37,11 +39,15 @@ class Wufoo_resource(Resource):
                 if not url:
                     return jsonify(error="No url given")
                 else:
-                    new_survey = Wufoo_Survey_Model(username=current_user.email, url=url)
-                    db.session.add(new_survey)
-                    db.session.commit()
-                    return make_response(dumps({"status":200, "msg":"Survey successfully added"}))
-
+                    print 'attempting to add survey'
+                    try:
+                        new_survey = Wufoo_Survey_Model(username=current_user.email, url=url)
+                        db.session.add(new_survey)
+                        db.session.commit()
+                        return make_response(dumps({"status":200, "msg":"Survey successfully added"}))
+                    except:
+                        traceback.print_exc()
+                        return jsonify(status=500)
         # if webhook and not the user registering the survey for the first time
         if not create:
             print 'not create'
