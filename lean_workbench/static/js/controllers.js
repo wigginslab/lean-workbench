@@ -20,6 +20,8 @@ function ExportController(){
 }
 
 function ViewScaleController($scope, $http){
+        $("#logout").show();
+
 	 $http.get(
         '/api/v1/scale'
       ).success(
@@ -130,6 +132,7 @@ function WufooController($scope, $http){
 }
 
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
+    $("#logout").show();
 
 
     $scope.xAxisTickFormat = function(){
