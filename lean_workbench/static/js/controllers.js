@@ -19,6 +19,42 @@ function ExportController(){
 
 }
 
+function ScaleController($scope, $http){
+	$scope.add_startup_data = function(){
+        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+        $http.defaults.headers.common['Content-Type'] = 'application/json'
+        $http.defaults.headers.common['Accept'] = 'application/json'
+
+      $http.post(
+        '/api/v1/scale',
+        JSON.stringify({crunchbase_url: $scope.crunchbase_url, angellist_url: $scope.angellist_url, description: $scope.description})
+        ).success(
+        function(data){
+            $scope.help_msg = data.msg;
+          }
+     	).error(
+        function(data){
+          $scope.help_msg = data.msg;
+        }
+      );
+    }
+
+    $scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
+			}
+		)
+	}
+
+
+}
+
+
 function WufooController($scope, $http){
 	$scope.add_survey = function(){
         $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
@@ -605,6 +641,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
         .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
+         .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
     
     // enable push state
     $locationProvider.html5Mode(true);
