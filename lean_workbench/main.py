@@ -20,7 +20,7 @@ from celery import Celery
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
-		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html']
+		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html']
 		# Get user from session
 		if not current_user.is_anonymous() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
@@ -186,6 +186,7 @@ def configure_views(app):
 	@app.route('/stats', methods=['POST','GET'])
 	@app.route('/stats/1',methods=['POST','GET'])
 	@app.route('/onboarding/stick', methods=['POST', 'GET'])
+        @app.route('/onboarding/scale', methods=['POST', 'GET'])
 	@app.route('/onboarding/virality', methods=['POST','GET'])
 	@app.route('/onboarding/pay', methods=['POST','GET'])
         @app.route('/onboarding/empathy', methods=['POST','GET'])

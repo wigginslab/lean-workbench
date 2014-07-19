@@ -20,7 +20,18 @@ class Startup_data_model(db.Model):
     vc_matcher_done = db.Column(db.Boolean, default= False)
     description = db.Column(db.Text, default=None)
     vcs = db.relationship('VC_model', backref="startup_data", lazy="dynamic")
-    
+
+    def as_dict(self):
+       return {
+            'angellist_url':self.angellist_url,
+            'crunchbase_url':self.crunchbase_url,
+            'description':self.description,
+            'vcs': [vc.as_dict() for vc in self.vcs]
+        }
+
+    def __str__(self):
+        return str(self.as_dict())
+
 class VC_model(db.Model):
     __tablename__ = "vc"
     id = db.Column(db.Integer, primary_key=True)
@@ -29,7 +40,7 @@ class VC_model(db.Model):
     crunchbase_url = db.Column(db.String)
     angellist_url = db.Column(db.String)
     image_url = db.Column(db.String)
-    score = db.Column(db.Integer)
+    score = db.Column(db.Float)
     startup_data_user_id = db.Column(db.Integer, db.ForeignKey('startup_data.id'))
 
 

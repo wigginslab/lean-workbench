@@ -11,27 +11,29 @@ from json import dumps
 class Scale_DAO(object):
 
     def __init__(self):
-        self.user_scale = Startup_data_model.query.filter_by(username=current_user.email).first()
+        self.user_scale = Startup_data_model.query.filter_by(username=current_user.email).order_by(Startup_data_model.date.desc()).first()
         print self.user_scale
-
-    #def as_dict(self):
-     #   return self.user_twitter.as_dict()
 
 
 class Scale_resource(Resource):
     def get(self, **kwargs):
-        metric = request.args.get('metric')
+        """
+        TODO: get old data to render in form as default
+        """
+        #check= request.args.get('check')
         if current_user.is_anonymous():
             return jsonify(status=400)
         scale = Scale_DAO()
         if scale.user_scale:
-            return make_response(dumps([{'values':values, key:"Twitter series"}]))
+            return make_response(dumps(scale.user_scale.as_dict()))
 
         else:
             return jsonify(scale_authed=False)
 
     def post(self):
-
+        """
+        TODO: add update instead of just creating whole new record
+        """
         if current_user.is_anonymous():
             return jsonify(msg="You are no longer logged in",status=400)
         try:
@@ -43,5 +45,5 @@ class Scale_resource(Resource):
             db.session.add(new_data)
             db.session.commit()
             return jsonify(status=200,msg="Data added successfully!")
-    except:
-        jsonify(msg="Error adding your data.")
+        except:
+            jsonify(msg="Error adding your data.")

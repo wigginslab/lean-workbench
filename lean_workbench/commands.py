@@ -48,8 +48,9 @@ class Scale(Command):
         with app.app_context():
             from scale.scale_model import Startup_data_model
             from scale.scale_mine import get_vcs
-            users = Startup_data_model.query.filter_by(vc_matcher_done=False).filter(description != None).all()
+            users = Startup_data_model.query.filter_by(vc_matcher_done=False).filter(Startup_data_model.description != None).all()
             if users:
+                print 'there are users to vc mine'
                 get_vcs(users)
 
 class Mine(Command):
