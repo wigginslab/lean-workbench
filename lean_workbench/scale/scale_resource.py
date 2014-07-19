@@ -11,6 +11,7 @@ from json import dumps
 class Scale_DAO(object):
 
     def __init__(self):
+	print 'making scale DAO'
         self.user_scale = Startup_data_model.query.filter_by(username=current_user.email).order_by(Startup_data_model.date.desc()).first()
         print self.user_scale
 
