@@ -39,44 +39,45 @@ function ViewScaleController($scope, $http){
 }
 
 function ScaleController($scope, $http){
+    $http.get(
+                  '/api/v1/scale'
+            ).success(
+                function(data){
+                    console.log(data);
+                    if (data.hasOwnProperty('scale_authed')){
+                    }
+                    else{
+                       $scope.description = data.description;
+                       $scope.angellist_url = data.angellist_url;
+                       $scope.crunchbase_url = data.crunchbase_url;
+                    }
+                }
+            ).error(
+                function(data){
+                    console.log('error')
+                    console.log(data)
+            });
+           
 	$scope.add_startup_data = function(){
-        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-        $http.defaults.headers.common['Content-Type'] = 'application/json'
-        $http.defaults.headers.common['Accept'] = 'application/json'
+            $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+            $http.defaults.headers.common['Content-Type'] = 'application/json'
+            $http.defaults.headers.common['Accept'] = 'application/json'
 
-      $http.get(
-              '/api/v1/scale'
-        ).success(
+           
+          $http.post(
+            '/api/v1/scale',
+            JSON.stringify({crunchbase_url: $scope.crunchbase_url, angellist_url: $scope.angellist_url, description: $scope.description})
+            ).success(
             function(data){
-                console.log(data);
-                if (data.hasOwnProperty('scale_authed')){
-                }
-                else{
-                   $scope.desc = data.description;
-                   $scope.al_url = data.angellist_url;
-                   $scope.cb_url = data.crunchbase_url;
-                }
+                $scope.request_sent = true;
+                $scope.help_msg = data.msg;
+              }
+            ).error(
+            function(data){
+              $scope.request_sent = true;
+              $scope.help_msg = data.msg;
             }
-        ).error(
-            function(data){
-                console.log('error')
-                console.log(data)
-        });
-        
-      $http.post(
-        '/api/v1/scale',
-        JSON.stringify({crunchbase_url: $scope.crunchbase_url, angellist_url: $scope.angellist_url, description: $scope.description})
-        ).success(
-        function(data){
-            $scope.request_sent = true;
-            $scope.help_msg = data.msg;
-          }
-     	).error(
-        function(data){
-          $scope.request_sent = true;
-          $scope.help_msg = data.msg;
-        }
-      );
+          );
     }
 
     $scope.done_onboarding = function(){
