@@ -37,7 +37,7 @@ class Wufoo_resource(Resource):
             else:
                 url = data.get("url")
                 if not url:
-                    return jsonify(error="No url given")
+                    return jsonify(emsg="No url given")
                 else:
                     print 'attempting to add survey'
                     try:

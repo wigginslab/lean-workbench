@@ -53,6 +53,11 @@ class Scale(Command):
                 print 'there are users to vc mine'
                 get_vcs(users)
 
+class Cohort(Command):
+    """
+    
+    """
+
 class Mine(Command):
     """
     Mines the data sources
