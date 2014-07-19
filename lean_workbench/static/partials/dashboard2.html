@@ -25,7 +25,7 @@
                     <div class="navbar container block-header navbar-inverse col-lg-12">
                         <h2>Twitter Data</h2>
                         <div ng-show="has_twitterData">    
-                            <nvd3-line-chart
+                            <nvd3-stacked-area-chart
                                 data="twitterData"
                                 width="600"
                                 height="350"
@@ -36,7 +36,7 @@
                                 showYAxis="true"
                                 xAxisTickFormat="xAxisTickFormat()"
                                 yAxisTickFormat="yAxisFormatFunction()">
-                                </nvd3-line-chart>
+                                </nvd3-stacked-area-chart>
                             </div>
                             <div ng-hide="has_twitterData">
                                 You have not connected a twitter account yet.                   </div>                 

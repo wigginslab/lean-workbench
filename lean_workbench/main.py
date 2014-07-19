@@ -193,6 +193,7 @@ def configure_views(app):
 	@app.route('/export', methods=['POST','GET'])
 	@app.route('/dashboard', methods=['POST', 'GET'])    
 	@app.route('/scale', methods=['POST', 'GET'])    
+        @app.route('/results', methods=['POST', 'GET'])    
         @app.route('/dashboard2', methods=['POST', 'GET'])    
 
 	def dashboard():
