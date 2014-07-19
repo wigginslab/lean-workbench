@@ -9,6 +9,8 @@ import traceback
 def get_vcs(startup_data_models):
     for user in startup_data_models:
         page = user.vc_matcher_page + 1
+        db.session.add(user)
+        db.session.commit()
         description = user.description
         payload = {"description":description}
         # TODO: move this to config eventually
