@@ -1,17 +1,17 @@
 <div class="dashboard clearfix">
     <div class="container-fluid col-lg-2" >
         <ul class="nav nav-pills nav-stacked">
-            <li class="active">
+            <li>
                 <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
             </li>
-           <li>
-                <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
+           <li class="active">
+                <a href="/results"><i class="icon-chevron-right"></i>Results</a>
             </li>
            <li>
                 <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
             </li>
             <li>
-                <a href="/export"><i class="icon-chevron-right"></i>Export Data</a>
+                <a href="/scale"><i class="icon-chevron-right"></i>Scale</a>
             </li>
         </ul>
     </div>
@@ -42,36 +42,45 @@
                                 You have not connected a twitter account yet.                   </div>                 
                             <h2>Google Analytics Data</h2>
                         <div ng-show="has_ga_data">
-                            <nvd3-line-chart
+                            <nvd3-stacked-area-chart
                                 data="googleData"
                                 width="600"
                                 height="350"
                                 margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                                showYAxis="true"
+                                interactive="true"
+                                useInteractiveGuideline="true"
+                                toolTipContent="toolTipContentFunction()" 
                                 yAxisLabel="Number of visitors"
                                 xAxisLabel="Date"
                                 showXAxis="true"
                                 showYAxis="true"
+
                                 xAxisTickFormat="xAxisTickFormat()"
                                 yAxisTickFormat="yAxisFormatFunction()">
-                                </nvd3-line-chart>
+                                </nvd3-stacked-area-chart>
                         </div>
                         <div ng-hide="has_ga_data">
                             You have not connected a Google Analytics account.
                         </div>
                         <h2>Facebook Data</h2>
                         <div ng-show="has_fb_data">
-                           <nvd3-line-chart
+                           <nvd3-stacked-area-chart
                             data="facebookData"
                             width="600"
                             height="350"
                             margin="{left: 80, top: 40, right: 100, bottom: 100}"
                             yAxisLabel="Number of likes"
                             xAxisLabel="Date"
+                            interactive="true"
+                            useInteractiveGuideline="true"
+                            toolTipContent="toolTipContentFunction()" 
+
                             showXAxis="true"
                             showYAxis="true"
                             xAxisTickFormat="xAxisTickFormat()"
                             yAxisTickFormat="yAxisFormatFunction()">
-                            </nvd3-line-chart>
+                            </nvd3-stacked-area-chart>
                     </div>
                     <div ng-hide="has_fb_data">
                     You have not yet connected a Facebook account.

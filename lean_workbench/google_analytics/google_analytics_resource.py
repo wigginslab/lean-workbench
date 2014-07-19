@@ -55,7 +55,7 @@ class Google_Analytics_DAO(object):
                 date = visit_dict['date']
                 count = visit_dict['visitors']
                 visits.append([date,count])
-        return make_response(dumps([{'values':visits}]))
+        return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
 
 class Google_analytics_resource(Resource):
     """
