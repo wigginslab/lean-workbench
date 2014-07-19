@@ -39,7 +39,17 @@ function WufooController($scope, $http){
       );
     }
 
-
+    $scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
+			}
+		)
+	}
 }
 
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
@@ -594,7 +604,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
 	.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
-        .when('/onboarding/wufoo', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
+        .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
     
     // enable push state
     $locationProvider.html5Mode(true);

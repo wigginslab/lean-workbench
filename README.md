@@ -31,7 +31,7 @@ sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get install nodejs
-sudo apt-get install postgresql postgresql-contrib
+sudo apt-get install  python-dev libpq-dev postgresql postgresql-contrib
 npm install -g grunt-cli
 mkdir /var/www
 cd /var/www

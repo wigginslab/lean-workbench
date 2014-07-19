@@ -38,7 +38,6 @@ class Dev(UserConfig):
             # or ('blog.views.app', {'url_prefix':'/blog'})
         ]  # each as (blueprint_instance, url_preffix)
       
-	SQLALCHEMY_ECHO=True
 	
 class Testing(UserConfig):
     TESTING = True

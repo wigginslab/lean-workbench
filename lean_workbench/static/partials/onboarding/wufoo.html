@@ -1,23 +1,27 @@
  <div class="onboarding holder">
  <div class="container">
-    <div ng-controller="WufooController" id="wufoo" style="">
+    <div ng-controller="WufooController" id="wufoo" style="text-align:center">
       <h2 class="center">Empathy</h2>
       <div class="center">
         <img src="/static/assets/wufoo.png" style="width:128px;height:138px;">
-      </div>
-      <p style="font-size:20px">To measure empathy towards your product, we use <a href="http://www.wufoo.com">Wufoo surveys.</a></p>
-      Submit your survey url and handshake (optional) below. Then <a href="http://help.wufoo.com/articles/en_US/SurveyMonkeyArticleType/Webhooks">set up your webhook</a> to connect to www.leanworkbench.com/api/v1/wufoo.
-          <form novalidate role="form simple-form" form-submit="add_survey" name="survey-form">
-              <span class="help-block" ng-show="survey_url_error">Survey url must be a valid Wufoo url.</span>
-                <input ng-model="url" placeholder="Survey url">
-                <input ng-model="handshake" placeholder="Handshake key (optional">
+        </div>
+    <div>
+        <p style="font-size:20px">
+            To measure empathy towards your product, we use <a href="http://www.wufoo.com">Wufoo surveys.</a>
+        </p>
+        Submit your survey url and handshake (optional) below. Then <a href="http://help.wufoo.com/articles/en_US/SurveyMonkeyArticleType/Webhooks">set up your webhook</a> to connect to www.leanworkbench.com/api/v1/wufoo.
+        <form novalidate role="form simple-form" form-submit="add_survey" name="survey-form" style="text-align:center">
+            <span class="help-block" ng-show="survey_url_error">Survey url must be a valid Wufoo url.</span>
+            <input ng-model="url" placeholder="Survey url">
+            <input ng-model="handshake" placeholder="Handshake key (optional">
         </form> 
-          <button ng-click="add_survey()" type="button" class="btn btn-primary btn-lg">Add Survey</button>
-		</p>
-		<div class="center">
+        <button ng-click="add_survey()" type="button" class="btn btn-primary btn-lg">Add Survey</button>
+	</p>
+	<div class="center">
           <ul class="pager">
-            <li><a href="/onboarding/virality">Next</a></li>
+            <li><a ng-click="done_onboarding()">Next</a></li>
           </ul>
         </div>
     </div>
 </div>
+
