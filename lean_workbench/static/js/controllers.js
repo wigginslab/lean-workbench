@@ -109,11 +109,13 @@ function WufooController($scope, $http){
         JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
         ).success(
         function(data){
-
+            $scope.request_sent = true;
+            $scope.help_msg = data.msg;
           }
      	).error(
         function(data){
-          $scope.survey_url_error = data.error;
+          $scope.help_msg = data.msg;
+          $scope.request_sent = true;
         }
       );
     }
