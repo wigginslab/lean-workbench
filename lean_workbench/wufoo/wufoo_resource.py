@@ -26,6 +26,7 @@ class Wufoo_resource(Resource):
         """
         Get wufoo data from webhook
         """
+        print 'inside wufoo post'
         # get json data
         data = request.json
         print data
