@@ -1,16 +1,14 @@
-<div class="dashboard clearfix" ng-controller="ViewScaleController">
-    <div class="container-fluid col-lg-2" >
-        <ul class="nav nav-pills nav-stacked">
+<div class="dashboard clearfix" ng-controller="ViewScaleController"> <div class="container-fluid col-lg-2" > <ul class="nav nav-pills nav-stacked">
             <li >
                 <a href="/dashboard"><i class="icon-chevron-right"></i>Hypotheses</a>
             </li>
-           <li class="active">
+           <li>
                 <a href="/stats"><i class="icon-chevron-right"></i>Results</a>
             </li>
            <li>
                 <a href="/onboarding/stick"><i class="icon-chevron-right"></i>APIs</a>
                 </li>
-      <li>
+      <li class="active">
                 <a href="/scale"><i class="icon-chevron-right"></i>Scale</a>
             </li>
         </ul>
@@ -21,6 +19,7 @@
                 <h1>Scale</h1>
                 <!-- block -->
                 <div class="block">
+                    Want to edit this information? Click <a href="/onboarding/scale">here.</a>
                     <h3> Product Information </h3>
                     <div class="scale-field">Crunchbase Url: <a href="[[startup_data.crunchbase_url]]">[[startup_data.crunchbase_url]]</a></div>
                     <div class="scale-field">Angellist Url:<a href="[[startup_data.angellist_url]]"> [[startup_data.angellist_url]]</a></div>

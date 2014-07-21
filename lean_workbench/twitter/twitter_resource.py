@@ -21,7 +21,6 @@ class Twitter_DAO(object):
     def as_dict(self):
         return self.user_twitter.as_dict()
 
-
 class Twitter_resource(Resource):
     def get(self, **kwargs):
         metric = request.args.get('metric')

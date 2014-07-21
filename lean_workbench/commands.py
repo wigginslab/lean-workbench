@@ -4,6 +4,8 @@ from flask.ext.script import Command, Option, prompt_bool
 import os
 import config
 from main import app_factory
+import datetime
+from datetime import timedelta
 
 class CreateDB(Command):
     """
@@ -56,14 +58,70 @@ class Cohort(Command):
     """
     Aggregate cohort stats (daily) 
     """
+    # allow user to enter 
+    # python manage.py cohort --new=True
+    # to mine only new API keys from the last day
+    option_list = (
+        Option('--new', '-n', dest='new'),
+    ) 
+
     def run(self):
         app = app_factory(config.Dev)
         with app.app_context():
             from database import db
-            from users.user_model import Role 
+            from sqlalchemy.sql import func
+            from users.user_model import Role, User
+            from google_analytics.google_analytics_models import Google_Analytics_Visitors
+            from twitter.twitter_model import Twitter_model
+            from facebook.facebook_model import Facebook_page_data
 
-        cohorts = db.session.query(Role.name.distinct()).all()
-        print cohorts
+            # get all cohorts
+            cohorts = db.session.query(Role.name.distinct()).all()
+
+            # mine for each cohort 
+            for cohort in cohorts:
+                
+                # get yesterday and today so we can query changes in between days
+
+                if new:
+                    yesterday = datetime.datetime.now()-timedelta(days=1)
+                    today = datetime.datetime.now()
+                    start = yesterday
+                    end = today
+
+                else:
+                    start = Google_Analytics_Visitors.order_by(Google_Analytics_Visitors.date).first().date
+                    end = today
+                while start < end:
+                    # get all users in cohort
+                    cohort_usernames = User.query.filter(User.roles.any(name=cohort[0])).with_entities(User.email).all()
+                    # get all GA visitor counts from after this time yesterday and before now
+                    visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.username.in_(cohort_usernames), Google_Analytics_Visitors.date > yesterday, Google_Analytics_Visitors.date < today).with_entities(Google_Analytics_Visitors.visitors).all()
+                    detupled_vistors = [x[0] for x in visitors]
+                    if detupled_vistors:
+                        visitor_avg = (sum(detupled_vistors))/len(detupled_vistors)
+                    else:
+                        visitor_avg = 0
+
+                    new_ga_visitors = Google_Analytics_Visitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
+                    start = start + timedelta(days=1)
+
+            # because you don't have time to figure out this query in SQLAlchemy right now
+                tweet_date_counts = {}
+                for username in cohort_usernames:
+                    twitter_words = Twitter_model.query.filter_by(username=username).first()
+                    if twitter_words:
+                        twitter_words = twitter_words.words
+                        print twitter_words
+                        for word in twitter_words:
+                            #.filter(word.counts.date < today).all()
+                            dates =  [str(counts.date) for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
+                            counts = [counts.count for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
+
+                        facebook_likes = Facebook_page_data.query.filter_by(username=username).all()
+                        for like in facebook_likes:
+                            print str(like.date)
+                            print like.likes
 class Mine(Command):
     """
     Mines the data sources
