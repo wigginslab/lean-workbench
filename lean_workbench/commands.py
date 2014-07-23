@@ -65,15 +65,15 @@ class Cohort(Command):
         Option('--new', '-n', dest='new'),
     ) 
 
-    def run(self):
+    def run(self, new=False):
         app = app_factory(config.Dev)
         with app.app_context():
             from database import db
             from sqlalchemy.sql import func
             from users.user_model import Role, User
             from google_analytics.google_analytics_models import Google_Analytics_Visitors
-            from twitter.twitter_model import Twitter_model
-            from facebook.facebook_model import Facebook_page_data
+            from twitter.twitter_model import Twitter_model, Cohort_Tweet_Count_Model
+            from facebook.facebook_model import Facebook_page_data, Cohort_Facebook_Likes_Model
 
             # get all cohorts
             cohorts = db.session.query(Role.name.distinct()).all()
@@ -104,24 +104,41 @@ class Cohort(Command):
                         visitor_avg = 0
 
                     new_ga_visitors = Google_Analytics_Visitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
+                    db.session.add(new_ga_visitors)
+                    db.session.commit()
                     start = start + timedelta(days=1)
 
-            # because you don't have time to figure out this query in SQLAlchemy right now
+
+                # because you don't have time to figure out this query in SQLAlchemy right now
                 tweet_date_counts = {}
                 for username in cohort_usernames:
                     twitter_words = Twitter_model.query.filter_by(username=username).first()
+                    
                     if twitter_words:
                         twitter_words = twitter_words.words
                         print twitter_words
                         for word in twitter_words:
+                            word_name = word.word
                             #.filter(word.counts.date < today).all()
-                            dates =  [str(counts.date) for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
+                            dates =  [counts.date for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
                             counts = [counts.count for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
-
+                            
+                            for i in range(len(dates)):
+                                date = dates[i]
+                                count = counts[i]
+                                new_tweet_count = Cohort_Tweet_Count_Model(date=date, cohort_name=cohort, count=count, word=word, username=username)
+                                db.session.add(new_tweet_count)
+                                db.session.commit()
+                            
+                           
                         facebook_likes = Facebook_page_data.query.filter_by(username=username).all()
                         for like in facebook_likes:
-                            print str(like.date)
-                            print like.likes
+                            date = like.date
+                            like_count =  like.likes
+                            new_fb_cohort_count = Cohort_Facebook_Likes_Model(date=date,likes_count=like_count, username=username,cohort_name=cohort)
+                            db.session.add(new_fb_cohort_count)
+                            db.session.commit()
+                            
 class Mine(Command):
     """
     Mines the data sources
