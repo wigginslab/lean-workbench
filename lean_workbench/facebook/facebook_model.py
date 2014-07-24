@@ -33,7 +33,6 @@ class Cohort_Facebook_Likes_Model(db.Model):
         date = db.Column(db.DateTime)
         cohort_name = db.Column(db.String)
         likes_count = db.Column(db.Integer)
-        username = db.Column(db.String)
 
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)

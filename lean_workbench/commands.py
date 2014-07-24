@@ -6,6 +6,7 @@ import config
 from main import app_factory
 import datetime
 from datetime import timedelta
+from sqlalchemy import func
 
 class CreateDB(Command):
     """
@@ -103,7 +104,11 @@ class Cohort(Command):
                     else:
                         visitor_avg = 0
 
-                    new_ga_visitors = Google_Analytics_Visitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
+		    new_ga_visitors = Google_Analytics_Visitors.query.filter_by(username="cohort:"+cohort[0],  date = start).first()
+		    if not new_ga_visitors:
+			new_ga_visitors = Google_Analytics_Visitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
+		    else:
+			new_ga_visitors.visitors = visitor_avg
                     db.session.add(new_ga_visitors)
                     db.session.commit()
                     start = start + timedelta(days=1)
@@ -111,34 +116,55 @@ class Cohort(Command):
 
                 # because you don't have time to figure out this query in SQLAlchemy right now
                 tweet_date_counts = {}
+		fb_like_date_counts = {}
                 for username in cohort_usernames:
                     twitter_words = Twitter_model.query.filter_by(username=username).first()
                     
                     if twitter_words:
                         twitter_words = twitter_words.words
-                        print twitter_words
                         for word in twitter_words:
                             word_name = word.word
-                            #.filter(word.counts.date < today).all()
                             dates =  [counts.date for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
                             counts = [counts.count for counts in word.counts.all() if counts.date > yesterday and counts.date < today ]
                             
                             for i in range(len(dates)):
                                 date = dates[i]
                                 count = counts[i]
-                                new_tweet_count = Cohort_Tweet_Count_Model(date=date, cohort_name=cohort, count=count, word=word, username=username)
-                                db.session.add(new_tweet_count)
-                                db.session.commit()
-                            
+				try:
+				    tweet_date_counts[date] = tweet_date_counts[date] + count
+				except:
+				    tweet_date_counts[date] = count
                            
                         facebook_likes = Facebook_page_data.query.filter_by(username=username).all()
                         for like in facebook_likes:
                             date = like.date
                             like_count =  like.likes
-                            new_fb_cohort_count = Cohort_Facebook_Likes_Model(date=date,likes_count=like_count, username=username,cohort_name=cohort)
-                            db.session.add(new_fb_cohort_count)
-                            db.session.commit()
-                            
+			    try:
+				fb_like_date_counts[date] = fb_like_date_counts[date] + 1
+			    except:
+				fb_like_date_counts[date] = like_count
+
+		for date in tweet_date_counts:
+		    count = tweet_date_counts[date]
+		    new_tweet_count = Cohort_Tweet_Count_Model.query.filter_by(date=date).first()
+		    if not new_tweet_count: 
+			new_tweet_count = Cohort_Tweet_Count_Model(cohort_name=cohort, date=date, count=count)
+		    else:
+			new_tweet_count.count = count
+
+		    db.session.add(new_tweet_count)
+		    db.session.commit()
+		
+		for date in fb_like_date_counts:
+		    count = fb_like_date_counts[date]
+		    new_fb_count = Cohort_Facebook_Likes_Model.query.filter_by(date=date).first()
+		    if not new_fb_count:
+			new_fb_count = Cohort_Facebook_Likes_Model(cohort_name=cohort,date=date,likes_count=count)
+		    else:
+			new_fb_count.count = count
+		    db.session.add(new_fb_count)
+		    db.session.commit()
+
 class Mine(Command):
     """
     Mines the data sources

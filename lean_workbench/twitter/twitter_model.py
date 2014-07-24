@@ -16,8 +16,6 @@ class Cohort_Tweet_Count_Model(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, default=datetime.datetime.now())
     count = db.Column(db.Integer)
-    word = db.Column(db.String)
-    username = db.Column(db.String)
     cohort_name = db.Column(db.String)
 
 class Date_count(db.Model):
