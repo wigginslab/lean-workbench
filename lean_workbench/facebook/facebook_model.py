@@ -33,6 +33,9 @@ class Cohort_Facebook_Likes_Model(db.Model):
         date = db.Column(db.DateTime)
         cohort_name = db.Column(db.String)
         likes_count = db.Column(db.Integer)
+	
+	def as_count(self):
+	    return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.likes_count]
 
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
