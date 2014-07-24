@@ -32,12 +32,12 @@ class Facebook_resource(Resource):
 		if not roles:
 		    return make_response(dumps([{'values':[x.as_count() for x in facebook_page]}]))
 		else:
-		    series = [{'values':[x.as_count() for x in facebook_page], 'key':"You"}]
+		    series = [{'values':[x.as_count() for x in facebook_page], 'key':"Your Likes"}]
 		    for role in roles:
 			role_name = role.name
 			cohort_data = Cohort_Facebook_Likes_Model.query.filter_by(cohort_name=role_name).all()
 			series_values = [x.as_count() for x in cohort_data]
-			series_dict = {"key": role_name, 'values': series_values}
+			series_dict = {"key": role_name+ "'s Average Likes", 'values': series_values}
 			series.append(series_dict)
 		    return make_response(dumps(series))
     
