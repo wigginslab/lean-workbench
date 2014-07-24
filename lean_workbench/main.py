@@ -16,7 +16,6 @@ from google_analytics.google_analytics_resource import Google_analytics_resource
 from ghosting.ghosting_resource import Ghosting_resource
 from scale.scale_resource import Scale_resource
 from users.user_resource import User_resource
-from celery import Celery
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
