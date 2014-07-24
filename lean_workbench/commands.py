@@ -181,6 +181,7 @@ class Mine(Command):
                 for user in new_fbs:
                     mine_fb_page_data(username=user.username)   
                 for user in new_gas:
+		    print user
                     mine_visits(username=user.username)
             else:        
                 mine_fb_page_data()

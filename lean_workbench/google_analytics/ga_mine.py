@@ -12,13 +12,12 @@ def mine_visits(username=None):
                 ga_users[0].active = True
                 db.session.add(ga_users[0])
                 db.session.commit()
-	print ga_users
 	if ga_users:
 		for ga_user in ga_users:
 			ga = Google_Analytics_User_Querier(username=ga_user.username)
 			# get the latest visit data
-			#ga.get_new_user_visit_data()
-                        ga.get_referral_data()
+			ga.get_new_user_visit_data()
+                        #ga.get_referral_data()
 
 class Google_Analytics_User_Querier:
 	"""
