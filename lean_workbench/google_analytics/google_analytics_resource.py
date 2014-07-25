@@ -51,6 +51,7 @@ class Google_Analytics_DAO(object):
 	cohorts = current_user.roles
     
         user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
+	
         user_visitors_dict_list = [x.as_dict() for x in user_visitors]
         user_visits = []
         for visit_dict in user_visitors_dict_list:
@@ -60,21 +61,28 @@ class Google_Analytics_DAO(object):
 	if not cohorts:
 	    return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
 	else:
+	    start = user_visitors[-1].date
+	    print start
+	    end = user_visitors[0].date
+	    print end
 	    lines = []
 	    for cohort in cohorts:
 		cohort_name = cohort.name
-		cohort_visitors = Google_Analytics_Visitors.query.filter_by(username="cohort:"+cohort_name).all()
+		cohort_visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.date >= start, Google_Analytics_Visitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
 		values = []
 		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
 	
 		for visit_dict in cohort_visitors_dict_list:
 		    date = visit_dict['date']
 		    count = visit_dict['visitors']
-		    values.append([date,count])
+		    values = [[date,count]] + values
 		lines.append({'key':cohort_name +'\'s visitors','values':values})
 	    lines.append({'key':"Your visitors",'values':user_visits})
+	    print 'length of user_visits %i' %(len(user_visits))
+	    print 'length of cohort visits %i' %(len(values))
+
 	    ex = [{'key':'hi','values':[[1406085474000,0],[1406171874000,0]]},{'key':'hi 2','values':[[1406085474000,0],[1406171874000,5]]}]
-	    return make_response(dumps(ex))
+	    return make_response(dumps(lines))
 
 class Google_analytics_resource(Resource):
     """

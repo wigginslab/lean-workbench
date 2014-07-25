@@ -78,27 +78,29 @@ class Cohort(Command):
 
             # get all cohorts
             cohorts = db.session.query(Role.name.distinct()).all()
+	    	
+	    yesterday = datetime.datetime.now()-timedelta(days=1)
+            today = datetime.datetime.now()
+
 
             # mine for each cohort 
             for cohort in cohorts:
                 
                 # get yesterday and today so we can query changes in between days
-
-                if new:
-                    yesterday = datetime.datetime.now()-timedelta(days=1)
-                    today = datetime.datetime.now()
+	        if not new:
                     start = yesterday
                     end = today
 
                 else:
-                    start = Google_Analytics_Visitors.order_by(Google_Analytics_Visitors.date).first().date
+                    start = db.session.query(Google_Analytics_Visitors).order_by(Google_Analytics_Visitors.date).first().date
                     end = today
                 while start < end:
                     # get all users in cohort
                     cohort_usernames = User.query.filter(User.roles.any(name=cohort[0])).with_entities(User.email).all()
                     # get all GA visitor counts from after this time yesterday and before now
-                    visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.username.in_(cohort_usernames), Google_Analytics_Visitors.date > yesterday, Google_Analytics_Visitors.date < today).with_entities(Google_Analytics_Visitors.visitors).all()
+                    visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.username.in_(cohort_usernames), Google_Analytics_Visitors.date > start, Google_Analytics_Visitors.date < end).with_entities(Google_Analytics_Visitors.visitors).all()
                     detupled_vistors = [x[0] for x in visitors]
+		    print detupled_vistors
                     if detupled_vistors:
                         visitor_avg = (sum(detupled_vistors))/len(detupled_vistors)
                     else:
