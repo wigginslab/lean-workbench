@@ -33,9 +33,12 @@
                                 yAxisLabel="Company Mentions"
                                 xAxisLabel="Date"
                                 showXAxis="true"
-                                showYAxis="true"
-                                xAxisTickFormat="xAxisTickFormat()"
-                                yAxisTickFormat="yAxisFormatFunction()">
+				showYAxis="true"
+				tooltips="true"
+				interactive="true"
+				useInteractiveGuideline="true"
+                                toolTipContent="toolTipContentFunction()" 
+				xAxisTickFormat="xAxisTickFormat()">
                                 </nvd3-stacked-area-chart>
                             </div>
                             <div ng-hide="has_twitterData">
@@ -77,7 +80,7 @@
                             interactive="true"
                             useInteractiveGuideline="true"
                             toolTipContent="toolTipContentFunction()" 
-
+			    tooltips="true"
                             showXAxis="true"
                             showYAxis="true"
                             xAxisTickFormat="xAxisTickFormat()"

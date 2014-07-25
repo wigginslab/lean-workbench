@@ -62,9 +62,7 @@ class Google_Analytics_DAO(object):
 	    return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
 	else:
 	    start = user_visitors[-1].date
-	    print start
 	    end = user_visitors[0].date
-	    print end
 	    lines = []
 	    for cohort in cohorts:
 		cohort_name = cohort.name
@@ -78,10 +76,7 @@ class Google_Analytics_DAO(object):
 		    values = [[date,count]] + values
 		lines.append({'key':cohort_name +'\'s visitors','values':values})
 	    lines.append({'key':"Your visitors",'values':user_visits})
-	    print 'length of user_visits %i' %(len(user_visits))
-	    print 'length of cohort visits %i' %(len(values))
 
-	    ex = [{'key':'hi','values':[[1406085474000,0],[1406171874000,0]]},{'key':'hi 2','values':[[1406085474000,0],[1406171874000,5]]}]
 	    return make_response(dumps(lines))
 
 class Google_analytics_resource(Resource):

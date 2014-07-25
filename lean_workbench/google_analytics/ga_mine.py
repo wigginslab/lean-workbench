@@ -77,15 +77,24 @@ class Google_Analytics_User_Querier:
 			for backwards_days in range(1,366):
 				# create google query object	
 				# get visitors and visitor types for the day
-				visitor_data = g.client.data().ga().get(
-					ids='ga:' + self.profile_id,
-					start_date=str(google_date),
-					end_date=str(google_date),
-					dimensions='ga:visitorType',
-					metrics='ga:visits').execute()
+				try:
+				    
+				    visitor_data = g.client.data().ga().get(
+					    ids='ga:' + self.profile_id,
+					    start_date=str(google_date),
+					    end_date=str(google_date),
+					    dimensions='ga:visitorType',
+					    metrics='ga:visits').execute()
 
-				# parse and save visitor data to database
-				self.process_visitor_data(visitor_data, date)
+				    # parse and save visitor data to database
+				    self.process_visitor_data(visitor_data, date)
+
+				except:
+				    print 'ga new visitor mining exception, setting visitors to 0'
+				    visitors_data_model = Google_Analytics_Visitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=total_visitors,percent_new_visits=percent_new_visits,new_visits=new_visit)
+				    db.session.add(visitors_data_model)
+				    db.session.commit()
+		
 				date = date - timedelta(days=1)
 				google_date = Google_Time_String(str(date))
 

@@ -18,6 +18,9 @@ class Cohort_Tweet_Count_Model(db.Model):
     count = db.Column(db.Integer)
     cohort_name = db.Column(db.String)
 
+    def as_count(self):
+	return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.count]
+
 class Date_count(db.Model):
 
 	__tablename__ = "twitter_date_count"
