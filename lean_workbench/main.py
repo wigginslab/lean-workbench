@@ -13,6 +13,7 @@ from twitter.twitter_resource import Twitter_resource
 from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
+from ghosting.ghosting_resource import Ghosting_resource
 from users.user_resource import User_resource
 from celery import Celery
 
@@ -165,8 +166,8 @@ def configure_views(app):
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)
-
-	@app.route('/')
+	
+        @app.route('/')
 	def index():
 		if current_user.is_authenticated():
 			logged_in = True
@@ -188,9 +189,11 @@ def configure_views(app):
 	@app.route('/onboarding/pay', methods=['POST','GET'])
 	@app.route('/export', methods=['POST','GET'])
 	@app.route('/dashboard', methods=['POST', 'GET'])    
+	@app.route('/dashboard2', methods=['POST', 'GET'])    
 	def dashboard():
 		"""
 		"""
+
 		return render_template('public.html', logged_in=True)
 	
 	api = restful.Api(app)
@@ -201,6 +204,4 @@ def configure_views(app):
 	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(User_resource, '/api/v1/users')
-
-	#from facebook.fb_mine import mine_fb_page_data
-	#mine_fb_page_data()
+        api.add_resource(Ghosting_resource, '/api/v1/ghosting')

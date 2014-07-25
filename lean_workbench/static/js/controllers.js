@@ -5,20 +5,69 @@ function MyCtrl1(){
 }
 
 function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twitter){
-	// Hypotheses query
-	var hyp = Hypotheses.get();
-	//GA query
-	var ga = GoogleAnalytics.get();
-	// Twitter Query
-	var twitter = Twitter.get();
-	// Quickbooks Query
-	//Wufoo Query
-
- 
+    // Hypotheses query
+    var hyp = Hypotheses.get();
+    //GA query
+    var ga = GoogleAnalytics.get();
+    // Twitter Query
+    var twitter = Twitter.get();
+    // Quickbooks Query
+    //Wufoo Query
 }
 
 function ExportController(){
 
+}
+
+function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
+	  $scope.xAxisTickFormat = function(){
+                return function(d){
+                    return d3.time.format('%x')(new Date(d));  //uncomment for date format
+                }
+            }
+
+	 $http.get(
+        '/api/v1/twitter'
+      ).success(
+        function(data) {
+          if (data.hasOwnProperty('twitter_authed')){
+             $scope.has_twitterData = false; 
+        }
+          $scope.twitterData = data;        
+          $scope.has_twitterData = true;
+        }
+      ).error(function(data){
+	     }
+      )
+
+       $http.get(
+        '/api/v1/google-analytics?metric=visits'
+      ).success(
+        function(data) {
+          $scope.googleData = data;
+          $scope.has_ga_data = true;
+        }
+      ).error(function(data){
+          $scope.has_ga_data = false;
+
+	     }
+      )
+
+        $http.get(
+        '/api/v1/facebook'
+      ).success(
+        function(data) {
+          if (data.hasOwnProperty('fb_authed')){
+              $scope.has_fb_data = false;
+          }
+          else{
+            $scope.has_fb_data = true;
+            $scope.facebookData = data;
+          }
+        }
+      ).error(function(data){
+	     }
+      )
 }
 
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {
@@ -27,11 +76,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 
 
 	$( ".datepicker" ).datepicker({ minDate: 0 });
-  	/*$scope.hypotheses = Hypotheses.get(function(hypotheses){
-  		console.log(hypotheses.hypotheses)
-  		console.log(hypotheses.hypotheses[0])
-  		$scope.hypotheses = hypotheses.hypotheses;
-  	});*/
+
 	var hypotheses=  $http.get(
 			'/api/v1/hypotheses'
 			).success(
@@ -45,9 +90,9 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 
 	$scope.show_form = false;
 	$scope.hypothesis_submit = function(){
-     $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-      $http.defaults.headers.common['Content-Type'] = 'application/json'
-      $http.defaults.headers.common['Accept'] = 'application/json'
+        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+        $http.defaults.headers.common['Content-Type'] = 'application/json'
+        $http.defaults.headers.common['Accept'] = 'application/json'
 
       $http.post(
         '/api/v1/hypotheses',
@@ -56,6 +101,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
         function(data){
           // if success
           if (data['response']['user']){
+                 
                  $location.path("/onboarding/stick");
 
           }
@@ -248,23 +294,23 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 	
 	$scope.has_twitter = false;
-		$http.get(
-				'/api/v1/twitter'
+		$http.post('/api/v1/twitter?metric=authed'
 		).success(
 			function(data){
 				console.log(data)
-				if (data['twitter_authed']){
+                                console.log(data[0])
+				if (data[0]['twitter_authed']){
 					$scope.has_twitter = true;
 				}
 			}
 		)
 
 		$scope.has_fb = false;
-		$http.get(
-				'/api/v1/facebook'
+		$http.post(
+				'/api/v1/facebook?metric=authed'
 		).success(
 			function(data){
-				if (data['fb_authed']){
+				if (data[0]['fb_authed']){
 					$scope.has_fb = true;
 				}
 			}
@@ -304,8 +350,9 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 }
 
+function PayController($scope, $http){
+    $scope.ghosting_clicked = false;
 
-function PayController($scope, $http, Quickbooks){
 	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	$http.get(
 		'/api/v1/quickbooks'
@@ -317,8 +364,18 @@ function PayController($scope, $http, Quickbooks){
 			}
 		)
 
+    $scope.qb_ghost = function(){
+        $http.post(
+	    '/api/v1/ghosting',
+	    JSON.stringify({'feature':"quickbooks"})
+	).success(
+	    function(data){
+                $scope.ghosting_clicked = true;
+	    }
+	)
+    }
 
-	$scope.done_onboarding = function(){
+    $scope.done_onboarding = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
 			'/api/v1/users',
@@ -332,7 +389,7 @@ function PayController($scope, $http, Quickbooks){
 }
 
 
-var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices'], 
+var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBServices', 'nvd3ChartDirectives'], 
 	function($interpolateProvider) {
 		$interpolateProvider.startSymbol('[[');
 		$interpolateProvider.endSymbol(']]');
@@ -347,53 +404,58 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                 };
 
                 $scope.submit = function() {
-                	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-					$http.defaults.headers.common['Content-Type'] = 'application/json';
-					$http.defaults.headers.common['Accept'] = 'application/json';
+                        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+                        $http.defaults.headers.common['Content-Type'] = 'application/json';
+                        $http.defaults.headers.common['Accept'] = 'application/json';
 
-					$http.post(
-						'/registration',
+                        $http.post(
+                            '/registration',
 
-						JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
-						).success(
-							function(data){
-								console.log(data);
-								// if success
-								console.log(data['response']['user']);
-								if (data['response']['user']){
-									$("#login").hide();
-    								$("#logout").show();
-									$location.path("/onboarding/stick");
-								}
+                            JSON.stringify({email: $scope.email, company: $scope.company, password: $scope.password, password_confirm: $scope.password_confirm})
+                            ).success(
+                                function(data){
+                                    console.log(data);
+                                    // if success
+                                    console.log(data['response']['user']);
+                                    if (data['response']['user']){
+                                        $("#login").hide();
+                                        $("#logout").show();
+                                        $http.post(
+                                                '/api/v1/users',
+                                                JSON.stringify({'cohort':$scope.cohort})
+                                         ).success(
+                                               function(data){
+                                                        console.log(data);
+                                                }
+                                        )
+                                        $location.path("/onboarding/stick");
+                                        }
 
-								else{
-									// TODO: brevity
-									var errors = data['response']['errors'];
-									if (errors.hasOwnProperty('email')){
-										// $scope.email_error = errors['email'][0];
-										$scope.email_error = true;
+                                    else{
+                                        // TODO: brevity
+                                        var errors = data['response']['errors'];
+                                        if (errors.hasOwnProperty('email')){
+                                                // $scope.email_error = errors['email'][0];
+					        $scope.email_error = true;
+                        									}
+					if (errors.hasOwnProperty('company')){
+					        $scope.company_error = true;
 									}
-									if (errors.hasOwnProperty('company')){
-										// $scope.company_error = errors['company'][0];
-										$scope.company_error = true;
-									}
-									if (errors.hasOwnProperty('password')) {
-										$scope.password_error = true;
-										// $scope.password_error = errors['password'][0];
-									}            
-									if (errors.hasOwnProperty('password_confirm')){
-										$scope.password_confirm_error = true;
-										// $scope.password_confirm_error = errors['password_confirm'][0];
-									}
-								}
-							}
-						).error(
-							function(data){
-								console.log('registration error')
-						
-								$scope.errorMsg = data.reason;
-							}
-						);
+					if (errors.hasOwnProperty('password')) {
+						$scope.password_error = true;
+				        }            
+				        if (errors.hasOwnProperty('password_confirm')){
+					        $scope.password_confirm_error = true;
+				        }
+				    }
+				}
+                                    ).error(
+                                            function(data){
+                                                    console.log('registration error')
+                                    
+                                                    $scope.errorMsg = data.reason;
+                                            }
+                                    );
 				};
 		}
 
@@ -499,6 +561,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+    .when('/dashboard2', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})

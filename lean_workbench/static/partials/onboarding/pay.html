@@ -6,11 +6,16 @@
       <div class="center">
       <img class="social-icon" src='/static/img/icons/quickbooks.png' style="width:128px;height:130px"></img>
       </div>
-       <p style="font-size:20px">The paid engine thrives on focuses on making money. The key performance indicators are <u>customer lifetime value</u>, and <u>customer acquisition cost</u>. This can be measured using the Quickbooks Online API.
-	   <p ng-show="has_qb"><b>Your Quickbooks Online account is connected.</b></p>
-     <div ng-hide="has_qb" class="center">
-        <ipp:connectToIntuit></ipp:connectToIntuit> 
-      </div>
+      <p style="font-size:20px">The paid engine thrives on focuses on making money. The key performance indicators are <u>customer lifetime value</u>, and <u>customer acquisition cost</u>. This can be measured using the Quickbooks Online API.
+      <p ng-show="has_qb"><b>Your Quickbooks Online account is connected.</b></p>
+<span class="help-block" ng-show="ghosting_clicked">We'll let you know when this feature becomes available!</span>
+
+<     <div ng-hide="has_qb" class="center">
+         <button ng-click="qb_ghost()" type="button" class="btn btn-primary btn-lg">Connect to Quickbooks</button>
+  
+   <!--
+   <ipp:connectToIntuit></ipp:connectToIntuit>--> 
+    </div>
       <div class="center">
           <ul class="pager">
             <li><a ng-click="done_onboarding()">Next</a></li>
@@ -20,7 +25,11 @@
 </div>
 
 <script>
-  intuit.ipp.anywhere.setup({          menuProxy: 'http://mtvl07ef11ee586.corp.intuit.net:8080/HelloWorldIA/BlueDotMenuServlet',         grantUrl: 'http://leanworkbench.com/connect/quickbooks'            })
+    /*
+  intuit.ipp.anywhere.setup({          
+      menuProxy: 'http://mtvl07ef11ee586.corp.intuit.net:8080/HelloWorldIA/BlueDotMenuServlet',
+      grantUrl: 'http://leanworkbench.com/connect/quickbooks'
+  })*/
 </script>  
 </body>
 </html>  

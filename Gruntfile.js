@@ -26,11 +26,59 @@ grunt.initConfig({
                 ext: '.css'
             }]
         }
-    }
-});
-grunt.loadNpmTasks('grunt-sass');
+    },
 
-grunt.registerTask('default', ['sass']);
+      concat: {
+        css: {
+           src: [
+                 'lean_workbench/static/css/*'
+                ],
+            dest: 'lean_workbench/static/css/combined.css'
+        },
+        js : {
+            src : [
+               'lean_workbench/static/js/app.js',
+               'lean_workbench/static/js/controllers.js',
+               'lean_workbench/static/js/directives.js',
+               'lean_workbench/static/js/filters.js',
+               'lean_workbench/static/js/resources.js',
+               'lean_workbench/static/js/services.js',
+            ],
+            dest : 'lean_workbench/static/js/combined.js'
+        }
+    },
+
+      cssmin : {
+          css:{
+              src: 'lean_workbench/static/css/combined.css',
+              dest: 'lean_workbench/static/css/combined.min.css'
+          }
+      },
+
+       uglify : {
+        js: {
+            files: {
+                'lean_workbench/static/js/combined.js' : [ 'lean_workbench/static/js/combined.js' ]
+            }
+        },
+
+        watch: {
+          files: ['lean_workbench/static/css/*', 'lean_workbench/static/js/*'],
+          tasks: ['concat', 'cssmin', 'uglify']
+      }
+    },
+
+
+    pkg: grunt.file.readJSON('package.json')
+});
+
+    grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.registerTask('default', [ 'sass','concat:css', 'cssmin:css', 'concat:js', 'uglify:js' ]);
+
 };
   // Project configuration.
 /*  grunt.initConfig({

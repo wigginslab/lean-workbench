@@ -20,9 +20,15 @@ roles_users = db.Table('roles_users',
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
 
 class Role(db.Model, RoleMixin):
+        """
+        Cohorts
+        """
 	id = db.Column(db.Integer(), primary_key=True)
 	name = db.Column(db.String(80), unique=True)
 	description = db.Column(db.String(255))
+        
+        def __repr__(self):
+                return self.name
 
 class User(db.Model, UserMixin):
 	"""
@@ -49,6 +55,11 @@ class User(db.Model, UserMixin):
 	def __repr__(self):
 		return '<User %s>' %self.email
 
+        def as_dict(self):
+                return {
+                        'email':self.email,
+                        'roles':self.roles
+                }
 class API(db.Model):
 	__tablename__ = "api"
 	id = db.Column(db.Integer, primary_key=True)

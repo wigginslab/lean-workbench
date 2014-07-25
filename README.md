@@ -9,6 +9,11 @@ Version
 
 0.1
 
+Requirements
+------------
+
+lean-workbench works best with Ubuntu 13/14. All installations and deploys must be run from a user with sudo access.
+
 Tech
 -----------
 
@@ -25,57 +30,50 @@ Installation
 --------------
 For developing locally:
 ```
-sudo apt-get install git
-sudo apt-get update
-sudo apt-get install -y python-software-properties python g++ make
-sudo add-apt-repository ppa:chris-lea/node.js
-sudo apt-get update
-sudo apt-get install nodejs
-sudo apt-get install postgresql postgresql-contrib
-npm install -g grunt-cli
-mkdir /var/www
-cd /var/www
-git clone https://github.com/wigginslab/lean-workbench
-cd lean-workbench
-sudo apt-get install libpq-dev python-dev
-sudo pip install virtualenv
-virtualenv venv
- . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
- pip install -r "requirements.txt"
-sudo apt-get install npm
-npm install .
-grunt sass
-python lean_workbench/manage.py create_db
-python lean_workbench/manage.py runserver 
+./setup-run-dev.sh 
+```
+Open your browser to http://127.0.0.1:5000/
+
+For the production server:
+
+```
+./setup-deploy.sh 
+```
+
+For the cronjob server:
+```
+./setup-deploy-cronjob.sh
+```
+Open the file
+```
+/etc/rsyslog.d/50-default.conf
+```
+Find the line that starts with:
+```
+#cron.*
+```
+and uncomment it and restart logging:
+```
+sudo service rsyslog restart
+```
+Now crontab logs are stored in:
+```
+/var/log/cron.log
+```
+Crontab program logs are stored in:
+```
+/var/mail/root
 ```
 
 
+copy crontab contents to crontab 
 ```
-sudo apt-get update
-sudo apt-get install libapache2-mod-wsgi
-sudo apt-get install postgresql postgresql-contrib 
-sudo a2enmod wsgi 
-sudo apt-get install git
-sudo apt-get install -y python-software-properties python g++ make
-sudo add-apt-repository ppa:chris-lea/node.js
-sudo apt-get update
-sudo apt-get install nodejs
-npm install -g grunt-cli
-mkdir /var/www
-cd /var/www
-git clone https://github.com/wigginslab/lean-workbench
-cd lean-workbench
-sudo apt-get install libpq-dev python-dev
-sudo pip install virtualenv
-virtualenv venv
- . venv/bin/activate # whenever you want to work on the project, start by activating virtualenv
- pip install -r "requirements.txt"
-sudo apt-get install npm
-npm install .
-grunt sass
-cp apache/LWB  /etc/apache2/sites-available/LWB
-sudo service apache2 restart 
+crontab -e
 ```
+
+to run cronjobs.
+
+
 Configuration
 --------------------
 The following variables must be set in an object called UserConfig in lean_workbench/user_config.py

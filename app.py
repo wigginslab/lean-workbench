@@ -25,21 +25,7 @@ app = SecuredStaticFlask(__name__,static_folder="static", static_path="/static")
 
 app = Flask(__name__)
 CsrfProtect(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('db_url')
 db = SQLAlchemy(app)
-app.config["SECRET_KEY"] = os.environ.get('secret_key')
-app.config["DEBUG"] = True
-
-# Setup Flask-Security users
-app.config["SECURITY_PASSWORD_HASH"]="bcrypt"
-app.config["SECURITY_EMAIL_SENDER"]="noreply@leanworkbench.com"
-app.config['SECURITY_REGISTERABLE'] = True
-app.config['SECURITY_PASSWORD_SALT'] = os.getenv("secret_key")
-app.config["SECURITY_EMAIL_SENDER"] = "noreply@leanworkbench.com"
-app.config["SECURITY_TRACKABLE"] = True
-app.config["SECURITY_RECOVERABLE"] = True
-app.config["SECURITY_REGISTER_URL"] = "/registration"
-
 
 # Setup Flask-Security email
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'

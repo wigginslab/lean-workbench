@@ -21,6 +21,9 @@
                 <input type="password" class="form-control" ng-model="password_confirm" placeholder="Confirm Password">
                 <span class="help-block" ng-show="password_confirm_error">Your passwords did not match.</span>
             </div>
+            <div class=form-group">
+          <input class="form-control" ng-model="cohort" placeholder="Cohort (optional)">
+            </div>
             <button type="submit" ng-click="submit()" class="btn btn-default">Submit</button>
             <p>Already have an account? <a href="/signin">Sign in</a>.
 

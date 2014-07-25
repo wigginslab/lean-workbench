@@ -9,6 +9,9 @@ def mine_visits(username=None):
 		ga_users = Google_Analytics_User_Model.query.all()
 	else:
 		ga_users = [Google_Analytics_User_Model.query.filter_by(username=username).first()]
+                ga_users[0].active = True
+                db.session.add(ga_users[0])
+                db.session.commit()
 	print ga_users
 	if ga_users:
 		for ga_user in ga_users:
@@ -35,9 +38,9 @@ class Google_Analytics_User_Querier:
 		g = Google_Analytics_API(self.username)
 		user_visitor_data = Google_Analytics_Visitors.query.filter_by(username=self.username).all()
 		
-		# if already mined, just do yesterday
+        # if already mined, just do yesterday
 		if user_visitor_data:
-			date = datetime.now()+timedelta(days=-backwards_days)
+			date = datetime.now()-timedelta(days=1)
 			google_date = Google_Time_String(str(date))
 
 			visitor_data = g.client.data().ga().get(
@@ -46,8 +49,9 @@ class Google_Analytics_User_Querier:
 				end_date=str(google_date),
 				dimensions='ga:visitorType',
 				metrics='ga:visits').execute()
+
 			# save visitor data to database
-			self.process_visitor_data(visitor_data)
+			self.process_visitor_data(visitor_data,date)
 		
 		# if first time mining GA data for user
 		else:
@@ -63,9 +67,11 @@ class Google_Analytics_User_Querier:
 					metrics='ga:visits').execute()
 
 				# parse and save visitor data to database
-				self.process_visitor_data(visitor_data)
+				self.process_visitor_data(visitor_data, date)
+				date = date - timedelta(days=1)
+				google_date = Google_Time_String(str(date))
 
-	def process_visitor_data(self,visitor_data):
+	def process_visitor_data(self,visitor_data, date):
 		"""
 		Takes the result of a Google Analytics API Client query for visitors, parses, and saves to database
 		"""
@@ -97,10 +103,6 @@ class Google_Analytics_User_Querier:
 		# save visitor data to database
 		db.session.add(visitors_data_model)
 		db.session.commit()
-		db.session.close()
-		# set date back in time one day
-		date = datetime.now()+timedelta(days=-backwards_days)
-		google_date = Google_Time_String(str(date))
 
 	def get_new_user_funnel_data(self):
 		"""

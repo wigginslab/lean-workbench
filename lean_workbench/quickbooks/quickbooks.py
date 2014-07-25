@@ -1,38 +1,27 @@
-
-try:
-    from rauth import OAuth1Session, OAuth1Service
-except:
-    print "Please import Rauth:\n\n"
-    print "http://rauth.readthedocs.org/en/latest/\n"
+import requests
+import time
+import random
+from hashlib import sha1
+import hmac
+import binascii
+import urllib
+from rauth import OAuth1Session, OAuth1Service
 
 import xml.etree.ElementTree as ET
 
 import json
 
-try:
 
-    """
-    This main module is for talking to the QBOv3 API. There are other
-    supporting modules for doing stuff with the results or read and query
-    operations and for getting stuff ready for update, delete,
-    and create operations
-    """
+"""
+This main module is for talking to the QBOv3 API. There are other
+supporting modules for doing stuff with the results or read and query
+operations and for getting stuff ready for update, delete,
+and create operations
+"""
 
-    import massage
-    import reference
-    import report
-
-except ImportError:
-
-    print "You won't be able to run some of the additional methods"
-
-    """
-    There are convenience-function calls to these companion modules, all
-    listed at the bottom here, and obvi those won't work alone, but
-    the rest of this module should be standalone
-    """
-
-    pass
+import massage
+import reference
+import report
 
 class QuickBooks():
     """A wrapper class around Python's Rauth module for Quickbooks the API"""
@@ -100,11 +89,14 @@ class QuickBooks():
         ]
 
 
+
+
     def get_authorize_url(self):
         """Returns the Authorize URL as returned by QB, 
         and specified by OAuth 1.0a.
         :return URI:
         """
+        print 'inside get_authorize_url'
         self.qbService = OAuth1Service(
                 name = None,
                 consumer_key = self.consumer_key,
@@ -118,6 +110,9 @@ class QuickBooks():
                 params={'oauth_callback':self.callback_url}
             )
 
+        print self.qbService.get_request_token(
+                params={'oauth_callback':self.callback_url}
+        )
         return self.qbService.get_authorize_url(self.request_token)
 
     def get_access_tokens(self, oauth_verifier):
@@ -125,6 +120,8 @@ class QuickBooks():
         access_token and access_token_secret on the QB Object.
         :param oauth_verifier: the oauth_verifier as specified by OAuth 1.0a
         """
+        print self.request_token
+        print self.request_token_secret
         session = self.qbService.get_auth_session(
                 self.request_token, 
                 self.request_token_secret,
@@ -134,6 +131,60 @@ class QuickBooks():
         self.access_token_secret = session.access_token_secret
 
         return session
+    def my_get_access_tokens(self, oauth_token, oauth_verifier, oauth_token_secret, consumer_secret):
+        self.access_token_url = "https://oauth.intuit.com/oauth/v1/get_access_token"
+        # length of nonce
+        length = 36 
+        payload = {
+            'oauth_verifier': oauth_verifier,
+            'oauth_token': oauth_token,
+            'oauth_signature_method':'HMAC-SHA1',
+            'oauth_timestamp': str(int(time.time())),
+            'oauth_nonce':''.join([str(random.randint(0, 9)) for i in range(length)]),
+            'oauth_version':'1.0',
+            'oauth_consumer_key':self.consumer_key,
+            'oauth_consumer_secret':self.consumer_secret
+
+        }
+
+        encoded_keys = [urllib.quote(x) for x in payload.keys()]
+        print encoded_keys
+        encoded_dict = {}
+        for key in encoded_keys:
+            unencoded_value = payload[key]
+            encoded_value = urllib.quote(unencoded_value)
+            encoded_dict[key] = encoded_value
+        
+        
+        val_string = ""
+        print encoded_keys
+        sorted_enc_keys = sorted(encoded_keys)
+        print sorted_enc_keys
+        for i in range(len(sorted_enc_keys)):
+            key = encoded_keys[i]
+            value = encoded_dict[key]
+            substring = key+"="+value
+            if i < len(sorted_enc_keys)-1:
+                substring = substring+"&"
+            val_string = val_string+substring
+
+
+
+        raw = "GET&"+urllib.quote(self.access_token_url)+val_string
+        hash_key = consumer_secret + "&" +self.request_token_secret 
+
+        hashed = hmac.new(key, raw, sha1)
+        signature = binascii.b2a_base64(hashed.digest()).rstrip('\n')
+
+        payload['oauth_signature'] = signature
+        print payload
+
+        r = requests.get(self.access_token_url, params=payload)
+
+        print r.url
+        print r.text
+        print r.json
+        return r.json
 
     def create_session(self):
         if (self.consumer_secret and 
@@ -325,6 +376,11 @@ class QuickBooks():
                                      data = request_body)
 
             if accept == "json":
+                print headers
+                # if unauthorized
+                if r.status_code == 401:
+                    print r.text
+                    raise Exception('Query object is not authorized to make that request.')
                 result = r.json()
                 
                 if "Fault" in result and result["Fault"]\
@@ -441,8 +497,6 @@ class QuickBooks():
         #CAN ONE SESSION USE MULTIPLE COMPANIES?
         #IF NOT, REMOVE THE COMPANY OPTIONALITY
         url = self.base_url_v3 + "/company/%s/query" % self.company_id
-
-        #print query_string
 
         results = self.query_fetch_more(r_type="POST",
                                         header_auth=True,
