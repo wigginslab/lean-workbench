@@ -26,22 +26,11 @@ class Google_Analytics_API:
 			self.credentials = self.credentials[-1]
 			expires_on = self.credentials.as_dict()['token_expiry']
 			current_time = datetime.now().isoformat()
-			print 'expires_on ' + str(expires_on)
-			print 'current_time ' + str(current_time)
-			# if valid credentials are in the database
-			if expires_on > current_time:
-				print 'expires on is greater than the current time'
-				self.client = self.build_client(self.credentials)
-                                credentials_dict = self.credentials.as_dict()
-                                self.credentials_dict = credentials_dict
-
-			else:
-                            print 'credentials expired'
-                            print self.credentials
-                            credentials_dict = self.credentials.as_dict()
-                            self.credentials_dict = credentials_dict
-                            self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
-                            self.client = self.build_client(self.credentials)
+			print self.credentials
+                        credentials_dict = self.credentials.as_dict()
+                        self.credentials_dict = credentials_dict
+                        self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+                        self.client = self.build_client(self.credentials)
 		else:
 			print "no credentials"
 			return None
@@ -52,6 +41,7 @@ class Google_Analytics_API:
 		"""
 		url = 'https://accounts.google.com/o/oauth2/token'
 		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
+		print values
 		# encode data
 		data = urllib.urlencode(values)
 		# post request for refresh token

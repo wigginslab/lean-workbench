@@ -9,14 +9,12 @@ def track_keywords(username = None):
 	app_key = current_app.config['TWITTER_APP_KEY']
 	app_secret = current_app.config['TWITTER_APP_SECRET']
 	if username:
-		twitter_models = Twitter_model.query.filter_by(username=username).first()
-                twitter_models.active = True
-                db.session.add(twitter_models)
-                db.session.commit()
-	else:
+		twitter_models = Twitter_model.query.filter_by(username=username).all()
+        else:
 		twitter_models = Twitter_model.query.all()
 
 	if twitter_models:
+		print twitter_models
 		for user_twitter in twitter_models:
 			oauth_token = user_twitter.oauth_token
 			oauth_token_secret = user_twitter.oauth_token_secret
@@ -30,3 +28,7 @@ def track_keywords(username = None):
 				date_count = Date_count(count=count)
 				word.counts.append(date_count)
 				db.session.commit()
+			user_twitter.active = True
+			db.session.add(user_twitter)
+			db.session.commit()
+

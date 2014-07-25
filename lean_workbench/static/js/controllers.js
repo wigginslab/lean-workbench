@@ -141,12 +141,13 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
                 return function(d){
                     return d3.time.format('%x')(new Date(d));  //uncomment for date format
                 }
-            }
+    }
+
     $scope.toolTipContentFunction = function(){
         return function(key, x, y, e, graph) {
-            console.log('tooltip content');
+            alert('tooltip content');
             return  'Super New Tooltip' +
-                    '<h1>' + key + '</h1>' +
+	            '<h1>' + key + '</h1>' +
                     '<p>' +  y + ' at ' + x + '</p>'
         }
     };	 

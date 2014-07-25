@@ -27,6 +27,16 @@ class Facebook_model(db.Model):
 		self.expired = False
                 self.active = False
 
+class Cohort_Facebook_Likes_Model(db.Model):
+        __tablename__ = "facebook_cohort_likes"
+        id = db.Column(db.Integer, primary_key=True)
+        date = db.Column(db.DateTime)
+        cohort_name = db.Column(db.String)
+        likes_count = db.Column(db.Integer)
+	
+	def as_count(self):
+	    return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.likes_count]
+
 class Facebook_page_data(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime)

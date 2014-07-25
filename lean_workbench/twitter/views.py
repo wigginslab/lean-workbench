@@ -22,7 +22,6 @@ def twitter_oauth_step_one():
 
 @app.route('/connect/twitter/success/', methods=['GET', 'POST'])
 def twitter_success():
-	#return render_template('public.html')
 	return redirect('/onboarding/virality')
 
 @app.route('/connect/twitter/callback/',methods=['GET', 'POST'])

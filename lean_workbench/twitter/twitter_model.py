@@ -11,6 +11,16 @@ tracked_twitter_words = db.Table('twitter_tracked_words',
 	db.Column('twitter_id', db.Integer, db.ForeignKey('twitter.id'))
 )
 
+class Cohort_Tweet_Count_Model(db.Model):
+    __tablename__ = "twitter_cohort_tweet_count"
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, default=datetime.datetime.now())
+    count = db.Column(db.Integer)
+    cohort_name = db.Column(db.String)
+
+    def as_count(self):
+	return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.count]
+
 class Date_count(db.Model):
 
 	__tablename__ = "twitter_date_count"

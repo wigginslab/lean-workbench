@@ -4,8 +4,6 @@ from flask.ext import script
 
 import commands
 
-from celery import Celery
-
 from main import app_factory
 import config
 

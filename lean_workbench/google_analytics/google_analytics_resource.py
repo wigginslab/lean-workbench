@@ -46,16 +46,38 @@ class Google_Analytics_DAO(object):
 
     def get_user_profile_visits(self, username):
         """
-        Go as far back as you can go, then check daily
+	return JSON of user and cohort visits (if available)
         """
+	cohorts = current_user.roles
+    
         user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
+	
         user_visitors_dict_list = [x.as_dict() for x in user_visitors]
-        visits = []
+        user_visits = []
         for visit_dict in user_visitors_dict_list:
                 date = visit_dict['date']
                 count = visit_dict['visitors']
-                visits.append([date,count])
-        return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
+                user_visits.append([date,count])
+	if not cohorts:
+	    return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
+	else:
+	    start = user_visitors[-1].date
+	    end = user_visitors[0].date
+	    lines = []
+	    for cohort in cohorts:
+		cohort_name = cohort.name
+		cohort_visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.date >= start, Google_Analytics_Visitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
+		values = []
+		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
+	
+		for visit_dict in cohort_visitors_dict_list:
+		    date = visit_dict['date']
+		    count = visit_dict['visitors']
+		    values = [[date,count]] + values
+		lines.append({'key':cohort_name +'\'s visitors','values':values})
+	    lines.append({'key':"Your visitors",'values':user_visits})
+
+	    return make_response(dumps(lines))
 
 class Google_analytics_resource(Resource):
     """
