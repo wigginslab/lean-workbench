@@ -19,13 +19,138 @@ function ExportController(){
 
 }
 
+function ViewScaleController($scope, $http){
+        $("#logout").show();
+
+	 $http.get(
+        '/api/v1/scale'
+      ).success(
+        function(data) {
+            if (data.hasOwnProperty('scale_authed')){
+            } 
+            else{
+              $scope.startup_data = data;
+
+            }
+        }
+      ).error(function(data){
+	     }
+      )
+
+
+}
+
+function ScaleController($scope, $http){
+    $http.get(
+                  '/api/v1/scale'
+            ).success(
+                function(data){
+                    console.log(data);
+                    if (data.hasOwnProperty('scale_authed')){
+                    }
+                    else{
+                       $scope.description = data.description;
+                       $scope.angellist_url = data.angellist_url;
+                       $scope.crunchbase_url = data.crunchbase_url;
+                    }
+                }
+            ).error(
+                function(data){
+                    console.log('error')
+                    console.log(data)
+            });
+           
+	$scope.add_startup_data = function(){
+            $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+            $http.defaults.headers.common['Content-Type'] = 'application/json'
+            $http.defaults.headers.common['Accept'] = 'application/json'
+
+           
+          $http.post(
+            '/api/v1/scale',
+            JSON.stringify({crunchbase_url: $scope.crunchbase_url, angellist_url: $scope.angellist_url, description: $scope.description})
+            ).success(
+            function(data){
+                $scope.request_sent = true;
+                $scope.help_msg = data.msg;
+              }
+            ).error(
+            function(data){
+              $scope.request_sent = true;
+              $scope.help_msg = data.msg;
+            }
+          );
+    }
+
+    $scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
+			}
+		)
+	}
+
+
+}
+
+
+function WufooController($scope, $http){
+	$scope.add_survey = function(){
+        $http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+        $http.defaults.headers.common['Content-Type'] = 'application/json'
+        $http.defaults.headers.common['Accept'] = 'application/json'
+
+      $http.post(
+        '/api/v1/wufoo',
+        JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
+        ).success(
+        function(data){
+            $scope.request_sent = true;
+            $scope.help_msg = data.msg;
+          }
+     	).error(
+        function(data){
+          $scope.help_msg = data.msg;
+          $scope.request_sent = true;
+        }
+      );
+    }
+
+    $scope.done_onboarding = function(){
+		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
+		$http.post(
+			'/api/v1/users',
+			JSON.stringify({'onboarded':true})
+		).success(
+			function(data){
+				window.location = '/dashboard';
+			}
+		)
+	}
+}
+
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
-	  $scope.xAxisTickFormat = function(){
+    $("#logout").show();
+
+
+    $scope.xAxisTickFormat = function(){
                 return function(d){
                     return d3.time.format('%x')(new Date(d));  //uncomment for date format
                 }
             }
-
+    $scope.toolTipContentFunction = function(){
+        return function(key, x, y, e, graph) {
+            console.log('tooltip content');
+            return  'Super New Tooltip' +
+                    '<h1>' + key + '</h1>' +
+                    '<p>' +  y + ' at ' + x + '</p>'
+        }
+    };	 
+ 
 	 $http.get(
         '/api/v1/twitter'
       ).success(
@@ -561,7 +686,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-    .when('/dashboard2', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
+    .when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
     .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
@@ -571,6 +696,10 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
 	.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
 	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
+        .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
+         .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
+          .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
+    
     // enable push state
     $locationProvider.html5Mode(true);
 }])

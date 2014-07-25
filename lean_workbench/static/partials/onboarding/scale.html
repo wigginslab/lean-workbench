@@ -1,0 +1,27 @@
+ <div class="onboarding holder">
+ <div class="container">
+    <div ng-controller="ScaleController" id="scale" style="text-align:center">
+      <h2 class="center">Scale</h2>
+      <div class="center">
+        <img src="/static/assets/scale.png" style="width:128px;height:138px;">
+        </div>
+    <div>
+        <p style="font-size:20px">
+        Sometimes you need to raise capital to scale your product. Let us help you find capital.
+        <form novalidate role="form simple-form" form-submit="add_startup_data" name="survey-form" style="text-align:center">
+           <span class="help-block" ng-show="request_sent">[[help_msg]]</span>
+  
+            <input ng-model="crunchbase_url" placeholder="Crunchbase Url">
+            <input ng-model="angellist_url" placeholder="Angellist Url">
+            <textarea class="form-control" rows="3" ng-model="description" placeholder="Example: A service that would let people bring all their files anywhere, with no need to email around attachments by two MIT students."></textarea>
+        </form> 
+        <button ng-click="add_startup_data()" type="button" class="btn btn-primary btn-lg">Save data</button>
+	</p>
+	<div class="center">
+          <ul class="pager">
+            <li><a ng-click="done_onboarding()">Next</a></li>
+          </ul>
+        </div>
+    </div>
+</div>
+

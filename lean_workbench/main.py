@@ -14,12 +14,13 @@ from wufoo.wufoo_resource import Wufoo_resource
 from forms.registration_form import ExtendedRegisterForm
 from google_analytics.google_analytics_resource import Google_analytics_resource
 from ghosting.ghosting_resource import Ghosting_resource
+from scale.scale_resource import Scale_resource
 from users.user_resource import User_resource
 from celery import Celery
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
-		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html']
+		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html']
 		# Get user from session
 		if not current_user.is_anonymous() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
@@ -185,11 +186,17 @@ def configure_views(app):
 	@app.route('/stats', methods=['POST','GET'])
 	@app.route('/stats/1',methods=['POST','GET'])
 	@app.route('/onboarding/stick', methods=['POST', 'GET'])
+        @app.route('/onboarding/scale', methods=['POST', 'GET'])
 	@app.route('/onboarding/virality', methods=['POST','GET'])
 	@app.route('/onboarding/pay', methods=['POST','GET'])
+        @app.route('/onboarding/empathy', methods=['POST','GET'])
 	@app.route('/export', methods=['POST','GET'])
 	@app.route('/dashboard', methods=['POST', 'GET'])    
-	@app.route('/dashboard2', methods=['POST', 'GET'])    
+	@app.route('/scale', methods=['POST', 'GET'])    
+        @app.route('/dashboard2', methods=['POST', 'GET'])    
+
+        @app.route('/results', methods=['POST', 'GET'])    
+        
 	def dashboard():
 		"""
 		"""
@@ -205,3 +212,5 @@ def configure_views(app):
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(User_resource, '/api/v1/users')
         api.add_resource(Ghosting_resource, '/api/v1/ghosting')
+
+        api.add_resource(Scale_resource, '/api/v1/scale')

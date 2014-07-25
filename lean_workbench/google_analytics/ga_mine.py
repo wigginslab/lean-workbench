@@ -17,7 +17,8 @@ def mine_visits(username=None):
 		for ga_user in ga_users:
 			ga = Google_Analytics_User_Querier(username=ga_user.username)
 			# get the latest visit data
-			ga.get_new_user_visit_data()
+			#ga.get_new_user_visit_data()
+                        ga.get_referral_data()
 
 class Google_Analytics_User_Querier:
 	"""
@@ -27,6 +28,24 @@ class Google_Analytics_User_Querier:
 		self.username = username
 		self.profile_id =  Google_Analytics_API(username).get_profile_id()
 		print self.profile_id
+        
+        def get_referral_data(self):
+	        # start at yesterday
+		date = datetime.now()-timedelta(days=1)
+		# google string formatted date
+		google_date = Google_Time_String(str(date))
+		g = Google_Analytics_API(self.username)
+                date = datetime.now()-timedelta(days=1)
+		google_date = Google_Time_String(str(date))
+
+		referral_data = g.client.data().ga().get(
+				ids='ga:' + self.profile_id,
+				start_date=str(google_date),
+				end_date=str(google_date),
+                                sort="ga:sessions",
+                                dimensions='ga:source,ga:medium',
+                                metrics='ga:sessions,ga:pageviews,ga:sessionDuration,ga:exits').execute()
+                print referral_data
 	def get_new_user_visit_data(self):
 		"""
 		Get all the visits data available for a user who just connected their Google Analytics account, or if visitor data exists get yesterday's data

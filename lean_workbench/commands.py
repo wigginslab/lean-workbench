@@ -1,12 +1,9 @@
 # -*- coding:utf-8 -*-
 
 from flask.ext.script import Command, Option, prompt_bool
-
 import os
 import config
-
 from main import app_factory
-import config
 
 class CreateDB(Command):
     """
@@ -28,6 +25,45 @@ class DropDB(Command):
         from database import drop_all
 
         drop_all()
+
+class Scale(Command):
+    """
+    For now, just hit the VC-matcher server
+    """
+    
+    # allow user to enter 
+    # python manage.py scale --new=True
+    # to mine only new API keys
+    option_list = (
+        Option('--new', '-n', dest='new'),
+    ) 
+    def run(self, new=False):
+        """
+        Run the mining
+
+        args:
+            new- if true, check for users that haven't been mined yet and mine only their data.
+        """
+        app = app_factory(config.Dev)
+        with app.app_context():
+            from scale.scale_model import Startup_data_model
+            from scale.scale_mine import get_vcs
+            users = Startup_data_model.query.filter_by(vc_matcher_done=False).filter(Startup_data_model.description != None).all()
+            if users:
+                get_vcs(users)
+
+class Cohort(Command):
+    """
+    Aggregate cohort stats (daily) 
+    """
+    def run(self):
+        app = app_factory(config.Dev)
+        with app.app_context():
+            from database import db
+            from users.user_model import Role 
+
+        cohorts = db.session.query(Role.name.distinct()).all()
+        print cohorts
 
 class Mine(Command):
     """

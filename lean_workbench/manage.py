@@ -22,5 +22,7 @@ if __name__ == "__main__":
 	manager.add_command("drop_db", commands.DropDB())
 	manager.add_command("mine", commands.Mine())
 	manager.add_command("users", commands.PrintUsers())
+        manager.add_command("scale", commands.Scale())
+        manager.add_command("cohort", commands.Cohort())
 
 	manager.run()

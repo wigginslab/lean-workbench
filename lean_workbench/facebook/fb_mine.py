@@ -1,6 +1,5 @@
 from facebook_model import Facebook_page_data, Facebook_model, db
-import facebook
-
+import facebook_module as facebook
 
 def mine_fb_page_data(username=None):
 	# if only for one user

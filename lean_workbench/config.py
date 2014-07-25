@@ -34,11 +34,11 @@ class Dev(UserConfig):
         'facebook.app',
         'quickbooks.app',
         'users.app',
-        'ghosting.app'
+        'ghosting.app',
+        'scale.app'
             # or ('blog.views.app', {'url_prefix':'/blog'})
         ]  # each as (blueprint_instance, url_preffix)
       
-	SQLALCHEMY_ECHO=True
 	
 class Testing(UserConfig):
     TESTING = True
