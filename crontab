@@ -4,5 +4,11 @@
 # check for new vc matcher requests every minute
 */1 * * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py scale
 
+# check for new cohort requests every minute
+*/1 * * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py cohort --new=True
+
 # mine existing users daily
-20 0 * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py
+20 0 * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py mine
+
+# mine cohort daily
+20 0 * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py cohort
