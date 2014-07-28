@@ -8,43 +8,38 @@ from quickbooks_model import *
 from flask.ext.security import current_user
 from quickbooks import QuickBooks
 
+QUICKBOOKS_TOKEN="dcb197a3b9244b41beb886bb327cc4e21bef"
+QUICKBOOKS_APP_KEY="qyprdRQ8jzw8c83JDT9mEfWns69bNT"
+QUICKBOOKS_APP_SECRET="glVdi3UXU3gr6lB9EI8W5y19mHEspikNzc3RHkHM"
+QUICKBOOKS_APP_CALLBACK_URL="http://127.0.0.1:5000/connect/quickbooks/callback/"
+
+qb = QuickBooks(
+    consumer_key = QUICKBOOKS_APP_KEY,
+    consumer_secret = QUICKBOOKS_APP_SECRET,
+    callback_url = QUICKBOOKS_APP_CALLBACK_URL,
+)
+
+
+
+
 app = Blueprint('quickbooks', __name__, template_folder='templates')
 @app.route('/connect/quickbooks')
 def quickbooks():
-    print 'inside quickbooks granturl'
-    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
-    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
-    qb = QuickBooks(
-             consumer_key=consumer_key, 
-             consumer_secret=consumer_secret, 
-             callback_url=callback_url)
-    global_qb = qb
     oauth_path = qb.get_authorize_url()
     return redirect(oauth_path)
 	
 @app.route('/connect/quickbooks/callback/')
 def quickbooks_callback():
 
-    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
-    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
-    print request.args
-    oauth_token = request.args.get('oauth_token')
     oauth_verifier = request.args.get('oauth_verifier')
-    oauth_token_secret = request.args.get('oauth_token_secret')
-    qb = QuickBooks(
-         consumer_key=consumer_key, 
-         consumer_secret=consumer_secret, 
-         callback_url=callback_url)
+    oauth_token = request.args.get('oauth_token')
+    print 'oauth token %s' %(oauth_token)
 
-    qb.my_get_access_tokens(oauth_token, oauth_verifier, oauth_token_secret, consumer_secret)
+    qb.set_up_service()
+    qb.get_access_tokens( oauth_verifier)
+    
     access_token = qb.access_token
     access_token_secret = qb.access_token_secret
-    print 'access token: %s' %(access_token)
-    print 'access token secret %s' %(access_token_secret)
     qbm = Quickbooks_model(oauth_verifier=oauth_verifier, realm_id=realm_id,username = current_user.email, access_token=access_token, access_token_secret=access_token_secret)
     db.session.add(qbm)
     db.session.commit()

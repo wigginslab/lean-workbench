@@ -54,7 +54,6 @@ class Google_Analytics_API:
 		db.session.commit()
 
 	def build_client(self, ga_user_credentials):
-		print 'build client'
 		credential_dict = ga_user_credentials.as_dict()
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"

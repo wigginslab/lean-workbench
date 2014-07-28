@@ -1,23 +1,38 @@
-import requests
-import time
-import random
-from hashlib import sha1
-import hmac
-import binascii
-import urllib
-from rauth import OAuth1Session, OAuth1Service
-
+'''Main class'''
 import xml.etree.ElementTree as ET
 
-import json
+import simplejson
 
+try:
+    from rauth import OAuth1Session, OAuth1Service
+except:
+    print("Please import Rauth:\n\n")
+    print("http://rauth.readthedocs.org/en/latest/\n")
 
-"""
-This main module is for talking to the QBOv3 API. There are other
-supporting modules for doing stuff with the results or read and query
-operations and for getting stuff ready for update, delete,
-and create operations
-"""
+try:
+
+    """
+    This main module is for talking to the QBOv3 API. There are other
+    supporting modules for doing stuff with the results or read and query
+    operations and for getting stuff ready for update, delete,
+    and create operations
+    """
+
+    import massage
+    import reference
+    import report
+
+except ImportError:
+
+    print("You won't be able to run some of the additional methods")
+
+    """
+    There are convenience-function calls to these companion modules, all
+    listed at the bottom here, and obvi those won't work alone, but
+    the rest of this module should be standalone
+    """
+
+    pass
 
 class QuickBooks():
     """A wrapper class around Python's Rauth module for Quickbooks the API"""
@@ -54,7 +69,7 @@ class QuickBooks():
 
         if 'consumer_secret' in args:
             self.consumer_secret = args['consumer_secret']
-                               
+
         if 'access_token' in args:
             self.access_token = args['access_token']
 
@@ -74,25 +89,17 @@ class QuickBooks():
 
         self._BUSINESS_OBJECTS = [
 
-        "Account","Attachable","Bill","BillPayment",
-        "Class","CompanyInfo","CreditMemo","Customer",
-        "Department","Employee","Estimate","Invoice",
-        "Item","JournalEntry","Payment","PaymentMethod",
-        "Preferences","Purchase","PurchaseOrder",
-        "SalesReceipt","TaxCode","TaxRate","Term",
-        "TimeActivity","Vendor","VendorCredit"
+            "Account","Attachable","Bill","BillPayment",
+            "Class","CompanyInfo","CreditMemo","Customer",
+            "Department","Employee","Estimate","Invoice",
+            "Item","JournalEntry","Payment","PaymentMethod",
+            "Preferences","Purchase","PurchaseOrder",
+            "SalesReceipt","TaxCode","TaxRate","Term",
+            "TimeActivity","Vendor","VendorCredit"
 
         ]
 
-
-
-
-    def get_authorize_url(self):
-        """Returns the Authorize URL as returned by QB, 
-        and specified by OAuth 1.0a.
-        :return URI:
-        """
-        print 'inside get_authorize_url'
+    def set_up_service(self):
         self.qbService = OAuth1Service(
                 name = None,
                 consumer_key = self.consumer_key,
@@ -102,13 +109,22 @@ class QuickBooks():
                 authorize_url = self.authorize_url,
                 base_url = None
             )
-        self.request_token, self.request_token_secret = self.qbService.get_request_token(
+
+    def get_authorize_url(self):
+        """Returns the Authorize URL as returned by QB, 
+        and specified by OAuth 1.0a.
+        :return URI:
+        """
+        if self.qbService is None:
+            self.set_up_service()
+        
+        self.request_token, self.request_token_secret = self.qbService \
+            .get_request_token(
                 params={'oauth_callback':self.callback_url}
             )
 
-        print self.qbService.get_request_token(
-                params={'oauth_callback':self.callback_url}
-        )
+        print self.request_token, self.request_token_secret
+
         return self.qbService.get_authorize_url(self.request_token)
 
     def get_access_tokens(self, oauth_verifier):
@@ -116,8 +132,6 @@ class QuickBooks():
         access_token and access_token_secret on the QB Object.
         :param oauth_verifier: the oauth_verifier as specified by OAuth 1.0a
         """
-        print self.request_token
-        print self.request_token_secret
         session = self.qbService.get_auth_session(
                 self.request_token, 
                 self.request_token_secret,
@@ -127,60 +141,6 @@ class QuickBooks():
         self.access_token_secret = session.access_token_secret
 
         return session
-    def my_get_access_tokens(self, oauth_token, oauth_verifier, oauth_token_secret, consumer_secret):
-        self.access_token_url = "https://oauth.intuit.com/oauth/v1/get_access_token"
-        # length of nonce
-        length = 36 
-        payload = {
-            'oauth_verifier': oauth_verifier,
-            'oauth_token': oauth_token,
-            'oauth_signature_method':'HMAC-SHA1',
-            'oauth_timestamp': str(int(time.time())),
-            'oauth_nonce':''.join([str(random.randint(0, 9)) for i in range(length)]),
-            'oauth_version':'1.0',
-            'oauth_consumer_key':self.consumer_key,
-            'oauth_consumer_secret':self.consumer_secret
-
-        }
-
-        encoded_keys = [urllib.quote(x) for x in payload.keys()]
-        print encoded_keys
-        encoded_dict = {}
-        for key in encoded_keys:
-            unencoded_value = payload[key]
-            encoded_value = urllib.quote(unencoded_value)
-            encoded_dict[key] = encoded_value
-        
-        
-        val_string = ""
-        print encoded_keys
-        sorted_enc_keys = sorted(encoded_keys)
-        print sorted_enc_keys
-        for i in range(len(sorted_enc_keys)):
-            key = encoded_keys[i]
-            value = encoded_dict[key]
-            substring = key+"="+value
-            if i < len(sorted_enc_keys)-1:
-                substring = substring+"&"
-            val_string = val_string+substring
-
-
-
-        raw = "GET&"+urllib.quote(self.access_token_url)+val_string
-        hash_key = consumer_secret + "&" +self.request_token_secret 
-
-        hashed = hmac.new(key, raw, sha1)
-        signature = binascii.b2a_base64(hashed.digest()).rstrip('\n')
-
-        payload['oauth_signature'] = signature
-        print payload
-
-        r = requests.get(self.access_token_url, params=payload)
-
-        print r.url
-        print r.text
-        print r.json
-        return r.json
 
     def create_session(self):
         if (self.consumer_secret and 
@@ -201,14 +161,14 @@ class QuickBooks():
         original_payload =''):
         """ Wrapper script around keep_trying to fetch more results if 
         there are more. """
-        
+
         # 500 is the maximum number of results returned by QB
 
         max_results = 500
         start_position = 0
         more = True
         data_set = []
-        url = self.base_url_v3 + "/company/%s/query" % self.company_id
+        url = self.base_url_v3 + "/company/{}/query".format(self.company_id)
 
         # Edit the payload to return more results.
         
@@ -229,7 +189,7 @@ class QuickBooks():
                     #print "Query OK, no results: %s" % r_dict['QueryResponse']
                     return []
                 else:
-                    print "FAILED", r_dict
+                    print("FAILED", r_dict)
                     r_dict = self.hammer_it(r_type,
                                               url,
                                               payload,
@@ -249,7 +209,7 @@ class QuickBooks():
                     if result_count < max_results:
                         more = False
                 except KeyError:
-                    print "\n\n ERROR", r_dict
+                    print("\n\n ERROR", r_dict)
                     pass
 
             # Just some math to prepare for the next iteration
@@ -257,7 +217,7 @@ class QuickBooks():
                 start_position = 1
 
             start_position = start_position + max_results
-            payload = "%s STARTPOSITION %s MAXRESULTS %s" % (original_payload, 
+            payload = "{0} STARTPOSITION {1} MAXRESULTS {2}".format(original_payload, 
                     start_position, max_results)
 
 
@@ -276,39 +236,40 @@ class QuickBooks():
         """
     
         if qbbo not in self._BUSINESS_OBJECTS:
-            raise Exception("%s is not a valid QBO Business Object." % qbbo,
+            raise Exception("{} is not a valid QBO Business Object." % qbbo,
                             " (Note that this validation is case sensitive.)")
 
-        url = "https://qb.sbfinance.intuit.com/v3/company/%s/%s" % \
-              (self.company_id, qbbo.lower())
+        url = "https://qb.sbfinance.intuit.com/v3/company/{0}/{1}".format(
+              self.company_id, qbbo.lower())
 
         if self.verbose:
 
-            print "About to create a %s object with this request_body:" \
-                % qbbo
-            print request_body
+            print("About to create a %s object with this request_body:".format(\
+                qbbo))
+            print(request_body)
 
         new_object = self.hammer_it("POST", url, request_body, content_type)\
                      [qbbo]
-        
+
         new_Id     = new_object["Id"]
 
         attr_name = qbbo+"s"
-        
+
         if not hasattr(self,attr_name):
 
             if self.verbose:
-                print "Creating a %ss attribute for this session." % qbbo
+                print("Creating a %ss attribute for this\
+                    session.".format(qbbo))
 
             setattr(self, attr_name, {new_Id:new_object})
 
         else:
-            
+
             if self.verbose:
-                print "Adding this new %s to the existing set of them." \
-                    % qbbo
-                print json.dumps(new_object, indent=4)
-                
+                print("Adding this new %s to the existing set of them.".format(
+                    qbbo))
+                print(json.dumps(new_object, indent=4))
+
             getattr(self, attr_name)[new_Id] = new_object
 
         return new_object
@@ -338,9 +299,9 @@ class QuickBooks():
                 content_type="text", accept = 'json'):
         """
         A slim version of simonv3's excellent keep_trying method. Among other
-         trimmings, it assumes we can only use v3 of the
-         QBO API. It also allows for requests and responses
-         in xml OR json. (No xml parsing added yet but the way is paved...)
+        trimmings, it assumes we can only use v3 of the
+        QBO API. It also allows for requests and responses
+        in xml OR json. (No xml parsing added yet but the way is paved...)
         """
 
         if self.session != None:
@@ -360,7 +321,7 @@ class QuickBooks():
 
         while trying:
             tries += 1
-                  
+
 
             headers = {
                     'Content-Type': 'application/%s' % content_type,
@@ -372,13 +333,13 @@ class QuickBooks():
                                      data = request_body)
 
             if accept == "json":
-                print headers
-                # if unauthorized
+
                 if r.status_code == 401:
-                    print r.text
+
                     raise Exception('Query object is not authorized to make that request.')
+
                 result = r.json()
-                
+
                 if "Fault" in result and result["Fault"]\
                    ["type"] == "ValidationFault":
 
@@ -388,12 +349,12 @@ class QuickBooks():
 
                     trying = False
                     print_error = True
-                    
+
 
                 elif tries >= 6:
 
                     trying = False
-                  
+
                     if "Fault" in result:
                         print_error = True
 
@@ -415,12 +376,11 @@ class QuickBooks():
     def get_single_object(self, qbbo, pk=None):
         if pk:
             if qbbo not in self._BUSINESS_OBJECTS:
-                raise Exception("%s not in list of QBO Business Objects." %  \
-                            qbbo + " Please use one of the " + \
-                            "following: %s" % self._BUSINESS_OBJECTS)
-            
+                raise Exception("{0} not in list of QBO Business Objects.\n\
+                                Please use one of the following:{1}".format(
+                                    qbo, self._BUSINESS_OBJECTS))
 
-            url = self.base_url_v3 + "/company/%s/%s/%s/" % (
+            url = self.base_url_v3 + "/company/{0}/{1}/{2}/".format(
                                                             self.company_id, 
                                                             qbbo.lower(),
                                                             pk)
@@ -431,7 +391,7 @@ class QuickBooks():
         else:
             return {}
 
-    def query_objects(self, business_object, params={}, query_tail = ""):
+    def query_objects(self, business_object, fields='*', params={}, query_tail = ""):
         """
         Runs a query-type request against the QBOv3 API
         Gives you the option to create an AND-joined query by parameter
@@ -441,16 +401,15 @@ class QuickBooks():
         """
 
         if business_object not in self._BUSINESS_OBJECTS:
-            raise Exception("%s not in list of QBO Business Objects." %  \
-                            business_object + " Please use one of the " + \
-                            "following: %s" % self._BUSINESS_OBJECTS)
+            raise Exception("{0} not in list of QBO Business Objects.\n\
+                            Please use one of the following: {1}".format(
+                                business_object, self._BUSINESS_OBJECTS))
 
-        #eventually, we should be able to select more than just *,
-        #but chances are any further filtering is easier done with Python
-        #than in the query...
+        if isinstance(fields, list):
+            fields = ','.join(fields)
 
-        query_string="SELECT * FROM %s" % business_object
-        
+        query_string="SELECT {0} FROM {1}".format(fields, business_object)
+
         if query_tail == "" and not params == {}:
 
             #It's not entirely obvious what are valid properties for
@@ -467,22 +426,19 @@ class QuickBooks():
             }
 
             p = params.keys()
-            
+
             #only validating the property name for now, not the DataType
             if p[0] not in props:
-                raise Exception("Unfamiliar property: %s" % p[0])
+                raise Exception("Unfamiliar property: {0}".format(p[0]))
 
-            query_string+=" WHERE %s %s %s" % (p[0],
-                                               params[p[0]][0],
-                                               params[p[0]][1])
+            query_string+=" WHERE {0} {1} {2}".format(p[0], params[p[0]][0], params[p[0]][1])
 
             if len(p)>1:
                 for i in range(1,len(p)+1):
                     if p[i] not in props:
-                        raise Exception("Unfamiliar property: %s" % p[i])
-                    
-                    query_string+=" AND %s %s %s" % (p[i],
-                                                     params[p[i]][0],
+                        raise Exception("Unfamiliar property: {}".format(p[i]))
+
+                    query_string+=" AND {0} {1} {2}".format(p[i], params[p[i]][0],
                                                      params[p[i]][1])
 
         elif not query_tail == "":
@@ -492,7 +448,9 @@ class QuickBooks():
 
         #CAN ONE SESSION USE MULTIPLE COMPANIES?
         #IF NOT, REMOVE THE COMPANY OPTIONALITY
-        url = self.base_url_v3 + "/company/%s/query" % self.company_id
+        url = self.base_url_v3 + "/company/{}/query".format(self.company_id)
+
+        #print query_string
 
         results = self.query_fetch_more(r_type="POST",
                                         header_auth=True,
@@ -516,7 +474,8 @@ class QuickBooks():
         #case-sensitive to what Intuit's documentation uses
 
         if qbbo not in self._BUSINESS_OBJECTS:
-            raise Exception("%s is not a valid QBO Business Object." % qbbo) 
+            raise Exception("{} is not a valid QBO Business\
+                    Object.".format(qbbo)) 
 
         attr_name = qbbo+"s"
 
@@ -527,7 +486,7 @@ class QuickBooks():
         if not hasattr(self,attr_name) or requery:
 
             if self.verbose:
-                print "Caching list of %ss." % qbbo
+                print("Caching list of {}s.".format(qbbo))
 
             object_list = self.query_objects(qbbo, params, query_tail)
 
@@ -718,4 +677,4 @@ class QuickBooks():
         #kwargs can include filter strings (to do a pnl of only recent
         #additions, for example)
 
-    	return report.pnl(self, period, start_date, end_date, **kwargs)
+        return report.pnl(self, period, start_date, end_date, **kwargs)
