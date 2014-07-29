@@ -33,7 +33,7 @@ class Google_Analytics_User_Querier:
 	    mined = Google_Analytics_Referrals_Model.query.filter_by(username=self.username).all()
 	    if mined:
 		# just mine yesterday
-		days_back = 1
+		days_back = 2
 		
 	    else:
 		# go a year back
