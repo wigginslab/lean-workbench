@@ -74,10 +74,50 @@ class Google_Analytics_DAO(object):
 		    date = visit_dict['date']
 		    count = visit_dict['visitors']
 		    values = [[date,count]] + values
-		lines.append({'key':cohort_name +'\'s visitors','values':values})
+		if values:
+		    lines.append({'key':cohort_name +'\'s visitors','values':values})
 	    lines.append({'key':"Your visitors",'values':user_visits})
 
 	    return make_response(dumps(lines))
+
+    def get_user_referrals(self, username, metric='source', start_date=None, end_date=None):
+	"""
+	Calculate page views per source, session view per source, and quantity per medium 
+	"""
+	if not start_date and not end_date:
+	    if metric == 'source':
+		unique_sources = db.session.query(Google_Analytics_Referrals_Model.source.distinct().label('source')).all()
+		sources = [Google_Analytics_Referrals_Model.query.filter_by(username=username, source=source).all() for source in unique_sources]
+		source_counts = []
+		for source in sources:
+		    counts = [s.sessions for s in source]
+		    count = sum(counts)
+		    source_counts.append(count)
+		source_names = [source[0].source for source in sources]
+		print source_counts
+		print source_names
+		source_count_list = []
+		for i in range(len(source_counts)):
+		    source_count_dict = {}
+		    source = source_names[i]
+		    source_count = source_counts[i]
+		    source_count_dict['key'] = source
+		    source_count_dict['y'] = source_count
+		    source_count_list.append(source_count_dict)
+		return make_response(dumps(source_count_list))
+
+	    elif metric == "mediums":
+		unique_mediums = db.session.query(Google_Analytics_Referrals_Model.medium.distinct().label('medium')).all()
+		mediums = [Google_Analytics_Referrals_Model.query.filter_by(username=username, medium=medium).all() for medium in unique_mediums]
+		medium_counts = []
+		for medium in mediums:
+		    counts = [m.sessions for m in medium]
+		    count = sum(counts)
+		    medium_counts.append(count)
+		medium_names = [medium[0].medium for medium in mediums]
+		print medium_counts
+		print medium_names
+		return ''
 
 class Google_analytics_resource(Resource):
     """
@@ -96,6 +136,8 @@ class Google_analytics_resource(Resource):
                         return GA.get_user_profiles()
                 elif metric == "visits":
                         return GA.get_user_profile_visits(username = current_user.email)
+		elif metric == "referrals":
+			return GA.get_user_referrals(username = current_user.email)
         else:
                 return jsonify(status=333)
 
@@ -124,5 +166,7 @@ class Google_analytics_resource(Resource):
             print 'committed data' 
             db.session.close()
             return jsonify(status=200,message="success!")
-            if metric == "visits":
-                visits =  GA.get_user_profile_visits()
+	if metric == "visits":
+            visits =  GA.get_user_profile_visits()
+
+
