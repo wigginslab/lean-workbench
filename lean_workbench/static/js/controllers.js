@@ -151,7 +151,29 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
                     '<p>' +  y + ' at ' + x + '</p>'
         }
     };	 
- 
+
+
+     $scope.donutToolTipContentFunction = function(){
+	    return function(key,  y, e, graph) {
+		return  'source: ' + key + '<br>' +'sessions: ' +y; 
+	    }
+	};	 
+
+
+
+	$scope.donutXFunction = function(){
+	    return function(d) {
+		return d.key;
+	    };
+	}
+	$scope.donutYFunction = function(){
+	    return function(d) {
+		return d.y;
+	    };
+	}
+
+
+
 	 $http.get(
         '/api/v1/twitter'
       ).success(
@@ -178,6 +200,18 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 
 	     }
       )
+    
+	  $http.get(
+	    '/api/v1/google-analytics?metric=referrals'
+	  ).success(
+	    function(data) {
+	      $scope.googleSourceData = data;
+	    }
+	  ).error(function(data){
+		 }
+	  )
+
+
 
         $http.get(
         '/api/v1/facebook'
