@@ -90,3 +90,15 @@ class Google_Analytics_Visitors(db.Model):
         else:
             return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.new_visits]
 
+class Google_Analytics_Referrals_Model(db.Model):
+    """
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    date = db.Column(db.DateTime, default=datetime.datetime.now())
+    source = db.Column(db.String)
+    medium = db.Column(db.String)
+    sessions = db.Column(db.Integer)
+    pageviews = db.Column(db.Integer)
+    session_duration = db.Column(db.Float)
+    exits = db.Column(db.Integer)
