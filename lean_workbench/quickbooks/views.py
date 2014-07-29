@@ -20,8 +20,6 @@ qb = QuickBooks(
 )
 
 
-
-
 app = Blueprint('quickbooks', __name__, template_folder='templates')
 @app.route('/connect/quickbooks')
 def quickbooks():
@@ -35,7 +33,7 @@ def quickbooks_callback():
     oauth_token = request.args.get('oauth_token')
     print 'oauth token %s' %(oauth_token)
 
-    qb.set_up_service()
+    #qb.set_up_service()
     qb.get_access_tokens( oauth_verifier)
     
     access_token = qb.access_token
