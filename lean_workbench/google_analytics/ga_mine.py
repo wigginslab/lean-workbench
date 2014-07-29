@@ -1,6 +1,6 @@
 from google_time_string import Google_Time_String
 from datetime import datetime, timedelta
-from google_analytics_models import Google_Analytics_Visitors, Google_Analytics_User_Model, db
+from google_analytics_models import Google_Analytics_Visitors, Google_Analytics_Referrals_Model, Google_Analytics_User_Model, db
 from google_analytics_client import Google_Analytics_API
 import json 
 
@@ -17,7 +17,7 @@ def mine_visits(username=None):
 			ga = Google_Analytics_User_Querier(username=ga_user.username)
 			# get the latest visit data
 			ga.get_new_user_visit_data()
-                        #ga.get_referral_data()
+                        ga.get_referral_data()
 
 class Google_Analytics_User_Querier:
 	"""
@@ -29,22 +29,43 @@ class Google_Analytics_User_Querier:
 		print self.profile_id
         
         def get_referral_data(self):
-	        # start at yesterday
-		date = datetime.now()-timedelta(days=1)
-		# google string formatted date
-		google_date = Google_Time_String(str(date))
-		g = Google_Analytics_API(self.username)
-                date = datetime.now()-timedelta(days=1)
-		google_date = Google_Time_String(str(date))
+	    # check to see if mined before
+	    mined = Google_Analytics_Referrals_Model.query.filter_by(username=self.username).all()
+	    if mined:
+		# just mine yesterday
+		days_back = 1
+		
+	    else:
+		# go a year back
+		days_back = 366
+	    date = datetime.now()
+	    # go backwards in time up to a year
+	    for backwards_days in range(1,days_back):
+		try:
+		    date = date - timedelta(days=1)
+		    # google string formatted date
+		    google_date = Google_Time_String(str(date))
+		    g = Google_Analytics_API(self.username)
 
-		referral_data = g.client.data().ga().get(
-				ids='ga:' + self.profile_id,
-				start_date=str(google_date),
-				end_date=str(google_date),
-                                sort="ga:sessions",
-                                dimensions='ga:source,ga:medium',
-                                metrics='ga:sessions,ga:pageviews,ga:sessionDuration,ga:exits').execute()
-                print referral_data
+		    referral_data = g.client.data().ga().get(
+				    ids='ga:' + self.profile_id,
+				    start_date=str(google_date),
+				    end_date=str(google_date),
+				    sort="ga:sessions",
+				    dimensions='ga:source,ga:medium',
+				    metrics='ga:sessions,ga:pageviews,ga:sessionDuration,ga:exits').execute()
+		    column_headers = referral_data.get('columnHeaders')
+		    rows =  referral_data.get('rows')
+
+		    for row in rows:
+			source, medium, sessions, pageviews, session_duration, exits = row
+			referral_model = Google_Analytics_Referrals_Model(username=self.username, date = date, source= source, medium=medium, sessions=sessions, pageviews=pageviews, session_duration=session_duration, exits = exits)
+			db.session.add(referral_model)
+			db.session.commit()
+
+		except Exception,e: print str(e)
+
+
 	def get_new_user_visit_data(self):
 		"""
 		Get all the visits data available for a user who just connected their Google Analytics account, or if visitor data exists get yesterday's data
