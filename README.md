@@ -76,6 +76,13 @@ to run cronjobs.
 
 Configuration
 --------------------
+The following environment variables must be set if you want to use quickbooks
+
+* QUICKBOOKS_OAUTH_CONSUMER_KEY
+* QUICKBOOKS_OAUTH_CONSUMER_SECRET
+* QUICKBOOKS_APP_TOKEN
+* QUICKBOOKS_CALLBACK_URL
+
 The following variables must be set in an object called UserConfig in lean_workbench/user_config.py
 
 * SQLALCHEMY_DATABASE_URI - url to a sqlalchemy compatible database
@@ -84,6 +91,7 @@ The following variables must be set in an object called UserConfig in lean_workb
 * SECURITY_PASSWORD_SALT - secret for salting passwords (nomz)
 * CELERY_BROKER_URL - where to store celery jobs
 * CELERY_RESULTS_BACKEND - can equal CELERY_BROKER_URL
+* HOST_URL - where the website is being server (by default 127.0.0.1:5000)
 
 For each of these APIs you want to use
 

@@ -6,7 +6,7 @@ project_name="leanworkbench"
 
 class Dev(UserConfig):
 	DEBUG = True
-
+        HOST_URL = "http://127.0.0.1:5000"
 	# Setup Flask-Security users
 	SECURITY_PASSWORD_HASH = "bcrypt"
 	SECURITY_EMAIL_SENDER = "noreply@leanworkbench.com"

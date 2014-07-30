@@ -1,8 +1,9 @@
 from quickbooks_model import *
 from quickbooks import QuickBooks
 import sys
+import traceback
 
-def mine_qb_data(consumer_key,consumer_secret, access_token, username=None):
+def mine_qb_data(consumer_key,consumer_secret,  username=None):
 	if username:
 		qb_users = [Quickbooks_model.query.filter_by(username=username)].last()
                 qb_users[0].active = True
@@ -12,14 +13,14 @@ def mine_qb_data(consumer_key,consumer_secret, access_token, username=None):
 		qb_users = Quickbooks_model.query.all()
 
 	for qb_user in qb_users:
-		access_token_secret = qb_user.access_token
+		access_token_secret = qb_user.access_token_secret
 		realm_id = qb_user.realm_id
-        print consumer_key
-        print consumer_secret
-        print access_token
-        print access_token_secret
-        print realm_id
-        """
+                access_token = qb_user.access_token
+        print "consumer_key %s" %(consumer_key)
+        print "consumer_secret %s" %(consumer_secret)
+        print "access_token %s" %(access_token)
+        print "access_token_secret %s" %(access_token_secret)
+        print "realm_id %s" %(realm_id)
         qb_querier = QuickBooks(
             consumer_key=consumer_key,
             consumer_secret=consumer_secret,
@@ -27,7 +28,6 @@ def mine_qb_data(consumer_key,consumer_secret, access_token, username=None):
             access_token_secret=access_token_secret,
             company_id=realm_id
         )
-        """
         business_objects=["Account","Attachable","Bill","BillPayment",
                 "Class","CompanyInfo","CreditMemo","Customer",
                 "Department","Employee","Estimate","Invoice",
@@ -36,17 +36,16 @@ def mine_qb_data(consumer_key,consumer_secret, access_token, username=None):
                 "SalesReceipt","TaxCode","TaxRate","Term",
                 "TimeActivity","Vendor","VendorCredit"]
         qb_querier = QuickBooks(
-                consumer_key="qyprdRIvDMh1GfAyToh39mK1WFlIDW",
-                consumer_secret="5FYBaYYwMJLNt7ZrQsvsCP1ZBgtAYRo0QJd7ea79",
-                access_token="e31e4187b9e5bb4bd2b94bdb9546dc76394a",
-                access_token_secret="qyprdLT4aIijOVq8LJKn8GUC6228ninIZXhzeZEqLvOdyKiF"
+                consumer_key=consumer_key,
+                consumer_secret=consumer_secret,
+                access_token=access_token,
+                access_token_secret=access_token_secret
         )
-        print qb_querier.get_access_tokens('yxe21zk')
-        sys.stop()
         for obj in business_objects:
             try:
-                invoices = qb_querier.query_objects(obj)           
+                invoices = qb_querier.query_objects("Bill")           
                 print invoices 
-            except:	
+            except:
+                print traceback.format_exc()
                 print obj + ' exception'
-                
+                break 
