@@ -11,16 +11,16 @@ class Quickbooks_model(db.Model):
         # company identifier
 	realm_id = db.Column(db.String)
         # already mined once?
-        active = db.Column(db.Boolean)
+        active = db.Column(db.Boolean, default=False)
 
-	def __init__(self, username, access_token, oauth_verifier, realm_id):
+	def __init__(self, username, access_token, oauth_verifier, realm_id, access_token_secret):
 		self.created = datetime.datetime.now()
 		self.updated = datetime.datetime.now()
 		self.username = username
 		self.access_token = access_token
 		self.oauth_verifier = oauth_verifier
 		self.realm_id = realm_id
-
+                self.access_token_secret = access_token_secret
 class Quickbooks_balance(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	created = db.Column(db.DateTime)

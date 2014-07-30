@@ -7,40 +7,40 @@ import oauth2 as oauth
 from quickbooks_model import *
 from flask.ext.security import current_user
 from quickbooks import QuickBooks
+import os
 
 app = Blueprint('quickbooks', __name__, template_folder='templates')
+
+consumer_key = os.getenv('QUICKBOOKS_OAUTH_CONSUMER_KEY')
+consumer_secret = os.getenv('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
+app_token = os.getenv('QUICKBOOKS_APP_TOKEN')
+callback_url = os.getenv('QUICKBOOKS_CALLBACK_URL')
+qb = QuickBooks(
+ consumer_key=consumer_key, 
+ consumer_secret=consumer_secret, 
+ callback_url=callback_url)
+
 @app.route('/connect/quickbooks')
 def quickbooks():
-    print 'inside quickbooks granturl'
-    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
-    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
-    qb = QuickBooks(
-             consumer_key=consumer_key, 
-             consumer_secret=consumer_secret, 
-             callback_url=callback_url)
-    global_qb = qb
+    print 'original qb for auth url'
+    print qb
     oauth_path = qb.get_authorize_url()
+    print qb.qbService
     return redirect(oauth_path)
 	
 @app.route('/connect/quickbooks/callback/')
 def quickbooks_callback():
 
-    consumer_key = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-    consumer_secret = current_app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-    app_token = current_app.config.get('QUICKBOOKS_APP_TOKEN')
-    callback_url = current_app.config.get('QUICKBOOKS_CALLBACK_URL')
-    print request.args
     oauth_token = request.args.get('oauth_token')
     oauth_verifier = request.args.get('oauth_verifier')
     oauth_token_secret = request.args.get('oauth_token_secret')
-    qb = QuickBooks(
-         consumer_key=consumer_key, 
-         consumer_secret=consumer_secret, 
-         callback_url=callback_url)
-
-    qb.my_get_access_tokens(oauth_token, oauth_verifier, oauth_token_secret, consumer_secret)
+    realm_id = request.args.get('realmId')
+    print 'qb in callback'
+    print qb
+    print qb.qbService
+    
+    qb.get_access_tokens(oauth_verifier)
+    
     access_token = qb.access_token
     access_token_secret = qb.access_token_secret
     print 'access token: %s' %(access_token)
