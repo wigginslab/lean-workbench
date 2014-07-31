@@ -36,8 +36,6 @@ def quickbooks_callback():
     oauth_token_secret = request.args.get('oauth_token_secret')
     realm_id = request.args.get('realmId')
     print 'qb in callback'
-    print qb
-    print qb.qbService
     
     qb.get_access_tokens(oauth_verifier)
     
