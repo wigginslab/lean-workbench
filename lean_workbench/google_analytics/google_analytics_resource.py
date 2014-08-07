@@ -127,9 +127,13 @@ class Google_analytics_resource(Resource):
         print 'ga get'
         args =  request.args
         metric = args.get('metric')
-
+        print 'metric %s' %(metric)
         profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
-        profile_id = profile.id
+        print 'profile:'
+        print profile
+        profile_id = profile.profile_id
+        print 'profile_id:'
+        print profile_id
         if profile :
                 GA = Google_Analytics_DAO(username = current_user.email)
                 if not metric:
