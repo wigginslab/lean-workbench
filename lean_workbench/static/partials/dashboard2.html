@@ -43,7 +43,7 @@
                             </div>
                             <div ng-hide="has_twitterData">
                                 You have not connected a twitter account yet.                   </div>                 
-                            <h2>Google Analytics Data</h2>
+                            <h2>Google Analytics Visitor Data</h2>
                         <div ng-controller="DashboardControllerTwo" ng-show="has_ga_data">
                             <nvd3-stacked-area-chart
                                 data="googleData"
@@ -62,26 +62,24 @@
                                 xAxisTickFormat="xAxisTickFormat()">
 
 				</nvd3-stacked-area-chart>
-				        <svg></svg>
-    <nvd3-pie-chart
-            data="googleSourceData"
-            id="google_source"
-            showLabels="true"
-            x="donutXFunction()"
-	    y="donutYFunction()"
-	    tooltips="true"
-	    toolTipContent="donutToolTipContentFunction()" 
+                                <svg></svg>
+                                <h2>Google Analytics Referral Data</h2>
+                                    <nvd3-pie-chart
+                                            data="googleSourceData"
+                                            id="google_source"
+                                            showLabels="true"
+                                            x="donutXFunction()"
+                                            y="donutYFunction()"
+                                            tooltips="true"
+                                            toolTipContent="donutToolTipContentFunction()" 
 
-	    donut="true"
-            margin="{left:0,top:0,bottom:0,right:0}"
-            donutRatio=".5"
-            donutLabelsOutside="true">
-        <svg></svg>
-    </nvd3-pie-chart>
-
-
-
-                        </div>
+                                            donut="true"
+                                            margin="{left:0,top:0,bottom:0,right:0}"
+                                            donutRatio=".5"
+                                            donutLabelsOutside="true">
+                                        <svg></svg>
+                                    </nvd3-pie-chart>
+                            </div>
                         <div ng-hide="has_ga_data">
                             You have not connected a Google Analytics account.
                         </div>
