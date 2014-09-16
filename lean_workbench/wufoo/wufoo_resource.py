@@ -2,7 +2,7 @@ import sys
 import os
 from wufoo_model import Wufoo_Survey_Model
 from flask.ext.restful import Resource, reqparse
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from database import db
 from json import dumps
@@ -17,10 +17,13 @@ class Wufoo_resource(Resource):
 
     def get(self, **kwargs):
         print 'inside wufoo  get'
-        if current_user.is_anonymous():
-            return make_response(dumps([{"status":400}]))
-        else:
-            return make_response(dumps({"status":200}))
+        try:
+            print request.args
+            print request.data
+            print dir(request)
+        except:
+            print traceback.print_exc
+        return jsonify(status=200)
 
     def post(self, **kwargs):
         """

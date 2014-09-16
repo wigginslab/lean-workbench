@@ -49,7 +49,8 @@ class Google_Analytics_DAO(object):
 	return JSON of user and cohort visits (if available)
         """
 	cohorts = current_user.roles
-    
+        print 'cohorts'
+        print cohorts
         user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
 	
         user_visitors_dict_list = [x.as_dict() for x in user_visitors]
@@ -58,7 +59,7 @@ class Google_Analytics_DAO(object):
                 date = visit_dict['date']
                 count = visit_dict['visitors']
                 user_visits.append([date,count])
-	if not cohorts:
+	if cohorts:
 	    return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
 	else:
 	    start = user_visitors[-1].date
@@ -127,9 +128,13 @@ class Google_analytics_resource(Resource):
         print 'ga get'
         args =  request.args
         metric = args.get('metric')
-
+        print 'metric %s' %(metric)
         profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
-        profile_id = profile.id
+        print 'profile:'
+        print profile
+        profile_id = profile.profile_id
+        print 'profile_id:'
+        print profile_id
         if profile :
                 GA = Google_Analytics_DAO(username = current_user.email)
                 if not metric:
