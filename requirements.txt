@@ -17,6 +17,6 @@ itsdangerous
 requests
 celery
 redis
-iron_worker
 oauth2
 rauth
+nose

@@ -49,7 +49,7 @@ class Google_Analytics_API:
 		url = 'https://accounts.google.com/o/oauth2/token'
                 values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token", "access_type":"offline"}
                 print 'refresh_token POST values: ' + str(values)
-		# encode data
+	        # encode data
 		data = urllib.urlencode(values)
                 print 'changed'
                 print 'data:' + str(data)
@@ -77,7 +77,7 @@ class Google_Analytics_API:
                 print credential_dict
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
-		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token?approval_prompt=force"
+		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
                 credential_dict['token_expiry'] = 3600
