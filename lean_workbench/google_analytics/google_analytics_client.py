@@ -39,7 +39,7 @@ class Google_Analytics_API:
 		"""
 		Refresh the access token if expired
 		"""
-		url = 'https://accounts.google.com/o/oauth2/token'
+		url = 'https://accounts.google.com/o/oauth2/auth'
 		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
 		print values
 		# encode data
@@ -57,7 +57,7 @@ class Google_Analytics_API:
 		credential_dict = ga_user_credentials.as_dict()
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
-		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token?approval_prompt=force"
+		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))

@@ -231,23 +231,13 @@ class Test(Command):
     """
     Run tests
     """
+    def run(self):
+        from flask import request
 
-    start_discovery_dir = "tests"
 
-    def get_options(self):
-        return [
-            Option('--start_discover', '-s', dest='start_discovery',
-                   help='Pattern to search for features',
-                   default=self.start_discovery_dir),
-        ]
+        app = app_factory(config.Dev)
+        with app.test_client() as c:
+            rv = c.get('/?vodka=42')
+            assert request.args['vodka'] == '42e'
 
-    def run(self, start_discovery):
-        import unittest
 
-        if os.path.exists(start_discovery):
-            argv = [config.project_name, "discover"]
-            argv += ["-s", start_discovery]
-            print argv
-            unittest.main(argv=argv)
-        else:
-            print("Directory '%s' was not found in project root." % start_discovery)
