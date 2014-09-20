@@ -390,9 +390,11 @@ function StickController($scope, $http, GoogleAnalytics){
                                     $scope.has_GA = true;
                             }
                             else{
-                                $scope.has_GA = false;
+                                if (data.hasOwnProperty('credentials')){
+                                    $scope.has_GA=true;
                             }
-				}
+                            }
+		    }
 	            )
 
 	}
@@ -402,7 +404,6 @@ function StickController($scope, $http, GoogleAnalytics){
 			).success(
 			function(data){
 				$scope.GA_profiles = data;
-				//$scope.has_GA = true;	
 			}
 		).error(function(data){
 			}

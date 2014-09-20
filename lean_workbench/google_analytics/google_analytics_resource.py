@@ -145,7 +145,9 @@ class Google_analytics_resource(Resource):
                 GA = Google_Analytics_DAO(username = current_user.email)
                 if not metric:
                     if profile:
-                        return make_response(dumps(GA.get_user_profiles))
+                        print 'get user profiles'
+                        profiles = GA.get_user_profiles()
+                        return make_response(dumps(profiles))
                     else:
                         
                         return jsonify(status=666)
