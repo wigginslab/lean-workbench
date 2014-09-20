@@ -22,13 +22,19 @@ class Google_Analytics_API:
 		"""
 		# get latest credentials
 		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
-		if self.credentials != []:
+                print self.credentials
+		if self.credentials:
+                        print 'there  are ga  credentials'
                         
-			expires_on = self.credentials.token_expiry
+		        expires_on = self.credentials.token_expiry
+                        print 'expires on' + str(expires_on)
 			current_time = datetime.now()
+                        print 'current_time '+str(current_time)
                         credentials_dict = self.credentials.as_dict()
                         self.credentials_dict = credentials_dict
+                        print 'about to compare times'
                         if current_time > expires_on:
+                            print 'about to refresh token'
                             self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
                         print 'GA credentials: ' + str(self.credentials_dict)
                         self.client = self.build_client(self.credentials)
@@ -67,16 +73,21 @@ class Google_Analytics_API:
 	def build_client(self, ga_user_credentials):
 		print 'build client'
 		credential_dict = ga_user_credentials.as_dict()
+                print 'credentials: '
+                print credential_dict
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
 		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/token?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
+                credential_dict['token_expiry'] = 3600
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
 		http = httplib2.Http()
+                print 'credentials built'
 		http = credentials.authorize(http)  
 		#  Build the Analytics Service Object with the authorized http object
 		client = build('analytics', 'v3', http=http)
+                print 'client built'
 		return client
 
 	def step_one(self, google_analytics_callback_url, google_analytics_client_id):
@@ -115,6 +126,7 @@ class Google_Analytics_API:
 		"""
 		print 'saving credentials'
 		# store information necessary for building client
+                credentials_dict['token_expiry'] = datetime.now() + timedelta(hours=1)
                 print credentials_dict
 		GAUM = Google_Analytics_User_Model(credentials_dict)
 		db.session.add(GAUM)

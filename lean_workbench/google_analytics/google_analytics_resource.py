@@ -135,6 +135,8 @@ class Google_analytics_resource(Resource):
         profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
         print 'profile:'
         print profile
+        if not profile:
+            return jsonify(authed='no')
         profile_id = profile.profile_id
         print 'profile_id:'
         print profile_id
@@ -142,7 +144,11 @@ class Google_analytics_resource(Resource):
                 print 'there is profile'
                 GA = Google_Analytics_DAO(username = current_user.email)
                 if not metric:
+                    if profile:
                         return make_response(dumps(GA.get_user_profiles))
+                    else:
+                        
+                        return jsonify(status=666)
                 elif metric == "visits":
                         return GA.get_user_profile_visits(username = current_user.email)
 		elif metric == "referrals":
@@ -152,10 +158,12 @@ class Google_analytics_resource(Resource):
                     GA = Google_Analytics_DAO(username = current_user.email)
                     print 'trying to get user profiles'
                     try:
+                        
+                        print 'attempting to get user profiles'
                         profiles = GA.get_user_profiles()
                         return make_response(dumps(profiles))
                     except:
-                        return jsonify(status=555)
+                        return jsonify(status=111)
 
     def post(self, **kwargs):
         """

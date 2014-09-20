@@ -376,20 +376,24 @@ function StickController($scope, $http, GoogleAnalytics){
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
-				'/connect/google-analytics'
-				).success(
-				function(data){
-					var status = data['status'];
-					if (data.hasOwnProperty('redirect_url')){
+                    '/connect/google-analytics'
+                    ).success(
+                    function(data){
+                            var authed = data['authed'];
+                            console.log(authed)
+                            if (data.hasOwnProperty('redirect_url')){
 
-								var redirect_url = data['redirect_url'];
-								window.location = redirect_url;
-						}
-					if (status == 200){
-						$scope.has_GA = true;
-					}
+                                var redirect_url = data['redirect_url']
+                                window.location = redirect_url;
+                            }
+                            if (authed == true){
+                                    $scope.has_GA = true;
+                            }
+                            else{
+                                $scope.has_GA = false;
+                            }
 				}
-			)
+	            )
 
 	}
 
@@ -398,7 +402,7 @@ function StickController($scope, $http, GoogleAnalytics){
 			).success(
 			function(data){
 				$scope.GA_profiles = data;
-				$scope.has_GA = true;	
+				//$scope.has_GA = true;	
 			}
 		).error(function(data){
 			}

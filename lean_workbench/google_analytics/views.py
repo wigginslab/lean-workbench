@@ -9,17 +9,19 @@ app = Blueprint('google_analytics', __name__, template_folder='templates')
 @auth_token_required
 @app.route('/connect/google-analytics', methods=['GET', 'POST'])
 def google_analytics_oauth():
-	google_analytics_callback_url = current_app.config['GOOGLE_ANALYTICS_CALLBACK_URL']
-	google_analytics_client_id = current_app.config['GOOGLE_ANALYTICS_CLIENT_ID']
-	username = current_user.email
-	if not username:
+        print 'inside connect/google-analytics'
+	google_analytics_callback_url = current_app.config.get('GOOGLE_ANALYTICS_CALLBACK_URL')
+	google_analytics_client_id = current_app.config.get('GOOGLE_ANALYTICS_CLIENT_ID')
+	if not current_user.is_authenticated():
 		print 'not logged in'
 		return redirect(url_for('index'))
+        username = current_user.email
 	GA_API = Google_Analytics_API(username)
+        print 'got google analytics API'
 	if GA_API.credentials:
                 print 'inside GA_API.credentials if'
-		expires_on = GA_API.credentials.as_dict()['token_expiry']
-		current_time = datetime.datetime.now().isoformat()
+		expires_on = GA_API.credentials.token_expiry
+		current_time = datetime.datetime.now()
 		# if credentials have not expired
 		if expires_on > current_time:
 			print GA_API.credentials.as_dict()
