@@ -9,6 +9,7 @@ import json
 from datetime import datetime, timedelta 
 from database import db
 from flask import current_app
+import sys
 
 class Google_Analytics_API:
 
@@ -20,19 +21,19 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		# get latest credentials
-		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).all()
-		print self.credentials
+		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
 		if self.credentials != []:
-			self.credentials = self.credentials[-1]
-			expires_on = self.credentials.as_dict()['token_expiry']
-			current_time = datetime.now().isoformat()
-			print self.credentials
+                        
+			expires_on = self.credentials.token_expiry
+			current_time = datetime.now()
                         credentials_dict = self.credentials.as_dict()
                         self.credentials_dict = credentials_dict
-                        self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+                        if current_time > expires_on:
+                            self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+                        print 'GA credentials: ' + str(self.credentials_dict)
                         self.client = self.build_client(self.credentials)
 		else:
-			print "no credentials"
+			print "no GA  credentials"
 			return None
 
 	def refresh_token(self,refresh_token,client_id, client_secret):
@@ -40,18 +41,28 @@ class Google_Analytics_API:
 		Refresh the access token if expired
 		"""
 		url = 'https://accounts.google.com/o/oauth2/token'
-		values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
-		print values
+                values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token", "access_type":"offline"}
+                print 'refresh_token POST values: ' + str(values)
 		# encode data
 		data = urllib.urlencode(values)
+                print 'changed'
+                print 'data:' + str(data)
 		# post request for refresh token
-		req = urllib2.Request(url, data)
-		response = urllib2.urlopen(req)
-		response_json = json.loads(response.read())
-		new_access_token = response_json["access_token"]
-		new_expiration_date = str(datetime.now() + timedelta(1))
-		self.credentials.token_expiry = new_expiration_date
-		db.session.commit()
+                try:
+		    req = urllib2.Request(url, data)
+                    print 'req: ' + req
+                    response = urllib2.urlopen(req)
+                    print 'response: ' + response
+                    response_json = json.loads(response.read())
+                    print 'google refresh token response json: ' + str(response_json)
+                    new_access_token = response_json["access_token"]
+                    new_expiration_date = datetime.now() + timedelta(hours=1)
+                    self.credentials.token_expiry = new_expiration_date
+                    db.session.add(self.credentials)
+                    db.session.commit()
+                    print 'done getting values from fresh_token'
+                except:
+                    print 'couldnt refresh credentials'
 
 	def build_client(self, ga_user_credentials):
 		print 'build client'
@@ -111,7 +122,10 @@ class Google_Analytics_API:
 		db.session.close()
 
 	def get_user_accounts(self):
+            print 'inisde get_user_accounts'
             accounts = self.client.management().accounts().list().execute()
+            print 'user accounts: '
+            print accounts
             return accounts
 
 	def get_profile_id(self):

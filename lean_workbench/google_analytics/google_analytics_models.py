@@ -12,7 +12,7 @@ class Google_Analytics_User_Model(db.Model):
     __tablename__ = "google_analytics_oauth_credentials"
 
     id = db.Column(db.Integer, primary_key=True)
-    token_expiry = db.Column(db.String)
+    token_expiry = db.Column(db.DateTime) 
     access_token = db.Column(db.String)
     client_id = db.Column(db.String)
     client_secret = db.Column(db.String)

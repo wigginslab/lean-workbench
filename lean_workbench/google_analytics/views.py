@@ -17,6 +17,7 @@ def google_analytics_oauth():
 		return redirect(url_for('index'))
 	GA_API = Google_Analytics_API(username)
 	if GA_API.credentials:
+                print 'inside GA_API.credentials if'
 		expires_on = GA_API.credentials.as_dict()['token_expiry']
 		current_time = datetime.datetime.now().isoformat()
 		# if credentials have not expired

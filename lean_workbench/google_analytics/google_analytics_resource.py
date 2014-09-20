@@ -37,12 +37,15 @@ class Google_Analytics_DAO(object):
         """
         Retrieve all userprofiles of a user
         """
+        print 'inside get user profiles'
+        print 'self.username :' + self.username
         g = Google_Analytics_API(self.username)
         if g:
+            print 'GA client exists'
             user_accounts = g.get_user_accounts()
             return user_accounts.get('items')
         else:
-            return None
+            return []
 
     def get_user_profile_visits(self, username):
         """
@@ -135,18 +138,25 @@ class Google_analytics_resource(Resource):
         profile_id = profile.profile_id
         print 'profile_id:'
         print profile_id
-        if profile :
+        if profile and profile_id:
+                print 'there is profile'
                 GA = Google_Analytics_DAO(username = current_user.email)
                 if not metric:
-                        return GA.get_user_profiles()
+                        return make_response(dumps(GA.get_user_profiles))
                 elif metric == "visits":
                         return GA.get_user_profile_visits(username = current_user.email)
 		elif metric == "referrals":
 			return GA.get_user_referrals(username = current_user.email)
         else:
-                return jsonify(status=333)
+                if profile:
+                    GA = Google_Analytics_DAO(username = current_user.email)
+                    print 'trying to get user profiles'
+                    try:
+                        profiles = GA.get_user_profiles()
+                        return make_response(dumps(profiles))
+                    except:
+                        return jsonify(status=555)
 
-                        
     def post(self, **kwargs):
         """
         Get profile-id
