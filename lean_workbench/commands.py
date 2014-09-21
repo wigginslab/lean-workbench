@@ -237,10 +237,9 @@ class Test(Command):
 
         app = app_factory(config.Dev)
         with app.test_client() as c:
-            rv = c.get('/?vodka=42')
-            from google_analytics_models import Google_Analytics_User_Model
+            from google_analytics.google_analytics_models import Google_Analytics_User_Model
             ga_users = Google_Analytics_User_Model.query.all()
             for user in ga_users:
-                assert ga_user.refresh_token != None
+                assert user.refresh_token != None
 
 

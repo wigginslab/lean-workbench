@@ -6,7 +6,7 @@ import time
 import oauth2 as oauth
 from quickbooks_model import *
 from flask.ext.security import current_user
-from quickbooks import QuickBooks
+from quickbooks_api import QuickBooks_API as QuickBooks
 
 QUICKBOOKS_TOKEN="dcb197a3b9244b41beb886bb327cc4e21bef"
 QUICKBOOKS_APP_KEY="qyprdRQ8jzw8c83JDT9mEfWns69bNT"
