@@ -29,36 +29,35 @@
 		<link rel="stylesheet" href="/static/bower_components/nvd3/nv.d3.css"/>
   </head>
   <body class="auth-application waiting-for-angular">
-	<nav class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation" ng-controller="NavController">
-	  <!-- Brand and toggle get grouped for better mobile display -->
-	  <div class="navbar-header">
-		<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-		  <span class="sr-only">Toggle navigation</span>
-		  <span class="icon-bar"></span>
-		  <span class="icon-bar"></span>
-		  <span class="icon-bar"></span>
-		</button>
-		<a class="navbar-brand" href="/dashboard">Lean Workbench</a>
-	  </div>
-	  <!-- Collect the nav links, forms, and other content for toggling -->
-	  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		<ul class="nav navbar-nav">
-			<li class="active"><a href="/">Home</a></li>
+      <div id="wrap">
+          <div id="main"  class="container clear-top">
+            <nav class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="navigation" ng-controller="NavController">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Lean Workbench</a>
+              </div>
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                        <li class="active"><a href="/">Home</a></li>
                         <!-- <li><a ng-click="scroll-to('features')">Features</a></li> -->
-			<li><a href="mailto:jen@leanworkbench.com">Contact Us</a></li>
-			<li><a id="login" class="pointer" ng-click="click_login()" style="display:none">Login</a></li>
-			 <li><a id="logout" class="pointer" ng-click="click_logout()" style="display:none">Logout</a></li>
-			
-		</ul>
-	  </div><!-- /.navbar-collapse -->
-	</nav>
-
-
-	<div ng-view style="margin-top: 50px;">
-	</div>
-
+                        <li><a href="mailto:jen@leanworkbench.com">Contact Us</a></li>
+                        <li><a id="login" class="pointer" ng-click="click_login()" style="display:none">Login</a></li>
+                         <li><a id="logout" class="pointer" ng-click="click_logout()" style="display:none">Logout</a></li>
+                </ul>
+              </div><!-- /.navbar-collapse -->
+            </nav>
+            <div ng-view style="margin-top: 50px;">
+            </div>
+          </div>
 	  <!-- FOOTER -->
-	  <footer>
+	  <footer class="footer">
 		<p>© 2014 Lean Workbench, Inc.</p>
 	  </footer>
 	</div><!-- /.container -->
