@@ -148,7 +148,6 @@ def configure_before_request(app):
 	pass
 
 
-
 def make_celery(app):
     celery = Celery(app.import_name, broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
@@ -193,9 +192,7 @@ def configure_views(app):
 	@app.route('/dashboard', methods=['POST', 'GET'])    
 	@app.route('/scale', methods=['POST', 'GET'])    
         @app.route('/dashboard2', methods=['POST', 'GET'])    
-
         @app.route('/results', methods=['POST', 'GET'])    
-        
 	def dashboard():
 		"""
 		"""
@@ -211,5 +208,4 @@ def configure_views(app):
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(UserResource, '/api/v1/users')
         api.add_resource(Ghosting_resource, '/api/v1/ghosting')
-
         api.add_resource(Scale_resource, '/api/v1/scale')

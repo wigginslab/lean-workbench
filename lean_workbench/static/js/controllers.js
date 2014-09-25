@@ -727,7 +727,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     $routeProvider
     .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
     .when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
-    .when('/dashboard', {templateUrl: 'static/partials/dashboard.html', controller: DashboardController})
+    .when('/dashboard', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
