@@ -1,6 +1,6 @@
 import sys
 import os
-from twitter_model import Twitter_model, Cohort_Tweet_Count_Model
+from twitter_model import TwitterModel, CohortTweetCountModel
 from flask.ext.restful import Resource, reqparse
 from flask import Flask, jsonify, request, make_response
 import os
@@ -8,10 +8,10 @@ from database import db
 from flask.ext.security import current_user
 from json import dumps
 
-class Twitter_DAO(object):
+class TwitterDAO(object):
 
     def __init__(self):
-        self.user_twitter = Twitter_model.query.filter_by(username=current_user.email).first()
+        self.user_twitter = TwitterModel.query.filter_by(username=current_user.email).first()
         print self.user_twitter
         try:
             self.twitter_handle = self.user_twitter.twitter_handle
@@ -21,12 +21,12 @@ class Twitter_DAO(object):
     def as_dict(self):
         return self.user_twitter.as_dict()
 
-class Twitter_resource(Resource):
+class TwitterResource(Resource):
     def get(self, **kwargs):
         metric = request.args.get('metric')
         if current_user.is_anonymous():
             return jsonify(status=400)
-        twitter = Twitter_DAO()
+        twitter = TwitterDAO()
         if twitter.user_twitter:
 	    cohorts = current_user.roles
             tracked_words = twitter.user_twitter.words
@@ -54,7 +54,7 @@ class Twitter_resource(Resource):
 		cohort_objs = []
 		for cohort in cohorts:
 		    cohort_name = cohort.name
-		    cohort_tweet_counts = Cohort_Tweet_Count_Model.query.filter_by(cohort_name=cohort_name).all()
+		    cohort_tweet_counts = CohortTweetCountModel.query.filter_by(cohort_name=cohort_name).all()
 		    values = [x.as_count() for x in cohort_tweet_counts]
 		    print values
 		    cohort_obj = {'values':values, 'key': cohort_name+'\'s average tweets'}
@@ -68,7 +68,7 @@ class Twitter_resource(Resource):
 
     def post(self):
         print 'inside twitter post\n'
-        twitter = Twitter_DAO()
+        twitter = TwitterDAO()
         print request.form
         metric = request.args.get('metric')
         print 'metric %s' %(metric)

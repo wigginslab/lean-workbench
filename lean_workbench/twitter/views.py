@@ -2,7 +2,7 @@ from flask import Blueprint, Response, render_template, request, session, redire
 url_for, make_response, current_app
 from flask.ext.security import current_user
 import os
-from twitter_model import Twitter_model, db
+from twitter_model import TwitterModel, db
 import urllib
 from twython import Twython
 
@@ -36,7 +36,7 @@ def twitter_oauth_callback():
 	user_oauth_token = final_step['oauth_token']
 	user_oauth_token_secret = final_step['oauth_token_secret']
 	twitter_username = final_step['screen_name']
-	twitter_row = Twitter_model({'username':current_user.email,
+	twitter_row = TwitterModel({'username':current_user.email,
 		'twitter_handle':twitter_username,
 		'oauth_token':user_oauth_token,
 		'oauth_token_secret':user_oauth_token_secret, 

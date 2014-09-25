@@ -5,7 +5,7 @@ company_tags_association = db.Table('company_tags_association',
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
 )
 
-class Crunchbase_Company_Model(db.Model):
+class CrunchbaseCompanyModel(db.Model):
 	__tablename__ = "crunchbase_company"
 	id = db.Column(db.Integer, primary_key = True)
 	name = db.Column(db.String)

@@ -4,7 +4,7 @@ import json
 import calendar
 import time
 import oauth2 as oauth
-from ghosting_model import Ghosting_model
+from ghosting_model import GhostingModel
 from flask.ext.security import current_user
 
 
@@ -15,7 +15,7 @@ def ghosting():
     # get the feature being ghosted
     feature = args.get('feature')
     username = current_user.email
-    ghost = Ghosting_model(feature=feature,username=username)
+    ghost = GhostingModel(feature=feature,username=username)
     db.session.add(ghost)
     db.session.commit()
     db.session.close()

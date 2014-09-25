@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, session, redirect, url_for, current_app
 from flask.ext.security import current_user
 import os
-from facebook_model import Facebook_model, db
+from facebook_model import FacebookModel, db
 import urllib
 import requests
 import json
@@ -39,7 +39,7 @@ def facebook_oauth_callback():
 		"https://graph.facebook.com/me?" +
 		urllib.urlencode(dict(access_token=access_token))))
 
-	fb_user = Facebook_model(key_name=str(profile["id"]),
+	fb_user = FacebookModel(key_name=str(profile["id"]),
 		name=profile["name"], access_token=access_token,
 		profile_url=profile["link"], username=current_user.email)
 

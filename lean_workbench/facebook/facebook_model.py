@@ -2,7 +2,7 @@ from database import db
 import datetime
 import time
 
-class Facebook_model(db.Model):
+class FacebookModel(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	created = db.Column(db.DateTime)
 	updated = db.Column(db.DateTime)
@@ -27,7 +27,7 @@ class Facebook_model(db.Model):
 		self.expired = False
                 self.active = False
 
-class Cohort_Facebook_Likes_Model(db.Model):
+class CohortFacebookLikesModel(db.Model):
         __tablename__ = "facebook_cohort_likes"
         id = db.Column(db.Integer, primary_key=True)
         date = db.Column(db.DateTime)
@@ -37,7 +37,7 @@ class Cohort_Facebook_Likes_Model(db.Model):
 	def as_count(self):
 	    return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.likes_count]
 
-class Facebook_page_data(db.Model):
+class FacebookPageData(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime)
 	likes = db.Column(db.Integer)

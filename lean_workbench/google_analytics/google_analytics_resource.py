@@ -2,7 +2,7 @@ from flask.ext.restful import fields, marshal_with, abort
 import sys
 import os
 from google_analytics_models import *
-from google_analytics_client import Google_Analytics_API
+from google_analytics_client import GoogleAnalyticsAPI
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
 from flask import session, escape, request, jsonify, make_response
@@ -18,7 +18,7 @@ parser.add_argument('end_date', type=str)
 parser.add_argument('dimension', type=str)
 parser.add_argument('metric', type=str)
 
-class Google_Analytics_DAO(object):
+class GoogleAnalyticsDAO(object):
     """
     Google Analytics Data Access Object
     used to query the GA models for the Resource
@@ -39,7 +39,7 @@ class Google_Analytics_DAO(object):
         """
         print 'inside get user profiles'
         print 'self.username :' + self.username
-        g = Google_Analytics_API(self.username)
+        g = GoogleAnalyticsAPI(self.username)
         if g:
             print 'GA client exists'
             user_accounts = g.get_user_accounts()
@@ -54,7 +54,7 @@ class Google_Analytics_DAO(object):
 	cohorts = current_user.roles
         print 'cohorts'
         print cohorts
-        user_visitors = Google_Analytics_Visitors.query.filter_by(username=username).all()
+        user_visitors = GoogleAnalyticsVisitors.query.filter_by(username=username).all()
 	
         user_visitors_dict_list = [x.as_dict() for x in user_visitors]
         user_visits = []
@@ -70,7 +70,7 @@ class Google_Analytics_DAO(object):
 	    lines = []
 	    for cohort in cohorts:
 		cohort_name = cohort.name
-		cohort_visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.date >= start, Google_Analytics_Visitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
+		cohort_visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.date >= start, GoogleAnalyticsVisitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
 		values = []
 		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
 	
@@ -90,8 +90,8 @@ class Google_Analytics_DAO(object):
 	"""
 	if not start_date and not end_date:
 	    if metric == 'source':
-		unique_sources = db.session.query(Google_Analytics_Referrals_Model.source.distinct().label('source')).all()
-		sources = [Google_Analytics_Referrals_Model.query.filter_by(username=username, source=source).all() for source in unique_sources]
+		unique_sources = db.session.query(GoogleAnalyticsReferralsModel.source.distinct().label('source')).all()
+		sources = [GoogleAnalyticsReferralsModel.query.filter_by(username=username, source=source).all() for source in unique_sources]
 		source_counts = []
 		for source in sources:
 		    counts = [s.sessions for s in source]
@@ -111,8 +111,8 @@ class Google_Analytics_DAO(object):
 		return make_response(dumps(source_count_list))
 
 	    elif metric == "mediums":
-		unique_mediums = db.session.query(Google_Analytics_Referrals_Model.medium.distinct().label('medium')).all()
-		mediums = [Google_Analytics_Referrals_Model.query.filter_by(username=username, medium=medium).all() for medium in unique_mediums]
+		unique_mediums = db.session.query(GoogleAnalyticsReferralsModel.medium.distinct().label('medium')).all()
+		mediums = [GoogleAnalyticsReferralsModel.query.filter_by(username=username, medium=medium).all() for medium in unique_mediums]
 		medium_counts = []
 		for medium in mediums:
 		    counts = [m.sessions for m in medium]
@@ -123,7 +123,7 @@ class Google_Analytics_DAO(object):
 		print medium_names
 		return ''
 
-class Google_analytics_resource(Resource):
+class GoogleAnalyticsResource(Resource):
     """
     Handles requests and returns the resources they ask for
     """
@@ -132,7 +132,7 @@ class Google_analytics_resource(Resource):
         args =  request.args
         metric = args.get('metric')
         print 'metric %s' %(metric)
-        profile = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+        profile = GoogleAnalyticsUserModel.query.filter_by(username=current_user.email).first()
         print 'profile:'
         print profile
         if not profile:
@@ -142,7 +142,7 @@ class Google_analytics_resource(Resource):
         print profile_id
         if profile and profile_id:
                 print 'there is profile'
-                GA = Google_Analytics_DAO(username = current_user.email)
+                GA = GoogleAnalyticsDAO(username = current_user.email)
                 if not metric:
                     if profile:
                         print 'get user profiles'
@@ -157,7 +157,7 @@ class Google_analytics_resource(Resource):
 			return GA.get_user_referrals(username = current_user.email)
         else:
                 if profile:
-                    GA = Google_Analytics_DAO(username = current_user.email)
+                    GA = GoogleAnalyticsDAO(username = current_user.email)
                     print 'trying to get user profiles'
                     try:
                         
@@ -183,7 +183,7 @@ class Google_analytics_resource(Resource):
         # if just posting profile id
         if metric == 'profile-id':
             print 'inside profile id'
-            ga_cred = Google_Analytics_User_Model.query.filter_by(username=current_user.email).first()
+            ga_cred = GoogleAnalyticsUserModel.query.filter_by(username=current_user.email).first()
             print ga_cred.profile_id
             ga_cred.profile_id = profile_id
             db.session.add(ga_cred)
@@ -193,5 +193,3 @@ class Google_analytics_resource(Resource):
             return jsonify(status=200,message="success!")
 	if metric == "visits":
             visits =  GA.get_user_profile_visits()
-
-

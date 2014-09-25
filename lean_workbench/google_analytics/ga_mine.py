@@ -1,14 +1,14 @@
-from google_time_string import Google_Time_String
+from google_time_string import GoogleTimeString
 from datetime import datetime, timedelta
-from google_analytics_models import Google_Analytics_Visitors, Google_Analytics_Referrals_Model, Google_Analytics_User_Model, db
-from google_analytics_client import Google_Analytics_API
+from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsReferralsModel, GoogleAnalyticsUserModel, db
+from google_analytics_client import GoogleAnalyticsAPI
 import json 
 
 def mine_visits(username=None):
 	if not username:
-		ga_users = Google_Analytics_User_Model.query.all()
+		ga_users = GoogleAnalyticsUserModel.query.all()
 	else:
-		ga_users = [Google_Analytics_User_Model.query.filter_by(username=username).first()]
+		ga_users = [GoogleAnalyticsUserModel.query.filter_by(username=username).first()]
                 ga_users[0].active = True
                 db.session.add(ga_users[0])
                 db.session.commit()
@@ -25,12 +25,12 @@ class Google_Analytics_User_Querier:
 	"""
 	def __init__(self, username):
 		self.username = username
-		self.profile_id =  Google_Analytics_API(username).get_profile_id()
+		self.profile_id =  GoogleAnalyticsAPI(username).get_profile_id()
 		print self.profile_id
         
         def get_referral_data(self):
 	    # check to see if mined before
-	    mined = Google_Analytics_Referrals_Model.query.filter_by(username=self.username).all()
+	    mined = GoogleAnalyticsReferralsModel.query.filter_by(username=self.username).all()
 	    if mined:
 		# just mine yesterday
 		days_back = 2
@@ -44,8 +44,8 @@ class Google_Analytics_User_Querier:
 		try:
 		    date = date - timedelta(days=1)
 		    # google string formatted date
-		    google_date = Google_Time_String(str(date))
-		    g = Google_Analytics_API(self.username)
+		    google_date = GoogleTimeString(str(date))
+		    g = GoogleAnalyticsAPI(self.username)
 
 		    referral_data = g.client.data().ga().get(
 				    ids='ga:' + self.profile_id,
@@ -59,7 +59,7 @@ class Google_Analytics_User_Querier:
 
 		    for row in rows:
 			source, medium, sessions, pageviews, session_duration, exits = row
-			referral_model = Google_Analytics_Referrals_Model(username=self.username, date = date, source= source, medium=medium, sessions=sessions, pageviews=pageviews, session_duration=session_duration, exits = exits)
+			referral_model = GoogleAnalyticsReferralsModel(username=self.username, date = date, source= source, medium=medium, sessions=sessions, pageviews=pageviews, session_duration=session_duration, exits = exits)
 			db.session.add(referral_model)
 			db.session.commit()
 
@@ -73,14 +73,14 @@ class Google_Analytics_User_Querier:
 		# start at yesterday
 		date = datetime.now()-timedelta(days=1)
 		# google string formatted date
-		google_date = Google_Time_String(str(date))
-		g = Google_Analytics_API(self.username)
-		user_visitor_data = Google_Analytics_Visitors.query.filter_by(username=self.username).all()
+		google_date = GoogleTimeString(str(date))
+		g = GoogleAnalyticsAPI(self.username)
+		user_visitor_data = GoogleAnalyticsVisitors.query.filter_by(username=self.username).all()
 		
         # if already mined, just do yesterday
 		if user_visitor_data:
 			date = datetime.now()-timedelta(days=1)
-			google_date = Google_Time_String(str(date))
+			google_date = GoogleTimeString(str(date))
 
 			visitor_data = g.client.data().ga().get(
 				ids='ga:' + self.profile_id,
@@ -112,12 +112,12 @@ class Google_Analytics_User_Querier:
 
 				except:
 				    print 'ga new visitor mining exception, setting visitors to 0'
-				    visitors_data_model = Google_Analytics_Visitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=total_visitors,percent_new_visits=percent_new_visits,new_visits=new_visit)
+				    visitors_data_model = GoogleAnalyticsVisitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=total_visitors,percent_new_visits=percent_new_visits,new_visits=new_visit)
 				    db.session.add(visitors_data_model)
 				    db.session.commit()
 		
 				date = date - timedelta(days=1)
-				google_date = Google_Time_String(str(date))
+				google_date = GoogleTimeString(str(date))
 
 	def process_visitor_data(self,visitor_data, date):
 		"""
@@ -141,7 +141,7 @@ class Google_Analytics_User_Querier:
 		except:
 			percent_new_visits=0
 		# add data to model
-		visitors_data_model = Google_Analytics_Visitors(
+		visitors_data_model = GoogleAnalyticsVisitors(
 				username=self.username,
 				profile_id=self.profile_id,
 				date=str(date),
@@ -164,11 +164,11 @@ class Google_Analytics_User_Querier:
 		# start at yesterday
 		date = datetime.now()-timedelta(days=1)
 		# google string formatted date
-		google_date = Google_Time_String(str(date))
+		google_date = GoogleTimeString(str(date))
 		# go backwards in time up to a year
 		for backwards_days in range(1,366):
 			# create google query object	
-			g = Google_Analytics_API(self.username)
+			g = GoogleAnalyticsAPI(self.username)
 			page_path_data = g.client.data().ga().get(
 				ids='ga:' + self.profile_id,
 				start_date=str(google_date),

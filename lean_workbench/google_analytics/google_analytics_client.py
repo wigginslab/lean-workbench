@@ -2,7 +2,7 @@ import urllib
 import urllib2
 import os
 from apiclient.discovery import build
-from google_analytics_models import Google_Analytics_User_Model
+from google_analytics_models import GoogleAnalyticsUserModel
 import httplib2
 from oauth2client.client import flow_from_clientsecrets, Credentials
 import json
@@ -11,7 +11,7 @@ from database import db
 from flask import current_app
 import sys
 
-class Google_Analytics_API:
+class GoogleAnalyticsAPI:
 
 	def __init__(self, username):
 		"""
@@ -21,7 +21,7 @@ class Google_Analytics_API:
 			username: username on the Lean Workbench sites
 		"""
 		# get latest credentials
-		self.credentials = Google_Analytics_User_Model.query.filter_by(username = username).first()
+		self.credentials = GoogleAnalyticsUserModel.query.filter_by(username = username).first()
                 print self.credentials
 		if self.credentials:
                         print 'there  are ga  credentials'
@@ -130,7 +130,7 @@ class Google_Analytics_API:
 		# store information necessary for building client
                 credentials_dict['token_expiry'] = datetime.now() + timedelta(hours=1)
                 print credentials_dict
-		GAUM = Google_Analytics_User_Model(credentials_dict)
+		GAUM = GoogleAnalyticsUserModel(credentials_dict)
 		db.session.add(GAUM)
 		db.session.commit()
 		db.session.close()

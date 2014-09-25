@@ -6,16 +6,16 @@ from flask_wtf.csrf import CsrfProtect
 import os
 from werkzeug import SharedDataMiddleware
 from flask.ext import restful
-from hypotheses.hypotheses_resource import Hypothesis_resource
+from hypotheses.hypotheses_resource import HypothesisResource
 from quickbooks.quickbooks_resource import Quickbooks_resource
-from facebook.facebook_resource import Facebook_resource
-from twitter.twitter_resource import Twitter_resource
-from wufoo.WufooResource import WufooResource
+from facebook.facebook_resource import FacebookResource
+from twitter.twitter_resource import TwitterResource
+from wufoo.wufoo_resource import WufooResource
 from forms.registration_form import ExtendedRegisterForm
-from google_analytics.google_analytics_resource import Google_analytics_resource
+from google_analytics.google_analytics_resource import GoogleAnalyticsResource
 from ghosting.ghosting_resource import Ghosting_resource
 from scale.scale_resource import Scale_resource
-from users.user_resource import User_resource
+from users.user_resource import UserResource
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -203,13 +203,13 @@ def configure_views(app):
 		return render_template('public.html', logged_in=True)
 	
 	api = restful.Api(app)
-	api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
-	api.add_resource(Facebook_resource, '/api/v1/facebook')
-	api.add_resource(Twitter_resource, '/api/v1/twitter')
+	api.add_resource(HypothesisResource, '/api/v1/hypotheses')
+	api.add_resource(FacebookResource, '/api/v1/facebook')
+	api.add_resource(TwitterResource, '/api/v1/twitter')
 	api.add_resource(WufooResource, '/api/v1/wufoo')
-	api.add_resource(Google_analytics_resource, '/api/v1/google-analytics')
+	api.add_resource(GoogleAnalyticsResource, '/api/v1/google-analytics')
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
-	api.add_resource(User_resource, '/api/v1/users')
+	api.add_resource(UserResource, '/api/v1/users')
         api.add_resource(Ghosting_resource, '/api/v1/ghosting')
 
         api.add_resource(Scale_resource, '/api/v1/scale')

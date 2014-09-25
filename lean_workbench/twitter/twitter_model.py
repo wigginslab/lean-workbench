@@ -11,7 +11,7 @@ tracked_twitter_words = db.Table('twitter_tracked_words',
 	db.Column('twitter_id', db.Integer, db.ForeignKey('twitter.id'))
 )
 
-class Cohort_Tweet_Count_Model(db.Model):
+class CohortTweetCountModel(db.Model):
     __tablename__ = "twitter_cohort_tweet_count"
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, default=datetime.datetime.now())
@@ -21,9 +21,9 @@ class Cohort_Tweet_Count_Model(db.Model):
     def as_count(self):
 	return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.count]
 
-class Date_count(db.Model):
+class DateCount(db.Model):
 
-	__tablename__ = "twitter_date_count"
+	__tablename__ = "twitter_datecount"
 	id = db.Column(db.Integer, primary_key=True)
 	date = db.Column(db.DateTime, default=datetime.datetime.now())
 	count = db.Column(db.Integer)
@@ -40,7 +40,7 @@ class Word(db.Model):
 	__tablename__ = "twitter_word"
 	id = db.Column(db.Integer, primary_key=True)
 	word = db.Column(db.String(140))
-	counts = db.relationship('Date_count',  backref='twitter_word', lazy='dynamic')
+	counts = db.relationship('DateCount',  backref='twitter_word', lazy='dynamic')
 	
 
 
@@ -51,7 +51,7 @@ class Word(db.Model):
 			'counts': [c.as_dict() for c in self.counts]
 		}
 
-class Twitter_model(db.Model):
+class TwitterModel(db.Model):
 
 	__tablename__ = "twitter"
 	id = db.Column(db.Integer, primary_key=True)

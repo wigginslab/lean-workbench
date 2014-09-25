@@ -2,7 +2,7 @@ import os
 import datetime
 from database import db
 from flask import current_app
-from scale_model import Startup_data_model, VC_model
+from scale_model import StartupDataModel, VCModel
 import requests
 import traceback
 
@@ -25,7 +25,7 @@ def get_vcs(startup_data_models):
                 url = item.get('url')
                 name = item.get('name')
                 score = item.get('result')
-                vc = VC_model(crunchbase_url=url, name=name, score=score)
+                vc = VCModel(crunchbase_url=url, name=name, score=score)
                 db.session.add(vc)
                 user.vcs.append(vc)
             
@@ -39,4 +39,3 @@ def get_vcs(startup_data_models):
         except:
             print 'VC Matcher data error'
             traceback.print_exc()
-

@@ -49,9 +49,9 @@ class Scale(Command):
         """
         app = app_factory(config.Dev)
         with app.app_context():
-            from scale.scale_model import Startup_data_model
+            from scale.scale_model import StartupDataModel
             from scale.scale_mine import get_vcs
-            users = Startup_data_model.query.filter_by(vc_matcher_done=False).filter(Startup_data_model.description != None).all()
+            users = StartupDataModel.query.filter_by(vc_matcher_done=False).filter(StartupDataModel.description != None).all()
             if users:
                 get_vcs(users)
 
@@ -72,9 +72,9 @@ class Cohort(Command):
             from database import db
             from sqlalchemy.sql import func
             from users.user_model import Role, User
-            from google_analytics.google_analytics_models import Google_Analytics_Visitors
-            from twitter.twitter_model import Twitter_model, Cohort_Tweet_Count_Model
-            from facebook.facebook_model import Facebook_page_data, Cohort_Facebook_Likes_Model
+            from google_analytics.google_analytics_models import GoogleAnalyticsVisitors
+            from twitter.twitter_model import TwitterModel, CohortTweetCountModel
+            from facebook.facebook_model import FacebookPageData, CohortFacebookLikesModel
 
             # get all cohorts
             cohorts = db.session.query(Role.name.distinct()).all()
@@ -92,13 +92,13 @@ class Cohort(Command):
                     end = today
 
                 else:
-                    start = db.session.query(Google_Analytics_Visitors).order_by(Google_Analytics_Visitors.date).first().date
+                    start = db.session.query(GoogleAnalyticsVisitors).order_by(GoogleAnalyticsVisitors.date).first().date
                     end = today
                 while start < end:
                     # get all users in cohort
                     cohort_usernames = User.query.filter(User.roles.any(name=cohort[0])).with_entities(User.email).all()
                     # get all GA visitor counts from after this time yesterday and before now
-                    visitors = Google_Analytics_Visitors.query.filter(Google_Analytics_Visitors.username.in_(cohort_usernames), Google_Analytics_Visitors.date > start, Google_Analytics_Visitors.date < end).with_entities(Google_Analytics_Visitors.visitors).all()
+                    visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.username.in_(cohort_usernames), GoogleAnalyticsVisitors.date > start, GoogleAnalyticsVisitors.date < end).with_entities(GoogleAnalyticsVisitors.visitors).all()
                     detupled_vistors = [x[0] for x in visitors]
 		    print detupled_vistors
                     if detupled_vistors:
@@ -106,9 +106,9 @@ class Cohort(Command):
                     else:
                         visitor_avg = 0
 
-		    new_ga_visitors = Google_Analytics_Visitors.query.filter_by(username="cohort:"+cohort[0],  date = start).first()
+		    new_ga_visitors = GoogleAnalyticsVisitors.query.filter_by(username="cohort:"+cohort[0],  date = start).first()
 		    if not new_ga_visitors:
-			new_ga_visitors = Google_Analytics_Visitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
+			new_ga_visitors = GoogleAnalyticsVisitors(username="cohort:"+cohort[0], visitors=visitor_avg, date = start)
 		    else:
 			new_ga_visitors.visitors = visitor_avg
                     db.session.add(new_ga_visitors)
@@ -117,10 +117,10 @@ class Cohort(Command):
 
 
                 # because you don't have time to figure out this query in SQLAlchemy right now
-                tweet_date_counts = {}
-		fb_like_date_counts = {}
+                tweet_DateCounts = {}
+		fb_like_DateCounts = {}
                 for username in cohort_usernames:
-                    twitter_words = Twitter_model.query.filter_by(username=username).first()
+                    twitter_words = TwitterModel.query.filter_by(username=username).first()
                     
                     if twitter_words:
                         twitter_words = twitter_words.words
@@ -133,35 +133,35 @@ class Cohort(Command):
                                 date = dates[i]
                                 count = counts[i]
 				try:
-				    tweet_date_counts[date] = tweet_date_counts[date] + count
+				    tweet_DateCounts[date] = tweet_DateCounts[date] + count
 				except:
-				    tweet_date_counts[date] = count
+				    tweet_DateCounts[date] = count
                            
-                        facebook_likes = Facebook_page_data.query.filter_by(username=username).all()
+                        facebook_likes = FacebookPageData.query.filter_by(username=username).all()
                         for like in facebook_likes:
                             date = like.date
                             like_count =  like.likes
 			    try:
-				fb_like_date_counts[date] = fb_like_date_counts[date] + 1
+				fb_like_DateCounts[date] = fb_like_DateCounts[date] + 1
 			    except:
-				fb_like_date_counts[date] = like_count
+				fb_like_DateCounts[date] = like_count
 
-		for date in tweet_date_counts:
-		    count = tweet_date_counts[date]
-		    new_tweet_count = Cohort_Tweet_Count_Model.query.filter_by(date=date).first()
+		for date in tweet_DateCounts:
+		    count = tweet_DateCounts[date]
+		    new_tweet_count = CohortTweetCountModel.query.filter_by(date=date).first()
 		    if not new_tweet_count: 
-			new_tweet_count = Cohort_Tweet_Count_Model(cohort_name=cohort, date=date, count=count)
+			new_tweet_count = CohortTweetCountModel(cohort_name=cohort, date=date, count=count)
 		    else:
 			new_tweet_count.count = count
 
 		    db.session.add(new_tweet_count)
 		    db.session.commit()
 		
-		for date in fb_like_date_counts:
-		    count = fb_like_date_counts[date]
-		    new_fb_count = Cohort_Facebook_Likes_Model.query.filter_by(date=date).first()
+		for date in fb_like_DateCounts:
+		    count = fb_like_DateCounts[date]
+		    new_fb_count = CohortFacebookLikesModel.query.filter_by(date=date).first()
 		    if not new_fb_count:
-			new_fb_count = Cohort_Facebook_Likes_Model(cohort_name=cohort,date=date,likes_count=count)
+			new_fb_count = CohortFacebookLikesModel(cohort_name=cohort,date=date,likes_count=count)
 		    else:
 			new_fb_count.count = count
 		    db.session.add(new_fb_count)
@@ -185,10 +185,10 @@ class Mine(Command):
         args:
             new- if true, check for users that haven't been mined yet and mine only their data.
         """
-        from twitter.twitter_model import Twitter_model
+        from twitter.twitter_model import TwitterModel
         from quickbooks.quickbooks_model import Quickbooks_model
-        from facebook.facebook_model import Facebook_model
-        from google_analytics.google_analytics_models import Google_Analytics_User_Model
+        from facebook.facebook_model import FacebookModel
+        from google_analytics.google_analytics_models import GoogleAnalyticsUserModel
     	from twitter.twitter_mine import track_keywords
     	from google_analytics.ga_mine import mine_visits
         from facebook.fb_mine import mine_fb_page_data
@@ -200,10 +200,10 @@ class Mine(Command):
             app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
               
             if new:
-                new_twitters = Twitter_model.query.filter_by(active=False).all()
+                new_twitters = TwitterModel.query.filter_by(active=False).all()
                 #new_qbs = Quickbooks_model.query.filter_by(active=False).all()
-                new_fbs = Facebook_model.query.filter_by(active=False).all()
-                new_gas = Google_Analytics_User_Model.query.filter_by(active=False).all()
+                new_fbs = FacebookModel.query.filter_by(active=False).all()
+                new_gas = GoogleAnalyticsUserModel.query.filter_by(active=False).all()
                 for user in new_twitters:
                     track_keywords(username=user.username)
                 for user in new_fbs:
@@ -232,8 +232,8 @@ class DeleteGACreds(Command):
         app = app_factory(config.Dev)
         with app.app_context():
             from database import db 
-            from google_analytics.google_analytics_models import Google_Analytics_User_Model
-            ga_users = Google_Analytics_User_Model.query.all()
+            from google_analytics.google_analytics_models import GoogleAnalyticsUserModel
+            ga_users = GoogleAnalyticsUserModel.query.all()
             print 'ga_users before' + str(ga_users)
             for ga_user in ga_users:
                 db.session.delete(ga_user)
@@ -242,14 +242,14 @@ class DeleteGACreds(Command):
 
 class RefreshGA(Command):
     def run(self):
-        from google_analytics.google_analytics_client import Google_Analytics_API
+        from google_analytics.google_analytics_client import GoogleAnalyticsAPI
         app = app_factory(config.Dev)
         with app.app_context():
             from database import db 
-            from google_analytics.google_analytics_models import Google_Analytics_User_Model
-            ga_users = Google_Analytics_User_Model.query.all()
+            from google_analytics.google_analytics_models import GoogleAnalyticsUserModel
+            ga_users = GoogleAnalyticsUserModel.query.all()
             for ga_user in ga_users:
-                Google_Analytics_API(username=ga_user.username).refresh_token()
+                GoogleAnalyticsAPI(username=ga_user.username).refresh_token()
             print 'ga_users now ' + str([ ga_user.refresh_token for ga_user in ga_users])
 
 
@@ -265,8 +265,8 @@ class Test(Command):
         app = app_factory(config.Dev)
         with app.test_client() as c:
             rv = c.get('/?vodka=42')
-            from google_analytics_models import Google_Analytics_User_Model
-            ga_users = Google_Analytics_User_Model.query.all()
+            from google_analytics_models import GoogleAnalyticsUserModel
+            ga_users = GoogleAnalyticsUserModel.query.all()
             for user in ga_users:
                 assert ga_user.refresh_token != None
 

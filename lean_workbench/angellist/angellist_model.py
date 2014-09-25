@@ -1,6 +1,6 @@
 from lean_workbench.core import db
 
-class Angellist_User_Model(db.Model):
+class AngellistUserModel(db.Model):
 	__tablename__ = "angellist_user"
 
 	id = db.Column(db.Integer, primary_key=True)

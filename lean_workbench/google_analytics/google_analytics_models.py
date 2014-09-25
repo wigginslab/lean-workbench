@@ -7,7 +7,7 @@ ga_profiles_association = db.Table('user_profiles_association',
     db.Column('profile_id', db.Integer, db.ForeignKey('google_analytics_profiles.id'))
 )
 
-class Google_Analytics_User_Model(db.Model):
+class GoogleAnalyticsUserModel(db.Model):
 
     __tablename__ = "google_analytics_oauth_credentials"
 
@@ -41,19 +41,19 @@ class Google_Analytics_User_Model(db.Model):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
-class Google_Analytics_Profiles(db.Model):
+class GoogleAnalyticsProfiles(db.Model):
 	
 	__tablename__ = "google_analytics_profiles"
 
 	id = db.Column(db.Integer, primary_key=True)
-	user =  db.relationship("Google_Analytics_User_Model", secondary = ga_profiles_association)
+	user =  db.relationship("GoogleAnalyticsUserModel", secondary = ga_profiles_association)
 	profile_id = db.Column(db.String)
 
 	def __init__(self, user, profile_id):
 		self.user = user
 		self.profile_id = profile_id
 
-class Google_Analytics_Visitors(db.Model):
+class GoogleAnalyticsVisitors(db.Model):
     """
     Google Analytics Site Visitor Metrics
     """
@@ -90,7 +90,7 @@ class Google_Analytics_Visitors(db.Model):
         else:
             return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.new_visits]
 
-class Google_Analytics_Referrals_Model(db.Model):
+class GoogleAnalyticsReferralsModel(db.Model):
     """
     """
     id = db.Column(db.Integer, primary_key=True)

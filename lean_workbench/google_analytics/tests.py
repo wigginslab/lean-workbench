@@ -1,19 +1,19 @@
 import re
-from google_analytics_client import Google_Analytics_API
+from google_analytics_client import GoogleAnalyticsAPI
 from datetime import datetime, timedelta
 import json
 from mine_user_ga_data import Google_Analytics_User_Querier
 def test_get_user_accounts():
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	return g.get_user_accounts()
 
 def test_get_user_profile():
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	user_accounts = g.get_user_accounts()
 	return user_accounts.get('items')
 
 def test_get_last_month_visits():
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
@@ -26,13 +26,13 @@ def test_get_month_visits():
 	"""
 	Currently disallowed
 	"""
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	user_profiles = g.get_user_accounts().get('items')
 	profile = user_profiles[-1]
 	profile_id = profile.get('id')
 	# convert date from isoformat to GA query format
-	current_date = Google_Time_String(str(datetime.now()-timedelta(days=1))) 
-	last_week = Google_Time_String(str(datetime.now() - timedelta(weeks=1)))	
+	current_date = GoogleTimeString(str(datetime.now()-timedelta(days=1))) 
+	last_week = GoogleTimeString(str(datetime.now() - timedelta(weeks=1)))	
 	g.client.data().ga().get(
 			      ids='ga:' + profile_id,
 				        start_date=last_week,
@@ -41,15 +41,15 @@ def test_get_month_visits():
 	assert True
 
 def test_multichannel_funnel():
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	profile_id = g.get_user_accounts().get('items')[0].get('id')
 	#print user_profiles
 	#profile = user_profiles[-1]
 	#print profile
 	#profile_id = profile.get('id')
 	
-	current_date = Google_Time_String(str(datetime.now()-timedelta(days=1))) 
-	last_week = Google_Time_String(str(datetime.now() - timedelta(weeks=1)))
+	current_date = GoogleTimeString(str(datetime.now()-timedelta(days=1))) 
+	last_week = GoogleTimeString(str(datetime.now() - timedelta(weeks=1)))
 	print last_week
 	print current_date
 	profile_id = g.get_profile_id()
@@ -62,7 +62,7 @@ def test_multichannel_funnel():
 	print json.dumps(apiQuery)
 
 def test_visitor_count():
-	g = Google_Analytics_API("jrubinovitz@gmail.com")
+	g = GoogleAnalyticsAPI("jrubinovitz@gmail.com")
 	profile_id = g.get_profile_id()
 	query = g.client.data().ga().get(
 			ids='ga:' + profile_id,
@@ -71,7 +71,7 @@ def test_visitor_count():
 			metrics='ga:visits').execute()
 	print json.dumps(query)
 
-class Google_Time_String:
+class GoogleTimeString:
 	def __init__(self,time):
 		# regular expression that separates all "words"
 		time_list = re.findall(r"[\w']+", time)

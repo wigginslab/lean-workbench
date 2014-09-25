@@ -2,7 +2,7 @@ from database import db
 import datetime
 import time
 
-class Ghosting_model(db.Model):
+class GhostingModel(db.Model):
     """
     Store users that click on features that aren't done yet.
     """

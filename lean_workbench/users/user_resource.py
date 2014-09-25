@@ -12,7 +12,7 @@ path = os.getenv("path")
 sys.path.append(path)
 
 
-class User_resource(Resource):
+class UserResource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""

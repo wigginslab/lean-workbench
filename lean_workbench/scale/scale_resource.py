@@ -1,6 +1,6 @@
 import sys
 import os
-from scale_model import Startup_data_model, VC_model
+from scale_model import StartupDataModel, VCModel
 from flask.ext.restful import Resource, reqparse
 from flask import Flask, jsonify, request, make_response
 import os
@@ -12,7 +12,7 @@ class Scale_DAO(object):
 
     def __init__(self):
 	print 'making scale DAO'
-        self.user_scale = Startup_data_model.query.filter_by(username=current_user.email).order_by(Startup_data_model.date.desc()).first()
+        self.user_scale = StartupDataModel.query.filter_by(username=current_user.email).order_by(StartupDataModel.date.desc()).first()
         print self.user_scale
 
 
@@ -42,7 +42,7 @@ class Scale_resource(Resource):
             cb_url = data.get('crunchbase_url')
             al_url = data.get('angellist_url')
             description = data.get('description')
-            new_data = Startup_data_model(username=current_user.email, crunchbase_url=cb_url, angellist_url=al_url, description=description)
+            new_data = StartupDataModel(username=current_user.email, crunchbase_url=cb_url, angellist_url=al_url, description=description)
             db.session.add(new_data)
             db.session.commit()
             return jsonify(status=200,msg="Data added successfully!")

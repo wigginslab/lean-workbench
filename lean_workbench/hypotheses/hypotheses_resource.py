@@ -1,7 +1,7 @@
 from flask.ext.restful import fields, marshal_with
 import sys
 import os
-from hypotheses_model import Hypothesis_model, db
+from hypotheses_model import HypothesisModel, db
 from flask.ext.restful import Resource, reqparse
 from flask import session, escape, abort, jsonify, request
 from flask.ext.security import auth_token_required, current_user
@@ -30,7 +30,7 @@ parser.add_argument('start_time', type=str)
 from werkzeug.exceptions import Unauthorized
 
 
-class Hypothesis_DAO(object):
+class HypothesisDAO(object):
 	"""
 	Hypothesis Data Access Object
 	used to query the Hypothesis  models for the Resource
@@ -43,7 +43,7 @@ class Hypothesis_DAO(object):
 		self.profile_id = profile_id
 		
 	def get_user_hypotheses(self):
-		hypotheses = Hypothesis_model.query.filter_by(username=self.username).all()
+		hypotheses = HypothesisModel.query.filter_by(username=self.username).all()
 		hypotheses_list = [hyp.serialize for hyp in hypotheses]
 		return hypotheses_list
 
@@ -59,7 +59,7 @@ class Hypothesis_DAO(object):
 		endpoint = os.getenv('endpoint')
 		print google_analytics
 		print title
-		hypothesis = Hypothesis_model({"username":self.username,
+		hypothesis = HypothesisModel({"username":self.username,
 				"wufoo":wufoo,
 				"event":event,
 				"twitter":twitter,
@@ -87,9 +87,9 @@ class Hypothesis_DAO(object):
 	def get_a_hypothesis(self, **form_dict):
 		hyp_id = form_dict.get('id')
 		# TODO: make query better
-		return Hypothesis_Model.query.filter_by(username=self.username).get_all()[hyp_id]
+		return HypothesisModel.query.filter_by(username=self.username).get_all()[hyp_id]
 
-class Hypothesis_resource(Resource):
+class HypothesisResource(Resource):
 	"""
 	Handles requests and returns the resources they ask for
 	"""
@@ -99,12 +99,12 @@ class Hypothesis_resource(Resource):
 		args = parser.parse_args()
 		print current_user
 		username = current_user.email
-		hypotheses = Hypothesis_DAO(username).get_user_hypotheses()	
+		hypotheses = HypothesisDAO(username).get_user_hypotheses()	
 		return jsonify(status=200, hypotheses = hypotheses,onboarded=current_user.onboarded)
 
 	def post(self):
 		username = current_user.email
-		hypothesis = Hypothesis_DAO(username)
+		hypothesis = HypothesisDAO(username)
 		print hypothesis
 		print request.json
 		return hypothesis.add_user_hypothesis(request.json)

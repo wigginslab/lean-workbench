@@ -1,17 +1,17 @@
-from facebook_model import Facebook_page_data, Facebook_model, db
+from facebook_model import FacebookPageData, FacebookModel, db
 import facebook_module as facebook
 
 def mine_fb_page_data(username=None):
 	# if only for one user
 	if username:
-		fb_user = Facebook_model.query.filter_by(username=username).order_by('-id').first()
+		fb_user = FacebookModel.query.filter_by(username=username).order_by('-id').first()
 		users = [fb_user]
                 fb_user.active = True
                 db.session.add(fb_user)
                 db.session.commit()
 
 	else:
-		users = Facebook_model.query.all()
+		users = FacebookModel.query.all()
 
 	for user in users:
 		oauth_access_token = user.access_token
@@ -35,6 +35,6 @@ def mine_fb_page_data(username=None):
 			except:
 				likes = 0
 			page_name = page.get('name')
-			page_today = Facebook_page_data(username = username, likes=likes, page_name=page_name)
+			page_today = FacebookPageData(username = username, likes=likes, page_name=page_name)
 			db.session.add(page_today)
 			db.session.commit()

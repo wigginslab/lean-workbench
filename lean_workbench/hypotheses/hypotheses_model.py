@@ -1,7 +1,7 @@
 from database import db
 import datetime
 
-class Hypothesis_model(db.Model):
+class HypothesisModel(db.Model):
 
 	__tablename__ = 'hypotheses'
 	id = db.Column(db.Integer, primary_key=True)

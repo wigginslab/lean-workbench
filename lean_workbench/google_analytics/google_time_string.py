@@ -1,5 +1,5 @@
 import re
-class Google_Time_String:
+class GoogleTimeString:
 	def __init__(self,time):
 		# regular expression that separates all "words"
 		time_list = re.findall(r"[\w']+", time)
