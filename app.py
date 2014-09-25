@@ -6,7 +6,7 @@ from flask_wtf.csrf import CsrfProtect
 from apps.hypotheses.hypotheses_resource import Hypothesis_resource
 from apps.facebook.facebook_resource import Facebook_resource
 from apps.twitter.twitter_resource import Twitter_resource
-from apps.wufoo.wufoo_resource import Wufoo_resource
+from apps.wufoo.WufooResource import WufooResource
 from app.google_analytics.google_analytics_resource import Google_analytics_resource
 from apps.google_analytics.google_analytics_resource import Google_analytics_resource
 
@@ -41,5 +41,5 @@ api = restful.Api(app)
 api.add_resource(Hypothesis_resource, '/api/v1/hypotheses')
 api.add_resource(Facebook_resource, '/api/v1/facebook')
 api.add_resource(Twitter_resource, '/api/v1/twitter')
-api.add_resource(Wufoo_resource, 'api/v1/wufoo')
+api.add_resource(WufooResource, 'api/v1/wufoo')
 api.add_resource(Google_analytics_resource, 'api/v1/ga')

@@ -1,6 +1,6 @@
 import sys
 import os
-from wufoo_model import Wufoo_Survey_Model
+from wufoo_model import WufooSurveyModel
 from flask.ext.restful import Resource, reqparse
 from flask import Flask, request, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -9,11 +9,11 @@ from json import dumps
 from flask.ext.security import current_user
 import traceback
 
-class Wufoo_DAO(object):
+class WufooDAO(object):
     def __init__(self, username):
         self.username = username
 
-class Wufoo_resource(Resource):
+class WufooResource(Resource):
 
     def get(self, **kwargs):
         print 'inside wufoo  get'
@@ -45,7 +45,7 @@ class Wufoo_resource(Resource):
                 else:
                     print 'attempting to add survey'
                     try:
-                        new_survey = Wufoo_Survey_Model(username=current_user.email, url=url)
+                        new_survey = WufooSurveyModel(username=current_user.email, url=url)
                         db.session.add(new_survey)
                         db.session.commit()
                         return make_response(dumps({"status":200, "msg":"Survey successfully added"}))
@@ -64,12 +64,12 @@ class Wufoo_resource(Resource):
             fields = field_structure.get("Fields")
             form_url = "%s.wufoo.com/forms/%surl" %(created_by, url)
             # get survey
-            survey = Wufoo_Survey_Model.query.filter_by(url=form_url).last()
+            survey = WufooSurveyModel.query.filter_by(url=form_url).last()
             if not survey:
                 # if survey doesn't exist yet, pass
                 return jsonify(status="This survey does not exist yet.")
             # create new entry
-            new_entry = Wufoo_Entry_Model(entry_id=entry_id)
+            new_entry = WufooEntryModel(entry_id=entry_id)
             survey_values = survey.values
 
             if survey_values:
@@ -99,10 +99,10 @@ class Wufoo_resource(Resource):
                         modified_field = False
                         
                     if new_field or modified_field: 
-                        new_field = Wufoo_Field_Model(field_id=field_id, title = title, field_type = field_type)
+                        new_field = WufooFieldModel(field_id=field_id, title = title, field_type = field_type)
                         survey.fields.append(new_field)
                 # make new value
-                new_value = Wufoo_Value(field_value)
+                new_value = WufooValue(field_value)
                 db.session.add(new_value)
                 # add new value to new entry
                 new_entry.values.append(new_value)

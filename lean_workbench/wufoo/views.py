@@ -19,9 +19,9 @@ def wufoo():
 
 	# get field values
 	for field in field_titles:
-		field_model = Wufoo_Field_Model()
+		field_model = WufooFieldModel()
 	form_structure = data['FormStructure']
 	url = form_structure['Url']
-	survey = Wufoo_Survey_Model.query.filter_by(url=url)
+	survey = WufooSurveyModel.query.filter_by(url=url)
 	if not survey:
-		survey = Wufoo_Survey_Model()
+		survey = WufooSurveyModel()
