@@ -239,7 +239,21 @@ class DeleteGACreds(Command):
                 db.session.delete(ga_user)
                 db.session.commit()
             print 'ga_users now ' + str([ ga_user.refresh_token for ga_user in ga_users])
-                    
+
+class RefreshGA(Command):
+    def run(self):
+        from google_analytics.google_analytics_client import Google_Analytics_API
+        app = app_factory(config.Dev)
+        with app.app_context():
+            from database import db 
+            from google_analytics.google_analytics_models import Google_Analytics_User_Model
+            ga_users = Google_Analytics_User_Model.query.all()
+            for ga_user in ga_users:
+                Google_Analytics_API(username=ga_user.username).refresh_token()
+            print 'ga_users now ' + str([ ga_user.refresh_token for ga_user in ga_users])
+
+
+
 class Test(Command):
     """
     Run tests

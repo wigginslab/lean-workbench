@@ -36,39 +36,41 @@ class Google_Analytics_API:
                         if current_time > expires_on:
                             print 'about to refresh token'
                             self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
-                        print 'GA credentials: ' + str(self.credentials_dict)
+                            print 'GA credentials: ' + str(self.credentials_dict)
                         self.client = self.build_client(self.credentials)
 		else:
 			print "no GA  credentials"
 			return None
 
-	def refresh_token(self,refresh_token,client_id, client_secret):
+	def refresh_token(self,refresh_token=None,client_id=None, client_secret=None):
 		"""
 		Refresh the access token if expired
 		"""
+                if not refresh_token and not client_id:
+                    refresh_token = self.credentials.refresh_token
+                    client_id = self.credentials.client_id
+                    client_secret = self.credentials.client_secret
+
 		url = 'https://accounts.google.com/o/oauth2/token'
-                values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token", "access_type":"offline"}
+                values = {"refresh_token":refresh_token, "client_id":client_id, "client_secret":client_secret, "grant_type":"refresh_token"}
                 print 'refresh_token POST values: ' + str(values)
 	        # encode data
 		data = urllib.urlencode(values)
                 print 'changed'
                 print 'data:' + str(data)
 		# post request for refresh token
-                try:
-		    req = urllib2.Request(url, data)
-                    print 'req: ' + req
-                    response = urllib2.urlopen(req)
-                    print 'response: ' + response
-                    response_json = json.loads(response.read())
-                    print 'google refresh token response json: ' + str(response_json)
-                    new_access_token = response_json["access_token"]
-                    new_expiration_date = datetime.now() + timedelta(hours=1)
-                    self.credentials.token_expiry = new_expiration_date
-                    db.session.add(self.credentials)
-                    db.session.commit()
-                    print 'done getting values from fresh_token'
-                except:
-                    print 'couldnt refresh credentials'
+		req = urllib2.Request(url, data)
+                print 'req: ' + str(req)
+                response = urllib2.urlopen(req)
+                print 'response: ' + str(response)
+                response_json = json.loads(response.read())
+                print 'google refresh token response json: ' + str(response_json)
+                new_access_token = response_json["access_token"]
+                new_expiration_date = datetime.now() + timedelta(hours=1)
+                self.credentials.token_expiry = new_expiration_date
+                db.session.add(self.credentials)
+                db.session.commit()
+                print 'done getting values from fresh_token'
 
 	def build_client(self, ga_user_credentials):
 		print 'build client'
