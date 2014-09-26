@@ -288,7 +288,7 @@ class MigrateUsers(Command):
             with open('user_table.csv', 'rb') as csvfile:
                 for row in csvfile:
                     id,email,password,last_login_at,current_login_at,last_login_ip,current_login_ip,login_count,created,company,active,confirmed_at,onboarded = row.split(';')
-                    active = False
+                    active = True
                     new_user = User(email=email,password=password,company=company,active=active, onboarded=False)
                     db.session.add(new_user)
                     db.session.commit()
