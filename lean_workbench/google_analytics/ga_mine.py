@@ -129,7 +129,6 @@ class Google_Analytics_User_Querier:
 		total_visitors, new_visits, returning_visitors = 0,0,0
 		# if visitors
 		if visitors_type:
-                        print 'inside visitors_type'
 			for visitor_list in visitors_type:
 				if visitor_list[0] == "New Visitor":
 					new_visits = int(visitor_list[1])

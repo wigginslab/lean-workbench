@@ -222,6 +222,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_fb_data = true;
+            console.log(data);
             $scope.facebookData = data;
           }
         }

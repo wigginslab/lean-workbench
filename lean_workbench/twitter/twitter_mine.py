@@ -24,8 +24,8 @@ def track_keywords(username = None):
 				print search_results
 				count = len(search_results['statuses'])
 				print 'count :%i' %(count)
-				DateCount = DateCount(count=count)
-				word.counts.append(DateCount)
+				date_count = DateCount(count=count)
+				word.counts.append(date_count)
 				db.session.commit()
 			user_twitter.active = True
 			db.session.add(user_twitter)

@@ -63,7 +63,7 @@ class GoogleAnalyticsDAO(object):
                 count = visit_dict['visitors']
                 user_visits.append([date,count])
 	if cohorts:
-	    return make_response(dumps([{'key':"Your visitors", 'values':visits}]))
+	    return make_response(dumps([{'key':"Your visitors", 'values':user_visits}]))
 	else:
 	    start = user_visitors[-1].date
 	    end = user_visitors[0].date

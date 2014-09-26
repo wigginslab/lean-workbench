@@ -136,7 +136,7 @@ class GoogleAnalyticsAPI:
 		db.session.close()
 
 	def get_user_accounts(self):
-            print 'inisde get_user_accounts'
+            print 'inside get_user_accounts'
             accounts = self.client.management().accounts().list().execute()
             print 'user accounts: '
             print accounts
