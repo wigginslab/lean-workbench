@@ -82,8 +82,6 @@ The following variables must be set in an object called UserConfig in lean_workb
 * SECRET - secret for hashing
 * SECRET_KEY - key for CSRF
 * SECURITY_PASSWORD_SALT - secret for salting passwords (nomz)
-* CELERY_BROKER_URL - where to store celery jobs
-* CELERY_RESULTS_BACKEND - can equal CELERY_BROKER_URL
 
 For each of these APIs you want to use
 
@@ -102,8 +100,6 @@ For each of these APIs you want to use
 * GOOGLE_ANALYTICS_KEY_LOCATION
 * GOOGLE_ANALYTICS_CLIENT_ID
 * GOOGLE_ANALYTICS_KEY_LOCATION
-* CELERY_BROKER_URL
-* CELERY_RESULTS_BACKEND
 
 Example lean_workbench/user_config.py
 ```
