@@ -24,4 +24,5 @@ if __name__ == "__main__":
         manager.add_command("cohort", commands.Cohort())
         manager.add_command("delete_ga", commands.DeleteGACreds())
         manager.add_command("refresh_ga", commands.RefreshGA())
+        manager.add_command("migrate_users", commands.MigrateUsers())
 	manager.run()
