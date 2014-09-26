@@ -7,6 +7,8 @@ from database import db
 from flask.ext.restful import Resource, reqparse, fields, marshal_with, abort
 from flask.ext.security import current_user
 from json import dumps
+import time
+import datetime
 
 class FacebookDAO(object):
     def __init__(self):
@@ -37,6 +39,9 @@ class FacebookResource(Resource):
                         role_name = role.name
                         cohort_data = CohortFacebookLikesModel.query.filter_by(cohort_name=role_name).all()
                         series_values = [x.as_count() for x in cohort_data]
+                        if not series_values:
+                            series_values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now() - datetime.timedelta(days=i))) * 100 , 0] for i in range(len(facebook_page))]
+
                         series_dict = {"key": role_name+ "'s Average Likes", 'values': series_values}
                     series.append(series_dict)
                     return make_response(dumps(series))
