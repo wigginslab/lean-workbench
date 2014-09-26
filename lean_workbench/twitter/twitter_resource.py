@@ -7,6 +7,8 @@ import os
 from database import db
 from flask.ext.security import current_user
 from json import dumps
+import time
+import datetime
 
 class TwitterDAO(object):
 
@@ -48,16 +50,23 @@ class TwitterResource(Resource):
             for key in date_count:
                 values.append([key,date_count[key]])
 
+            if not values:
+                
+                values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now())) * 100, 0]]
+
 	    if not cohorts:
+                
 		return make_response(dumps([{'values':values, key:"Tweets"}]))
 	    else:
 		cohort_objs = []
 		for cohort in cohorts:
 		    cohort_name = cohort.name
 		    cohort_tweet_counts = CohortTweetCountModel.query.filter_by(cohort_name=cohort_name).all()
-		    values = [x.as_count() for x in cohort_tweet_counts]
-		    print values
-		    cohort_obj = {'values':values, 'key': cohort_name+'\'s average tweets'}
+		    cohort_values = [x.as_count() for x in cohort_tweet_counts]
+                    if not cohort_values:
+                        cohort_values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now())) * 100, 0] for i in range(len(values))]
+
+		    cohort_obj = {'values':cohort_values, 'key': cohort_name+'\'s average tweets'}
 		    cohort_objs.append(cohort_obj)
 
 		cohort_objs.append({'values':values, 'key':"Your Tweets"})
