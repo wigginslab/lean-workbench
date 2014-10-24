@@ -747,7 +747,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
     .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
     .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
-    
+    .when('/eula', {templateUrl: '/static/partials/eula.html', controller:EULAController})
     // enable push state
     $locationProvider.html5Mode(true);
 }])
