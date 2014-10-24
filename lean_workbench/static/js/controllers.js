@@ -19,6 +19,9 @@ function ExportController(){
 
 }
 
+function PrivacyController(){
+}
+
 function ViewScaleController($scope, $http){
         $("#logout").show();
 
@@ -740,6 +743,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
     .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
     .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
+    .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
     
     // enable push state
     $locationProvider.html5Mode(true);
