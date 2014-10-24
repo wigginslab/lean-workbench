@@ -19,6 +19,9 @@ function ExportController(){
 
 }
 
+function EULAController(){
+}
+
 function ViewScaleController($scope, $http){
         $("#logout").show();
 
