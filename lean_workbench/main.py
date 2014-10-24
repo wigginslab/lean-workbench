@@ -194,6 +194,7 @@ def configure_views(app):
         @app.route('/dashboard2', methods=['POST', 'GET'])    
         @app.route('/results', methods=['POST', 'GET'])  
         @app.route('/privacy', methods=['POST','GET'])
+        @app.route('/eula', methods=['POST','GET'])
 	def dashboard():
 		"""
 		"""

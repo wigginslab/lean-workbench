@@ -519,6 +519,9 @@ body {
     padding: 1.5em 0;
     text-align: center; }
 
+.eula p {
+  color: black; }
+
 html, body {
   height: 100%; }
 
