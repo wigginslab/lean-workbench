@@ -252,6 +252,13 @@ class RefreshGA(Command):
                 GoogleAnalyticsAPI(username=ga_user.username).refresh_token()
             print 'ga_users now ' + str([ ga_user.refresh_token for ga_user in ga_users])
 
+            from google_analytics.google_analytics_models import GoogleAnalyticsUserModel
+            ga_users = GoogleAnalyticsUserModel.query.all()
+            print 'ga_users before' + str(ga_users)
+            for ga_user in ga_users:
+                db.session.delete(ga_user)
+                db.session.commit()
+            print 'ga_users now ' + str([ ga_user.refresh_token for ga_user in ga_users])
 
 
 class Test(Command):
@@ -270,4 +277,19 @@ class Test(Command):
             for user in ga_users:
                 assert ga_user.refresh_token != None
 
-
+class MigrateUsers(Command):
+    def run(self):
+        import csv
+        app = app_factory(config.Dev)
+        
+        with app.app_context():
+            from database import db 
+            from users.user_model import User
+            with open('user_table.csv', 'rb') as csvfile:
+                for row in csvfile:
+                    id,email,password,last_login_at,current_login_at,last_login_ip,current_login_ip,login_count,created,company,active,confirmed_at,onboarded = row.split(';')
+                    active = True
+                    new_user = User(email=email,password=password,company=company,active=active, onboarded=False)
+                    db.session.add(new_user)
+                    db.session.commit()
+                    print 'user ' + email + 'migrated'
