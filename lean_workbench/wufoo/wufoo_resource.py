@@ -1,11 +1,11 @@
 import sys
 import os
-#from wufoo_model import WufooSurveyModel
+from wufoo_model import WufooSurveyModel, WufooFieldModel
 from flask.ext.restful import Resource
 from flask import Flask, request, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from database import db
-from json import dumps
+from json import dumps, loads
 from flask.ext.security import current_user
 import traceback
 
@@ -17,18 +17,21 @@ class WufooDAO(object):
 
 class WufooResource(Resource):
 
-    def get(self):
+    def get(self, **kwargs):
+        print 'inside wufoo  get'
+        try:
+            print request.args
+            print request.data
+            print request.json
+        except:
+            print traceback.print_exc
         return jsonify(status=200)
 
     def post(self):
         """
         Get wufoo data from webhook
         """
-        return jsonify(status=200) 
-        """
-        print 'inside wufoo post'
-        # get json data
-        data = request.json
+        data = request.form
         print data
         create = data.get("create")
         # if creating/registering survey to user
@@ -50,19 +53,23 @@ class WufooResource(Resource):
                         traceback.print_exc()
                         return jsonify(status=500)
         # if webhook and not the user registering the survey for the first time
-        if not create:
+        else:
             print 'not create'
             # parse json load
             created_by = data.get("CreatedBy")
             entry_id = data.get("EntryId")
             form_structure = data.get("FormStructure")
-            url = form_structure.get("Url")
+            form_structure_dict =  loads(form_structure)
+            url = form_structure_dict.get("Url")
             field_structure = data.get("FieldStructure")
-            fields = field_structure.get("Fields")
+            field_structure_dict = loads(field_structure)
+            fields = field_structure_dict.get("Fields")
             form_url = "%s.wufoo.com/forms/%surl" %(created_by, url)
+            print 'attempt to query for survey'
             # get survey
             survey = WufooSurveyModel.query.filter_by(url=form_url).last()
             if not survey:
+                print 'survey does not exist yet'
                 # if survey doesn't exist yet, pass
                 return jsonify(status="This survey does not exist yet.")
             # create new entry
@@ -109,4 +116,3 @@ class WufooResource(Resource):
         survey.entries.append(new_entry)
         db.session.add(survey)
         db.session.commit()
-        """
