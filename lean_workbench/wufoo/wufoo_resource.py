@@ -34,8 +34,12 @@ class WufooResource(Resource):
         # potential data coming in from wufoo.com
         data = request.form
         # potential data coming in from leanworkbench.com
-        lwb_data = loads(request.data)
-        create = lwb_data.get("create")
+        if request.data:
+            lwb_data = loads(request.data)
+            create = lwb_data.get("create")
+        else:
+            create = False
+
         # if creating/registering survey to user
         if create:
             if current_user.is_anonymous():
@@ -56,6 +60,7 @@ class WufooResource(Resource):
                         return jsonify(status=500)
         # if webhook and not the user registering the survey for the first time
         else:
+            #TODO: confirm handshake
             print 'not create'
             # parse json load
             created_by = data.get("CreatedBy")
@@ -66,14 +71,16 @@ class WufooResource(Resource):
             field_structure = data.get("FieldStructure")
             field_structure_dict = loads(field_structure)
             fields = field_structure_dict.get("Fields")
-            form_url = "%s.wufoo.com/forms/%surl" %(created_by, url)
+            form_url = "https://%s.wufoo.com/forms/%s/" %(created_by, url)
             print 'attempt to query for survey'
             # get survey
-            survey = WufooSurveyModel.query.filter_by(url=form_url).last()
+            survey = WufooSurveyModel.query.filter_by(url=form_url).all()
             if not survey:
+                print form_url
                 print 'survey does not exist yet'
                 # if survey doesn't exist yet, pass
                 return jsonify(status="This survey does not exist yet.")
+            survey = survey[-1]
             # create new entry
             print 'create new entry for survey'
             new_entry = WufooEntryModel(entry_id=entry_id)
