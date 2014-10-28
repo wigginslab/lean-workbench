@@ -31,15 +31,17 @@ class WufooResource(Resource):
         """
         Get wufoo data from webhook
         """
+        # potential data coming in from wufoo.com
         data = request.form
-        print data
-        create = data.get("create")
+        # potential data coming in from leanworkbench.com
+        lwb_data = loads(request.data)
+        create = lwb_data.get("create")
         # if creating/registering survey to user
         if create:
             if current_user.is_anonymous():
                 return dumps([{"status":400}])
             else:
-                url = data.get("url")
+                url = lwb_data.get("url")
                 if not url:
                     return jsonify(emsg="No url given")
                 else:
@@ -73,6 +75,7 @@ class WufooResource(Resource):
                 # if survey doesn't exist yet, pass
                 return jsonify(status="This survey does not exist yet.")
             # create new entry
+            print 'create new entry for survey'
             new_entry = WufooEntryModel(entry_id=entry_id)
             survey_values = survey.values
 
