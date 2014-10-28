@@ -271,11 +271,10 @@ class Test(Command):
 
         app = app_factory(config.Dev)
         with app.test_client() as c:
-            rv = c.get('/?vodka=42')
-            from google_analytics_models import GoogleAnalyticsUserModel
-            ga_users = GoogleAnalyticsUserModel.query.all()
-            for user in ga_users:
-                assert ga_user.refresh_token != None
+            rv = c.post('/api/v1/wufoo')
+            print rv
+            print dir(rv)
+            print [x for x in rv.response]
 
 class MigrateUsers(Command):
     def run(self):

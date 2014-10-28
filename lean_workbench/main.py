@@ -200,8 +200,8 @@ def configure_views(app):
 		"""
 
 		return render_template('public.html', logged_in=True)
-	
-	api = restful.Api(app)
+
+	api = restful.Api(app, decorators=[csrf.exempt])
 	api.add_resource(HypothesisResource, '/api/v1/hypotheses')
 	api.add_resource(FacebookResource, '/api/v1/facebook')
 	api.add_resource(TwitterResource, '/api/v1/twitter')

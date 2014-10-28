@@ -1,7 +1,7 @@
 import sys
 import os
-from wufoo_model import WufooSurveyModel
-from flask.ext.restful import Resource, reqparse
+#from wufoo_model import WufooSurveyModel
+from flask.ext.restful import Resource
 from flask import Flask, request, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
 from database import db
@@ -9,25 +9,22 @@ from json import dumps
 from flask.ext.security import current_user
 import traceback
 
+"""
 class WufooDAO(object):
     def __init__(self, username):
         self.username = username
+"""
 
 class WufooResource(Resource):
 
-    def get(self, **kwargs):
-        print 'inside wufoo  get'
-        try:
-            print request.args
-            print request.data
-            print dir(request)
-        except:
-            print traceback.print_exc
+    def get(self):
         return jsonify(status=200)
 
-    def post(self, **kwargs):
+    def post(self):
         """
         Get wufoo data from webhook
+        """
+        return jsonify(status=200) 
         """
         print 'inside wufoo post'
         # get json data
@@ -112,3 +109,4 @@ class WufooResource(Resource):
         survey.entries.append(new_entry)
         db.session.add(survey)
         db.session.commit()
+        """
