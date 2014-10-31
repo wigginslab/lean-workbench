@@ -267,14 +267,21 @@ class Test(Command):
     """
     def run(self):
         from flask import request
+        from wufoo.wufoo_model import WufooSurveyModel
 
 
         app = app_factory(config.Dev)
         with app.test_client() as c:
-            rv = c.post('/api/v1/wufoo')
+            from database import db
+            new_survey = WufooSurveyModel(
+                   username='test@test.com',
+                   url='https://test.wufoo.com/forms/test'
+            )
+            db.session.add(new_survey)
+            rv = c.post(
+                    '/api/v1/wufoo&CreatedBy=test?Url=test'
+                    )
             print rv
-            print dir(rv)
-            print [x for x in rv.response]
 
 class MigrateUsers(Command):
     def run(self):

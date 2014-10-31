@@ -18,14 +18,13 @@ class WufooDAO(object):
 class WufooResource(Resource):
 
     def get(self, **kwargs):
-        print 'inside wufoo  get'
-        try:
-            print request.args
-            print request.data
-            print request.json
-        except:
-            print traceback.print_exc
-        return jsonify(status=200)
+        data = request.json
+        survey_id = data.get('survey_id')
+        if not survey_id:
+            return make_response(json.dumps({'status':500}))
+
+        else:
+            pass 
 
     def post(self):
         """
