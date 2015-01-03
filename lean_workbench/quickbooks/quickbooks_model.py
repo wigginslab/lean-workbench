@@ -1,34 +1,23 @@
 from database import db
 import datetime
+import time
 
-class Quickbooks_model(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	created = db.Column(db.DateTime)
-	updated = db.Column(db.DateTime)
-	username = db.Column(db.String)
-	access_token = db.Column(db.String)
-	access_token_secret = db.Column(db.String)
-        # company identifier
-	realm_id = db.Column(db.String)
-        # already mined once?
-        active = db.Column(db.Boolean)
+class QuickbooksUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    active = db.Column(db.Boolean, default=False)
+    balances = db.relationship('QuickbooksDailyBalance', backref='quickbooks_user',lazy='dynamic')
 
-	def __init__(self, username, access_token, oauth_verifier, realm_id):
-		self.created = datetime.datetime.now()
-		self.updated = datetime.datetime.now()
-		self.username = username
-		self.access_token = access_token
-		self.oauth_verifier = oauth_verifier
-		self.realm_id = realm_id
-
-class Quickbooks_balance(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	created = db.Column(db.DateTime)
-	username = db.Column(db.String)
-	balance = db.Column(db.Integer)
-
-	def __init__(self,username, balance):
-		self.created = datetime.datetime.now()
-		self.balance = balance
-		self.name =	name
-		self.username = username
+class QuickbooksDailyBalance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)    
+    balance = db.Column(db.Float)
+    quickbooks_user_id = db.Column(db.Integer, db.ForeignKey('quickbooks_user.id'))
+    
+    def __init__(self,date, username, balance):
+            self.date = date
+            self.balance = balance
+            self.name = name
+    
+    def date_balance(self):
+        return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.balance]

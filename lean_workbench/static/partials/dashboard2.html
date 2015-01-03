@@ -42,7 +42,7 @@
                                 </nvd3-stacked-area-chart>
                             </div>
                             <div ng-hide="has_twitterData">
-                                You have not connected a twitter account yet.                   </div>                 
+                                You have not connected a twitter account yet.          </div>                 
                             <h2>Google Analytics Visitor Data</h2>
                         <div ng-controller="DashboardControllerTwo" ng-show="has_ga_data">
                             <nvd3-stacked-area-chart
@@ -104,15 +104,37 @@
                     </div>
                     <div ng-hide="has_fb_data">
                     You have not yet connected a Facebook account.
+                </div>
+                <h2>Quickbooks Data</h2>
+                        <div ng-show="has_qb_data">
+                           <nvd3-stacked-area-chart
+                            data="quickbooksData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                            yAxisLabel="Balance"
+                            xAxisLabel="Date"
+                            interactive="true"
+                            useInteractiveGuideline="true"
+                            toolTipContent="toolTipContentFunction()" 
+			    tooltips="true"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+			    <svg></svg>  </nvd3-stacked-area-chart>
                     </div>
-                    </div>
-                    <div class="block-content collapse in">
+                    <div ng-hide="has_fb_data">
+                    You have not yet connected a Quickbooks account.
                     </div>
                 </div>
+                <div class="block-content collapse in">
                 </div>
-                <!-- /block -->
             </div>
         </div>
+        <!-- /block -->
+    </div>
+    </div>
     </div>
 </div>
 
