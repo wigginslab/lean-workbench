@@ -13,11 +13,12 @@ class QuickbooksDailyBalance(db.Model):
     date = db.Column(db.DateTime)    
     balance = db.Column(db.Float)
     quickbooks_user_id = db.Column(db.Integer, db.ForeignKey('quickbooks_user.id'))
-    
-    def __init__(self,date, username, balance):
+    name = db.Column(db.String)
+
+    def __init__(self,date, username, balance,name):
             self.date = date
             self.balance = balance
             self.name = name
-    
+
     def date_balance(self):
         return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.balance]
