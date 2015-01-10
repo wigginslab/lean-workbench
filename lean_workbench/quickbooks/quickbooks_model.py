@@ -6,9 +6,9 @@ class QuickbooksUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
     active = db.Column(db.Boolean, default=False)
-    balances = db.relationship('QuickbooksDailyBalance', backref='quickbooks_user',lazy='dynamic')
+    daily_balances = db.relationship('QuickbooksDailyAccountBalance', backref='quickbooks_user', lazy='joined')
 
-class QuickbooksDailyBalance(db.Model):
+class QuickbooksDailyAccountBalance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime)    
     balance = db.Column(db.Float)

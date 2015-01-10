@@ -5,7 +5,7 @@ from database import db
 
 def mine_qb_data(quickbooks_server_url, api_token, username=None):
         if username:
-            users = [QuickbooksUserModel.query.filter_by(username=username)]
+            users = [QuickbooksUser.query.filter_by(username=username)]
         else: 
             users = [x for x in QuickbooksUser.query.all()]
         for user in users:
@@ -19,12 +19,17 @@ def mine_qb_data(quickbooks_server_url, api_token, username=None):
             data = r.json()
             print data
             for row in data:
-                date = date_tuple(row['date'])
+                year,month,day = str(date_tuple(row['date']).date()).split("-")
+                year = int(year)
+                month = int(month)
+                day = int(day)
+                new_date = datetime.date(year,month,day)
                 username = username
                 balance = row['balance']
                 name = row['name']
-                new_daily_balance = QuickbooksDailyBalance(username=username, balance=balance, date=date,name=name)
-                user.balances.append(new_daily_balance)
+                new_daily_account_balance = QuickbooksDailyAccountBalance(username=username, balance=balance, date=new_date,name=name)
+
+                user.daily_balances.append(new_daily_account_balance)
                 db.session.add(user)
                 db.session.commit()
 

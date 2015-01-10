@@ -198,8 +198,13 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/google-analytics?metric=visits'
       ).success(
         function(data) {
+      if (data.hasOwnProperty('authed')){
+              $scope.has_qb_data = false;
+          }
+      else{
           $scope.googleData = data;
           $scope.has_ga_data = true;
+        }
         }
       ).error(function(data){
           $scope.has_ga_data = false;
@@ -211,8 +216,14 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	    '/api/v1/google-analytics?metric=referrals'
 	  ).success(
 	    function(data) {
+      if (data.hasOwnProperty('authed')){
+              $scope.has_fb_data = false;
+          }
+      else{
+
 	      $scope.googleSourceData = data;
 	    }
+        }
 	  ).error(function(data){
 		 }
 	  )
@@ -228,7 +239,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_fb_data = true;
-            console.log(data);
             $scope.facebookData = data;
           }
         }
@@ -245,6 +255,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_qb_data = true;
+            console.log(data)
             $scope.quickbooksData = data;
           }
         }
