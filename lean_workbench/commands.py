@@ -197,7 +197,7 @@ class Mine(Command):
         app = app_factory(config.Dev)
         with app.app_context():
             api_token = app.config.get('QUICKBOOKS_SERVER_API_TOKEN')
-            quickbooks_server_url = app.config.get('QUICKBOOKS_SERVER_URL')
+            quickbooks_server_url = app.config.get('QUICKBOOKS_SERVER_URL') + "/data"
               
             if new:
                 new_twitters = TwitterModel.query.filter_by(active=False).all()
