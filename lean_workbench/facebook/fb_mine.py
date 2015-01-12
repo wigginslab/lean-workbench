@@ -17,15 +17,12 @@ def mine_fb_page_data(username=None):
 		oauth_access_token = user.access_token
 		username = user.username
 		if oauth_access_token:
-			# get graph
+                    try:
+		        # get graph
 			graph = facebook.GraphAPI(oauth_access_token)
 			# get pages
 			pages = graph.request('me/accounts')
 			page_access_token = pages['data'][0]['access_token']
-			print oauth_access_token
-			print '\n'
-			print page_access_token
-			print '\n'
 			# get likes per page for today
 			page_id = pages['data'][0]['category_list'][0]['id']
 			page = graph.request(str(page_id)+'?access_token='+page_access_token)
@@ -38,3 +35,5 @@ def mine_fb_page_data(username=None):
 			page_today = FacebookPageData(username = username, likes=likes, page_name=page_name)
 			db.session.add(page_today)
 			db.session.commit()
+                    except:
+                        print 'error in fb_mine.py for %s' %(user.username)

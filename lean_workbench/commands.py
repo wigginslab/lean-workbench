@@ -205,19 +205,25 @@ class Mine(Command):
                 new_gas = GoogleAnalyticsUserModel.query.filter_by(active=False).all()
                 new_qbs = QuickbooksUser.query.filter_by(active=False).all()
                 for user in new_twitters:
-                    track_keywords(username=user.username)
+                    try:
+                        track_keywords(username=user.username)
+                    except:
+                        print '%s failed twitter mine' %(user.username)
                 for user in new_fbs:
-                    mine_fb_page_data(username=user.username)   
+                    try:
+                        mine_fb_page_data(username=user.username)   
+                    except:
+                        print '%s failed fb mine' %(user.username)
                 for user in new_gas:
-                    mine_visits(username=user.username)
-                for user in new_qbs:
-                    mine_visits(username=user.username, quickbooks_server_url=quickbooks_server_url,api_token=api_token)
                     try:
                         mine_visits(username=user.username)
-                        print '% visits mined' %(user.username)
                     except:
-                        print 'Exception mining %s visits' %(user.username)
-
+                        print '% failed ga visitor mine' %(user.username)
+                for user in new_qbs:
+                    try:
+                        mine_visits(username=user.username, quickbooks_server_url=quickbooks_server_url,api_token=api_token)
+                    except:
+                        print '% failed qb mine' %(user.username)
             else:        
                 mine_fb_page_data()
                 mine_visits()
