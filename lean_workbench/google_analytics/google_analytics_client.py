@@ -40,7 +40,10 @@ class GoogleAnalyticsAPI:
                             print 'about to refresh token'
                             self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
                             print 'GA credentials: ' + str(self.credentials_dict)
-                        self.client = self.build_client(self.credentials)
+                        else: 
+                            self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
+
+                        self.client = self.build_client()
 		else:
 			print "no GA  credentials"
 			return None
@@ -69,23 +72,26 @@ class GoogleAnalyticsAPI:
                 response_json = json.loads(response.read())
                 print 'google refresh token response json: ' + str(response_json)
                 new_access_token = response_json["access_token"]
+                self.credentials.access_token = new_access_token
                 new_expiration_date = datetime.now() + timedelta(hours=1)
                 self.credentials.token_expiry = new_expiration_date
                 db.session.add(self.credentials)
                 db.session.commit()
                 print 'done getting values from fresh_token'
 
-	def build_client(self, ga_user_credentials):
+	def build_client(self):
 		print 'build client'
-		credential_dict = ga_user_credentials.as_dict()
+		credential_dict = self.credentials.as_dict()
                 print 'credentials: '
                 print credential_dict
 		credential_dict['_module'] = "oauth2client.client"
 		credential_dict['_class'] = "OAuth2Credentials"
 		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
+                credential_dict['access_type'] = "offline"
 		credential_dict['invalid'] = "false"
-                credential_dict['token_expiry'] = "3600"
+                credential_dict['token_expiry'] = "T".join(str(credential_dict['token_expiry']).split(" ")).split(".")[0]
+                print credential_dict['token_expiry']
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
 		http = httplib2.Http()
                 print 'credentials built'
@@ -110,6 +116,7 @@ class GoogleAnalyticsAPI:
 		"""
 		Handle callback information
 		"""
+                print 'redirect_uri %s' %(google_analytics_callback_url)
 		client_secrets = "/var/www/lean-workbench/lean_workbench/google_analytics/ga_client_secrets.json"
 		flow = flow_from_clientsecrets(client_secrets,
 						scope='https://www.googleapis.com/auth/analytics.readonly',
@@ -132,7 +139,6 @@ class GoogleAnalyticsAPI:
 		print 'saving credentials'
 		# store information necessary for building client
                 credentials_dict['token_expiry'] = datetime.now() + timedelta(hours=1)
-                print credentials_dict
 		GAUM = GoogleAnalyticsUserModel(credentials_dict)
 		db.session.add(GAUM)
 		db.session.commit()
