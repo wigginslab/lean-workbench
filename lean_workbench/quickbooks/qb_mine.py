@@ -30,6 +30,7 @@ def mine_qb_data(quickbooks_server_url, api_token, username=None):
                 new_daily_account_balance = QuickbooksDailyAccountBalance(username=username, balance=balance, date=new_date,name=name)
 
                 user.daily_balances.append(new_daily_account_balance)
+                user.active = True
                 db.session.add(user)
                 db.session.commit()
 

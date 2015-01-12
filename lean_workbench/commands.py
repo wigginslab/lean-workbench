@@ -212,6 +212,12 @@ class Mine(Command):
                     mine_visits(username=user.username)
                 for user in new_qbs:
                     mine_visits(username=user.username, quickbooks_server_url=quickbooks_server_url,api_token=api_token)
+                    try:
+                        mine_visits(username=user.username)
+                        print '% visits mined' %(user.username)
+                    except:
+                        print 'Exception mining %s visits' %(user.username)
+
             else:        
                 mine_fb_page_data()
                 mine_visits()

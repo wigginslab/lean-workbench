@@ -20,6 +20,7 @@ class GoogleAnalyticsAPI:
 		args:
 			username: username on the Lean Workbench sites
 		"""
+                self.client = None
 		# get latest credentials
 		self.credentials = GoogleAnalyticsUserModel.query.filter_by(username = username).first()
                 print self.credentials
@@ -34,6 +35,8 @@ class GoogleAnalyticsAPI:
                         self.credentials_dict = credentials_dict
                         print 'about to compare times'
                         if current_time > expires_on:
+                            print 'credentials dict:'
+                            print self.credentials_dict
                             print 'about to refresh token'
                             self.refresh_token(credentials_dict.get("refresh_token"), credentials_dict.get("client_id"), credentials_dict.get("client_secret"))
                             print 'GA credentials: ' + str(self.credentials_dict)
@@ -60,7 +63,7 @@ class GoogleAnalyticsAPI:
                 print 'data:' + str(data)
 		# post request for refresh token
 		req = urllib2.Request(url, data)
-                print 'req: ' + str(req)
+                print  req.get_full_url()
                 response = urllib2.urlopen(req)
                 print 'response: ' + str(response)
                 response_json = json.loads(response.read())
@@ -82,7 +85,7 @@ class GoogleAnalyticsAPI:
 		credential_dict['token_uri'] = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force"
 		credential_dict['user_agent'] = "null"
 		credential_dict['invalid'] = "false"
-                credential_dict['token_expiry'] = 3600
+                credential_dict['token_expiry'] = "3600"
 		credentials = Credentials.new_from_json(json.dumps(credential_dict))
 		http = httplib2.Http()
                 print 'credentials built'
@@ -137,6 +140,7 @@ class GoogleAnalyticsAPI:
 
 	def get_user_accounts(self):
             print 'inside get_user_accounts'
+            print self.client
             accounts = self.client.management().accounts().list().execute()
             print 'user accounts: '
             print accounts
