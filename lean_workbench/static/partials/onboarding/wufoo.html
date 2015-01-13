@@ -14,6 +14,7 @@
         <form novalidate role="form simple-form" form-submit="add_survey" name="survey-form" style="text-align:center">
             <span class="help-block" ng-show="survey_url_error">Survey url must be a valid Wufoo url.</span>
             <input ng-model="url" placeholder="Survey url">
+            <input ng-model="email" placeholder="Your Wufoo account email">
             <input ng-model="handshake" placeholder="Handshake key (optional)">
         </form> 
         <button ng-click="add_survey()" type="button" class="btn btn-primary btn-lg">Add Survey</button>

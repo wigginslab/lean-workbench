@@ -112,7 +112,7 @@ function WufooController($scope, $http){
 
       $http.post(
         '/api/v1/wufoo',
-        JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
+        JSON.stringify({url: $scope.url, handshake: $scope.handshake, email: $scope.email, create:true})
         ).success(
         function(data){
             $scope.request_sent = true;
@@ -269,7 +269,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
           // if success
           if (data['response']['user']){
                  
-                 $location.path("/onboarding/stick");
+                 $location.path("/signin");
 
           }
 
