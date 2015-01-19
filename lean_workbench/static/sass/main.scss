@@ -171,11 +171,17 @@ body {
     }
 
     footer {
-        height: 75px;
+        position: absolute;
+        bottom: 0;
         width: 100%;
-        background: #3D3D3D;
-        padding: 1.5em 0;
-        text-align: center;        
+        /* Set the fixed height of the footer here */
+        height: 60px;
+        background-color:  #3D3D3D; 
+        text-align:center; 
+    }
+
+    footer p{
+      margin-top:20px;
     }
     
 }
@@ -184,9 +190,14 @@ body {
     color:black;
 }
 
-html, body {
-  height: 100%;
-}
+   html {
+       position: relative;
+         min-height: 100%;
+       }
+       body {
+           /* Margin bottom by footer height */
+           margin-bottom: 60px;
+         }
 
 #wrap {
   min-height: 100%;
@@ -195,13 +206,6 @@ html, body {
 #main {
   overflow:auto;
 }
-
-.footer {
-  position: relative;
-  height: 50px;
-  clear:both;
-  padding-top:20px;
-} 
 
 .container{
     width:100%;
