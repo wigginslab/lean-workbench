@@ -598,9 +598,10 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                                          ).success(
                                                function(data){
                                                         console.log(data);
+                                                        $location.path("/signin");
                                                 }
                                         )
-                                        $location.path("/onboarding/stick");
+                                        $location.path("/");
                                         }
 
                                     else{
@@ -648,12 +649,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          if (data.meta){
-            var status_code = data.meta.code;
-          }
-          else{
-            var status_code = data.status;
-          }
+          console.log(data);
+          var status_code = data.meta.code;
           if (status_code == 200 || status_code == 302 || status_code == 301){        
             $.cookie('email', $scope.email, { expires: 7 });
             $.cookie('auth_token', data.authentication_token, { expires: 7 });

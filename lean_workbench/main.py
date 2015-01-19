@@ -19,7 +19,7 @@ from users.user_resource import UserResource
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
-		protected_templates = ['partials/dashboard.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html']
+		protected_templates = ['partials/dashboard2.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html']
 		# Get user from session
 		if not current_user.is_anonymous() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
@@ -178,6 +178,8 @@ def configure_views(app):
 	@app.route('/signin', methods=["POST", "GET"])
 	@app.route('/signup', methods=["POST", "GET"])
 	def sign():
+                if current_user.is_authenticated():
+                    return redirect(url_for('dashboard'))
 		return render_template('public.html', logged_in=current_user.is_authenticated())
 
 	@auth_token_required
@@ -189,12 +191,12 @@ def configure_views(app):
 	@app.route('/onboarding/pay', methods=['POST','GET'])
         @app.route('/onboarding/empathy', methods=['POST','GET'])
 	@app.route('/export', methods=['POST','GET'])
-	@app.route('/dashboard', methods=['POST', 'GET'])    
-	@app.route('/scale', methods=['POST', 'GET'])    
-        @app.route('/dashboard2', methods=['POST', 'GET'])    
+        @app.route('/scale', methods=['POST', 'GET'])    
         @app.route('/results', methods=['POST', 'GET'])  
         @app.route('/privacy', methods=['POST','GET'])
         @app.route('/eula', methods=['POST','GET'])
+        @app.route('/dashboard', methods=['POST', 'GET'])    
+
 	def dashboard():
 		"""
 		"""
