@@ -198,6 +198,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/google-analytics?metric=visits'
       ).success(
         function(data) {
+
           $scope.googleData = data;
           $scope.has_ga_data = true;
         }
@@ -386,23 +387,17 @@ function StickController($scope, $http, GoogleAnalytics){
                     '/connect/google-analytics'
                     ).success(
                     function(data){
-                            var authed = data['authed'];
                             console.log(authed)
                             if (data.hasOwnProperty('redirect_url')){
 
                                 var redirect_url = data['redirect_url']
                                 window.location = redirect_url;
                             }
-                            if (authed == true){
-                                    $scope.has_GA = true;
-                            }
-                            else{
-                                if (data.hasOwnProperty('credentials')){
-                                    $scope.has_GA=true;
-                            }
-                            }
-		    }
-	            )
+                            $scope.has_GA = true;
+		    }).error(
+                      function(data){
+                        $scope.has_GA = false;
+                      })
 
 	}
 
@@ -470,10 +465,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 		).success(
 			function(data){
 				console.log(data)
-                                console.log(data[0])
-				if (data[0]['twitter_authed']){
 					$scope.has_twitter = true;
-				}
 			}
 		)
 
