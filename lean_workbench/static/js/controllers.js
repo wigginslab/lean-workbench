@@ -184,13 +184,10 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/twitter'
       ).success(
         function(data) {
-          if (data.hasOwnProperty('twitter_authed')){
-             $scope.has_twitterData = false; 
-        }
-          $scope.twitterData = data;        
           $scope.has_twitterData = true;
         }
       ).error(function(data){
+          $scope.has_twitterData = false;
 	     }
       )
 

@@ -26,7 +26,20 @@ class WufooResource(Resource):
                 return make_response(dumps({'status':500}))
             else:
                 surveys = WufooSurveyModel.query.filter_by(username=username).all()
-                return make_response(dumps([survey.as_dict() for survey in surveys]))
+                
+                surveys = [survey for survey in surveys]
+                entries = [survey.entries.all() for survey in surveys]
+                print entries
+                entries = [entry.as_dict() for entry in entries[0]]
+                return make_response(dumps(entries))
+                survey_fields = []
+                for survey in surveys:
+                  survey_fields.append([])
+                  this_survey = survey_fields[-1]
+                  for field in this_survey.fields:
+                    title = field.get("title")
+
+                return make_response(dumps(surveys))
         else:
             pass 
 

@@ -92,6 +92,7 @@ class WufooEntryModel(db.Model):
 
     def as_dict(self):
         return {
+            'values':[value.as_dict() for value in self.values]
                 }
 class WufooValueModel(db.Model):
     """
