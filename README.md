@@ -24,7 +24,7 @@ lean-workbench uses a number of open source projects to work properly:
 * Flask-Sqlalchemy- a Flask SQL database wrapper
 * Postgresql- A SQL database
 * HTML5Boilerplate
-* Yeoman - Frontend management (you should have Node.js and NPM installed)
+* Yeoman - Frontend management
  
 Installation
 --------------
@@ -43,6 +43,10 @@ For the production server:
 For the cronjob server:
 ```
 ./setup-deploy-cronjob.sh
+```
+Copy the crontab contents into
+```
+crontab -e
 ```
 Open the file
 ```
@@ -64,16 +68,6 @@ Crontab program logs are stored in:
 ```
 /var/mail/root
 ```
-
-
-copy crontab contents to crontab 
-```
-crontab -e
-```
-
-to run cronjobs.
-
-
 Configuration
 --------------------
 The following variables must be set in an object called UserConfig in lean_workbench/user_config.py
@@ -81,7 +75,7 @@ The following variables must be set in an object called UserConfig in lean_workb
 * SQLALCHEMY_DATABASE_URI - url to a sqlalchemy compatible database
 * SECRET - secret for hashing
 * SECRET_KEY - key for CSRF
-* SECURITY_PASSWORD_SALT - secret for salting passwords (nomz)
+* SECURITY_PASSWORD_SALT - secret for salting passwords 
 
 For each of these APIs you want to use
 
@@ -100,6 +94,8 @@ For each of these APIs you want to use
 * GOOGLE_ANALYTICS_KEY_LOCATION
 * GOOGLE_ANALYTICS_CLIENT_ID
 * GOOGLE_ANALYTICS_KEY_LOCATION
+* QUICKBOOKS_SERVER_API_TOKEN
+* QUICKBOOKS_SERVER_URL
 
 Example lean_workbench/user_config.py
 ```

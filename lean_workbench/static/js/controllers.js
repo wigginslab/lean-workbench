@@ -196,8 +196,12 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
       ).success(
         function(data) {
 
+              $scope.has_ga_data = false;
+          }
+      else{
           $scope.googleData = data;
           $scope.has_ga_data = true;
+        }
         }
       ).error(function(data){
           $scope.has_ga_data = false;
@@ -209,8 +213,14 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	    '/api/v1/google-analytics?metric=referrals'
 	  ).success(
 	    function(data) {
+      if (data.hasOwnProperty('authed')){
+              $scope.has_fb_data = false;
+          }
+      else{
+
 	      $scope.googleSourceData = data;
 	    }
+        }
 	  ).error(function(data){
 		 }
 	  )
@@ -238,13 +248,30 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_fb_data = true;
-            console.log(data);
             $scope.facebookData = data;
           }
         }
       ).error(function(data){
 	     }
       )
+
+        $http.get(
+        '/api/v1/quickbooks'
+      ).success(
+        function(data) {
+          if (data.hasOwnProperty('qb_authed')){
+              $scope.has_qb_data = false;
+          }
+          else{
+            $scope.has_qb_data = true;
+            console.log(data)
+            $scope.quickbooksData = data;
+          }
+        }
+      ).error(function(data){
+	     }
+      )
+
 }
 
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {
@@ -533,20 +560,11 @@ function PayController($scope, $http){
 			function(data){
 				if (data['qb_authed']){
 					$scope.has_qb = true;
+                                        $scope.qb_url = data['qb_url'];
 				}
 			}
 		)
 
-    $scope.qb_ghost = function(){
-        $http.post(
-	    '/api/v1/ghosting',
-	    JSON.stringify({'feature':"quickbooks"})
-	).success(
-	    function(data){
-                $scope.ghosting_clicked = true;
-	    }
-	)
-    }
 
     $scope.done_onboarding = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
@@ -736,16 +754,16 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
     .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
     .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
     .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
-	.when('/signin', {templateUrl: 'static/partials/signin.html'})
-	.when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
-	.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
-	.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
-	.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
-    .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
-    .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
-    .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
-    .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
-    .when('/eula', {templateUrl: '/static/partials/eula.html', controller:EULAController})
-    // enable push state
-    $locationProvider.html5Mode(true);
+    .when('/signin', {templateUrl: 'static/partials/signin.html'})
+    .when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
+    .when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+    .when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
+    .when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
+.when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
+.when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
+.when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
+.when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
+.when('/eula', {templateUrl: '/static/partials/eula.html', controller:EULAController})
+// enable push state
+$locationProvider.html5Mode(true);
 }])

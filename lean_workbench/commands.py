@@ -187,36 +187,49 @@ class Mine(Command):
             new- if true, check for users that haven't been mined yet and mine only their data.
         """
         from twitter.twitter_model import TwitterModel
-        from quickbooks.quickbooks_model import Quickbooks_model
+        from quickbooks.quickbooks_model import QuickbooksUser
         from facebook.facebook_model import FacebookModel
         from google_analytics.google_analytics_models import GoogleAnalyticsUserModel
     	from twitter.twitter_mine import track_keywords
     	from google_analytics.ga_mine import mine_visits
         from facebook.fb_mine import mine_fb_page_data
-        #from quickbooks.qb_mine import mine_qb_data
+        from quickbooks.qb_mine import mine_qb_data
+        
         app = app_factory(config.Dev)
         with app.app_context():
-            consumer_key = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_KEY')
-            consumer_secret = app.config.get('QUICKBOOKS_OAUTH_CONSUMER_SECRET')
-            app_token = app.config.get('QUICKBOOKS_APP_TOKEN')
+            api_token = app.config.get('QUICKBOOKS_SERVER_API_TOKEN')
+            quickbooks_server_url = app.config.get('QUICKBOOKS_SERVER_URL')
               
             if new:
                 new_twitters = TwitterModel.query.filter_by(active=False).all()
-                #new_qbs = Quickbooks_model.query.filter_by(active=False).all()
                 new_fbs = FacebookModel.query.filter_by(active=False).all()
                 new_gas = GoogleAnalyticsUserModel.query.filter_by(active=False).all()
+                new_qbs = QuickbooksUser.query.filter_by(active=False).all()
                 for user in new_twitters:
-                    track_keywords(username=user.username)
+                    try:
+                        track_keywords(username=user.username)
+                    except:
+                        print '%s failed twitter mine' %(user.username)
                 for user in new_fbs:
-                    mine_fb_page_data(username=user.username)   
+                    try:
+                        mine_fb_page_data(username=user.username)   
+                    except:
+                        print '%s failed fb mine' %(user.username)
                 for user in new_gas:
-		    print user
-                    mine_visits(username=user.username)
+                    try:
+                        mine_visits(username=user.username)
+                    except:
+                        print '% failed ga visitor mine' %(user.username)
+                for user in new_qbs:
+                    try:
+                        mine_visits(username=user.username, quickbooks_server_url=quickbooks_server_url,api_token=api_token)
+                    except:
+                        print '% failed qb mine' %(user.username)
             else:        
                 mine_fb_page_data()
                 mine_visits()
                 track_keywords()
-                #mine_qb_data(consumer_key,consumer_secret,app_token)
+                mine_qb_data(quickbooks_server_url,api_token)
 
 class PrintUsers(Command):
 	"""

@@ -1,9 +1,10 @@
 # deploy-server.sh
 
 # add dem repos and packages
+sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
-sudo apt-get install -y git libapache2-mod-wsdi postgresql postgresql-contrib python-software-properties python g++ make nodejs libpq-dev python-dev npm
+sudo apt-get install -y git apache2 libapache2-mod-wsgi postgresql postgresql-contrib nodejs libpq-dev python-dev python-virtualenv
 sudo a2enmod wsgi
 npm install -g grunt-cli
 

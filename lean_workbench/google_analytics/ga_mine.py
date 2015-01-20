@@ -14,10 +14,14 @@ def mine_visits(username=None):
                 db.session.commit()
 	if ga_users:
 		for ga_user in ga_users:
-			ga = Google_Analytics_User_Querier(username=ga_user.username)
-			# get the latest visit data
-			ga.get_new_user_visit_data()
+                    try:
+                        ga = Google_Analytics_User_Querier(username=ga_user.username)
+                        # get the latest visit data
+                        ga.get_new_user_visit_data()
                         ga.get_referral_data()
+                        print '%s ga data mined' %(ga_user.username)
+                    except:
+                        print 'exception mining %s ga data' %(ga_user.username)
 
 class Google_Analytics_User_Querier:
 	"""
