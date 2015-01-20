@@ -112,7 +112,7 @@ class Google_Analytics_User_Querier:
 
 				except:
 				    print 'ga new visitor mining exception, setting visitors to 0'
-				    visitors_data_model = GoogleAnalyticsVisitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=total_visitors,percent_new_visits=percent_new_visits,new_visits=new_visit)
+				    visitors_data_model = GoogleAnalyticsVisitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=0,percent_new_visits=percent_new_visits,new_visits=new_visit)
 				    db.session.add(visitors_data_model)
 				    db.session.commit()
 		

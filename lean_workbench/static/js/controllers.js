@@ -112,7 +112,7 @@ function WufooController($scope, $http){
 
       $http.post(
         '/api/v1/wufoo',
-        JSON.stringify({url: $scope.url, handshake: $scope.handshake, create:true})
+        JSON.stringify({url: $scope.url, handshake: $scope.handshake, email: $scope.email, create:true})
         ).success(
         function(data){
             $scope.request_sent = true;
@@ -184,13 +184,10 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/twitter'
       ).success(
         function(data) {
-          if (data.hasOwnProperty('twitter_authed')){
-             $scope.has_twitterData = false; 
-        }
-          $scope.twitterData = data;        
           $scope.has_twitterData = true;
         }
       ).error(function(data){
+          $scope.has_twitterData = false;
 	     }
       )
 
@@ -198,6 +195,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/google-analytics?metric=visits'
       ).success(
         function(data) {
+
           $scope.googleData = data;
           $scope.has_ga_data = true;
         }
@@ -217,6 +215,18 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 		 }
 	  )
 
+        $http.get(
+	    '/api/v1/wufoo'
+	  ).success(
+	    function(data) {
+	      $scope.wufooValues = data['values'][0].fields;
+              $scope.wufooQuestionTitle = data['values'][0]['title'];
+              console.log(data['values'][0]['title']);
+              $scope.wufooTitle = data['name'];
+	    }
+	  ).error(function(data){
+		 }
+	  )
 
 
         $http.get(
@@ -269,7 +279,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
           // if success
           if (data['response']['user']){
                  
-                 $location.path("/onboarding/stick");
+                 $location.path("/signin");
 
           }
 
@@ -386,23 +396,17 @@ function StickController($scope, $http, GoogleAnalytics){
                     '/connect/google-analytics'
                     ).success(
                     function(data){
-                            var authed = data['authed'];
                             console.log(authed)
                             if (data.hasOwnProperty('redirect_url')){
 
                                 var redirect_url = data['redirect_url']
                                 window.location = redirect_url;
                             }
-                            if (authed == true){
-                                    $scope.has_GA = true;
-                            }
-                            else{
-                                if (data.hasOwnProperty('credentials')){
-                                    $scope.has_GA=true;
-                            }
-                            }
-		    }
-	            )
+                            $scope.has_GA = true;
+		    }).error(
+                      function(data){
+                        $scope.has_GA = false;
+                      })
 
 	}
 
@@ -470,10 +474,7 @@ function ViralityController($scope, $http, Facebook, Twitter){
 		).success(
 			function(data){
 				console.log(data)
-                                console.log(data[0])
-				if (data[0]['twitter_authed']){
 					$scope.has_twitter = true;
-				}
 			}
 		)
 
@@ -598,9 +599,10 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                                          ).success(
                                                function(data){
                                                         console.log(data);
+                                                        $location.path("/signin");
                                                 }
                                         )
-                                        $location.path("/onboarding/stick");
+                                        $location.path("/");
                                         }
 
                                     else{
@@ -648,12 +650,8 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          if (data.meta){
-            var status_code = data.meta.code;
-          }
-          else{
-            var status_code = data.status;
-          }
+          console.log(data);
+          var status_code = data.meta.code;
           if (status_code == 200 || status_code == 302 || status_code == 301){        
             $.cookie('email', $scope.email, { expires: 7 });
             $.cookie('auth_token', data.authentication_token, { expires: 7 });

@@ -2,7 +2,7 @@ import sys
 import os
 from twitter_model import TwitterModel, CohortTweetCountModel
 from flask.ext.restful import Resource, reqparse
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, Response
 import os
 from database import db
 from flask.ext.security import current_user
@@ -27,7 +27,11 @@ class TwitterResource(Resource):
     def get(self, **kwargs):
         metric = request.args.get('metric')
         if current_user.is_anonymous():
-            return jsonify(status=400)
+        
+            error = dumps({'error':'The user is not logged in.'})
+            resp = Response(response=error,status=400,mimetype="application/json")
+            return resp
+
         twitter = TwitterDAO()
         if twitter.user_twitter:
 	    cohorts = current_user.roles
@@ -73,7 +77,10 @@ class TwitterResource(Resource):
 		return make_response(dumps(cohort_objs))
 
         else:
-            return jsonify(twitter_authed=False)
+            error = dumps({'error':'No Twitter account is associated with this user.'})
+            resp = Response(response=error,status=400,mimetype="application/json")
+            return resp
+
 
     def post(self):
         print 'inside twitter post\n'

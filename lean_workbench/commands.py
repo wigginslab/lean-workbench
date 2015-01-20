@@ -7,6 +7,7 @@ from main import app_factory
 import datetime
 from datetime import timedelta
 from sqlalchemy import func
+import json
 
 class CreateDB(Command):
     """
@@ -267,14 +268,35 @@ class Test(Command):
     """
     def run(self):
         from flask import request
+        from wufoo.wufoo_model import WufooSurveyModel
 
 
         app = app_factory(config.Dev)
         with app.test_client() as c:
-            rv = c.post('/api/v1/wufoo')
+            from database import db
+            
+            
+            test_file = open("test/wufoo.json", "r").read()
+            test_json_dict = json.loads(test_file)
+            form_structure = json.loads(test_json_dict['FormStructure'])
+
+            form_url = "https://rubinovitz.wufoo.com/forms/my-new-feature/"
+
+            print form_structure
+            new_survey = WufooSurveyModel(
+                   username="jen@leanworkbench.com",
+                   wufoo_email=form_structure['Email'],
+                   url=form_url,
+                   name=form_structure['Url']
+            )
+            db.session.add(new_survey)
+            db.session.commit()
+
+            rv = c.post(
+                    '/api/v1/wufoo', data=test_json_dict
+                    )
+            db.session.delete(new_survey) 
             print rv
-            print dir(rv)
-            print [x for x in rv.response]
 
 class MigrateUsers(Command):
     def run(self):

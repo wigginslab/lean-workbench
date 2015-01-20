@@ -5,7 +5,7 @@ from google_analytics_models import *
 from google_analytics_client import GoogleAnalyticsAPI
 from flask.ext.restful import Resource, reqparse
 from flask.ext.security import current_user
-from flask import session, escape, request, jsonify, make_response
+from flask import session, escape, request, jsonify, make_response, Response
 from database import db
 from json import dumps
 
@@ -136,7 +136,10 @@ class GoogleAnalyticsResource(Resource):
         print 'profile:'
         print profile
         if not profile:
-            return jsonify(authed='no')
+            error = dumps({'error':'No Google Analytics Account is associated with this user.'})
+            resp = Response(response=error,status=400,mimetype="application/json")
+            return resp
+
         profile_id = profile.profile_id
         print 'profile_id:'
         print profile_id

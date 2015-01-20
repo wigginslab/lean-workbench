@@ -1,6 +1,6 @@
 flask==0.9
 flask-sqlalchemy
-flask-security
+flask-security==1.7.3
 flask-mail
 simplejson
 psycopg2
