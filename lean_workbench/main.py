@@ -200,7 +200,7 @@ def configure_views(app):
 	def dashboard():
 		"""
 		"""
-
+        
 		return render_template('public.html', logged_in=True)
 
 	api = restful.Api(app, decorators=[csrf.exempt])
