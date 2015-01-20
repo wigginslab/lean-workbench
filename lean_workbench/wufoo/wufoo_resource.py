@@ -27,19 +27,33 @@ class WufooResource(Resource):
             else:
                 surveys = WufooSurveyModel.query.filter_by(username=username).all()
                 
-                surveys = [survey for survey in surveys]
-                entries = [survey.entries.all() for survey in surveys]
-                print entries
-                entries = [entry.as_dict() for entry in entries[0]]
-                return make_response(dumps(entries))
+                surveys_list = [survey for survey in surveys]
+                surveys_dicts = [survey.as_dict() for survey in surveys]
+                #print entries
+                #entries = [entry.as_dict() for entry in entries[0]]
+                #return make_response(dumps(entries))
                 survey_fields = []
-                for survey in surveys:
+                for survey in surveys_dicts:
+                 
+                
+                    
+                  d3_json = {'name':survey.get('name'), 'values':[]}
                   survey_fields.append([])
                   this_survey = survey_fields[-1]
-                  for field in this_survey.fields:
+                  print survey
+                  for field in survey.get('fields'):
+                    fields = []
                     title = field.get("title")
-
-                return make_response(dumps(surveys))
+                    values = field.get("values")
+                    values_list = [value.get('value') for value in values]
+                    unique_values = set(values_list)
+                    value_counts = [(value,values_list.count(value)) for value in unique_values]
+                    for value_tuple in value_counts:
+                        value_label = value_tuple[0]
+                        value_count = value_tuple[1]
+                        fields.append({"key":value_label, "y":value_count})
+                    d3_json['values'].append({"title":title,"fields":fields}) 
+                return make_response(dumps(d3_json))
         else:
             pass 
 

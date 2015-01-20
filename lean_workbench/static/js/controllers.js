@@ -215,6 +215,18 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 		 }
 	  )
 
+        $http.get(
+	    '/api/v1/wufoo'
+	  ).success(
+	    function(data) {
+	      $scope.wufooValues = data['values'][0].fields;
+              $scope.wufooQuestionTitle = data['values'][0]['title'];
+              console.log(data['values'][0]['title']);
+              $scope.wufooTitle = data['name'];
+	    }
+	  ).error(function(data){
+		 }
+	  )
 
 
         $http.get(
