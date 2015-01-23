@@ -196,12 +196,8 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
       ).success(
         function(data) {
 
-              $scope.has_ga_data = false;
-          }
-      else{
           $scope.googleData = data;
           $scope.has_ga_data = true;
-        }
         }
       ).error(function(data){
           $scope.has_ga_data = false;
@@ -213,15 +209,11 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	    '/api/v1/google-analytics?metric=referrals'
 	  ).success(
 	    function(data) {
-      if (data.hasOwnProperty('authed')){
-              $scope.has_fb_data = false;
-          }
-      else{
-
+              $scope.has_ga_data = true;
 	      $scope.googleSourceData = data;
-	    }
         }
 	  ).error(function(data){
+                
 		 }
 	  )
 
@@ -423,7 +415,6 @@ function StickController($scope, $http, GoogleAnalytics){
                     '/connect/google-analytics'
                     ).success(
                     function(data){
-                            console.log(authed)
                             if (data.hasOwnProperty('redirect_url')){
 
                                 var redirect_url = data['redirect_url']
@@ -503,9 +494,9 @@ function ViralityController($scope, $http, Facebook, Twitter){
 				console.log(data)
 					$scope.has_twitter = true;
 			}
-		)
+		).error( function(data){
 
-		$scope.has_fb = false;
+		$scope.has_twitter = false;})
 		$http.post(
 				'/api/v1/facebook?metric=authed'
 		).success(
