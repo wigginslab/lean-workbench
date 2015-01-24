@@ -550,13 +550,14 @@ body {
   .features .feature-image {
     height: 150px;
     width: 150px; }
-  .features .col-lg-4 {
+  .features .col-sm-4 {
     padding: 2em 0;
-    text-align: center; }
-    .features .col-lg-4 h2 {
+    text-align: center;
+    color: #5a5a5a; }
+    .features .col-sm-4 h2 {
       font-weight: 300;
       font-family: "Lato", sans-serif; }
-    .features .col-lg-4 p {
+    .features .col-sm-4 p {
       width: 300px;
       margin: 0 auto;
       color: #000; }
