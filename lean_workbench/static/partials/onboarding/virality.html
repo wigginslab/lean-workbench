@@ -15,12 +15,16 @@
         </b>Please enable popups for login windows</b>
         </div>
           <span class="help-block" ng-show="twitter_error">[[twitter_error ]]</span>
-          <div ng-show="has_twitter"><b>Your Twitter account is connected.</b></p>
+          <div ng-show="has_twitter">
+            <b>Your Twitter account is connected.</b>
+          </div>
           <div ng-hide="has_twitter" class="center">
             <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
           </div>
          <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
-          <div ng-show="has_fb"><b>Your Facebook account is connected.</b></div>
+          <div ng-show="has_fb">
+            <b>Your Facebook account is connected.</b>
+          </div>
           <div ng-hide="has_fb" class="center">
             <button ng-click="fb_auth()" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>
           </div>

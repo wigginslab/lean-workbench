@@ -188,6 +188,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/twitter'
       ).success(
         function(data) {
+          $scope.twitterData = data;
           $scope.has_twitterData = true;
         }
       ).error(function(data){
@@ -492,15 +493,15 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 	
 	$scope.has_twitter = false;
-		$http.post('/api/v1/twitter?metric=authed'
+		$http.get('/api/v1/twitter'
 		).success(
 			function(data){
 				console.log(data)
-					$scope.has_twitter = true;
+				$scope.has_twitter = true;
 			}
-		).error( function(data){
-
-		$scope.has_twitter = false;})
+		).error(function(data){
+		  $scope.has_twitter = false;
+        })
 		$http.post(
 				'/api/v1/facebook?metric=authed'
 		).success(

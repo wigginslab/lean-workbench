@@ -18,64 +18,85 @@
     </div>
     <!--/span-->
     <div class="col-md-10" id="content" ng-controller="DashboardControllerTwo">
-                <!-- block -->
-                        <h2>Twitter Data</h2>
-                        <div ng-show="has_twitterData">    
-                            <nvd3-stacked-area-chart
-                                data="twitterData"
-                                width="600"
-                                height="350"
-                                margin="{left: 80, top: 40, right: 100, bottom: 100}"
-                                yAxisLabel="Company Mentions"
-                                xAxisLabel="Date"
-                                showXAxis="true"
-				showYAxis="true"
-				tooltips="true"
-				interactive="true"
-				useInteractiveGuideline="true"
-                                toolTipContent="toolTipContentFunction()" 
-				xAxisTickFormat="xAxisTickFormat()">
-                                </nvd3-stacked-area-chart>
-                            </div>
-                            <div ng-hide="has_twitterData">
-                                Connect your Twitter account <a href="/onboarding/virality">here</a>. </div>                 
-                            <h2>Google Analytics Visitor Data</h2>
+        <div id="innovation-accounting">
+            <h1>Innovation Accounting</h1>
+             The Lean methodology defines its own accounting -- Innovation Accounting -- with separate analyses appropriate to different points in the life-cycle of a business hypothesis: baseline quantification, optimization, and pivoting. 
+            <div id="baseline-quantification">
+                <h2>Baseline Quantification</h2>
+                In baseline quantification, we test your minimum viable product (MVP) and quantify the parameters on which your business projections rest.
+                <!-- customer signup rate -->
+                <div id="customer-signup-rate">
+                    <!-- graph -->
+                    <!-- graph copy -->
+                </div>
+                <!-- return rate -->
+                <div id="customer-return-rate">
+                    <!-- graph -->
+                    <!-- graph copy -->
+
+                      <h2>Google Analytics Visitor Data</h2>
                         <div ng-controller="DashboardControllerTwo" ng-show="has_ga_data">
                             <nvd3-stacked-area-chart
                                 data="googleData"
                                 width="600"
                                 height="350"
                                 margin="{left: 80, top: 40, right: 100, bottom: 100}"
-				showYAxis="true"
-				tooltips="true"
+                                showYAxis="true"
+                                tooltips="true"
                                 toolTipContent="toolTipContentFunction()" 
                                 yAxisLabel="Number of visitors"
                                 xAxisLabel="Date"
                                 showXAxis="true"
                                 showYAxis="true"
-				interactive="true"
-				useInteractiveGuideline="true"
+                                interactive="true"
+                                useInteractiveGuideline="true"
                                 xAxisTickFormat="xAxisTickFormat()">
-
-				</nvd3-stacked-area-chart>
+                            </nvd3-stacked-area-chart>
                                 <svg></svg>
-                                <h2>Google Analytics Referral Data</h2>
-                                    <nvd3-pie-chart
-                                            data="googleSourceData"
-                                            id="google_source"
-                                            showLabels="true"
-                                            x="donutXFunction()"
-                                            y="donutYFunction()"
-                                            tooltips="true"
-                                            toolTipContent="donutToolTipContentFunction()" 
-
-                                            donut="true"
-                                            margin="{left:0,top:0,bottom:0,right:0}"
-                                            donutRatio=".5"
-                                            donutLabelsOutside="true">
-                                        <svg></svg>
-                                    </nvd3-pie-chart>
-                            </div>
+                              
+                            
+                </div>
+            <div>
+            <div id="optimization">
+                <h2>Optimization</h2>
+                In optimization, we approaches design and product changes as experiments, identifying specific hypotheses to be falsified by recording the effect on a success metric of a specific change.
+                <!-- experiments -->
+                <div id="experiments">
+                    Here are you experiments as quantified by the Google Analytics experiments API.
+                    <!-- graphs -->
+                    <!-- graphs with copy -->
+                </div>
+                <div id="surveys">
+                    When you create Wufoo surveys for your features, we can gauge the sentiment in the free text responses. Here are your surveys and their sentiments.
+                    <!-- graphs -->
+                    <!-- graph copy-->
+                </div>
+            </div>
+        </div>
+         <div id="lean-operations">
+            <h1>Lean Operations</h1>
+                <h3>Twitter Data</h3>
+                <div ng-show="has_twitterData">    
+                    <nvd3-stacked-area-chart
+                        data="twitterData"
+                        width="800"
+                        height="500"
+                        margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                        yAxisLabel="Company Mentions"
+                        xAxisLabel="Date"
+                        showXAxis="true"
+                		showYAxis="true"
+                		tooltips="true"
+                		interactive="true"
+                		useInteractiveGuideline="true"
+                        toolTipContent="toolTipContentFunction()" 
+    	            xAxisTickFormat="xAxisTickFormat()">
+                        </nvd3-stacked-area-chart>
+                    </div>
+                    <div ng-hide="has_twitterData">
+                        Connect your Twitter account <a href="/onboarding/virality">here</a>. </div>
+        </div>                 
+                          </div>
                         <div ng-hide="has_ga_data">
                           Connect your Google Analytics account <a href="/onboarding/stick">here</a>. 
                         </div>
@@ -101,24 +122,7 @@
                     <div ng-hide="has_fb_data">
                       Connect your Facebook account <a href="/onboarding/virality">here</a>.
                     </div>
-                      <h2>Wufoo Data</h2>
-                      <h3>[[wufooTitle]]</h3>
-                      <div>[[wufooQuestionTitle]]</div>
-                                  <nvd3-pie-chart
-                                            data="wufooValues"
-                                            id="wufoo_source"
-                                            showLabels="true"
-                                            x="donutXFunction()"
-                                            y="donutYFunction()"
-                                            tooltips="true"
-                                            toolTipContent="donutToolTipContentFunction()" 
-
-                                            donut="true"
-                                            margin="{left:0,top:0,bottom:0,right:0}"
-                                            donutRatio=".5"
-                                            donutLabelsOutside="true">
-                                        <svg></svg>
-                                    </nvd3-pie-chart>
+             
                 <h2>Quickbooks Data</h2>
                         <div ng-show="has_qb_data">
                            <nvd3-stacked-area-chart
@@ -142,6 +146,22 @@
                     You have not yet connected a Quickbooks account.
                     </div>
                 </div>
+                  <h2>Google Analytics Referral Data</h2>
+                <nvd3-pie-chart
+                        data="googleSourceData"
+                        id="google_source"
+                        showLabels="true"
+                        x="donutXFunction()"
+                        y="donutYFunction()"
+                        tooltips="true"
+                        toolTipContent="donutToolTipContentFunction()" 
+
+                        donut="true"
+                        margin="{left:0,top:0,bottom:0,right:0}"
+                        donutRatio=".5"
+                        donutLabelsOutside="true">
+                    <svg></svg>
+                </nvd3-pie-chart>
                 <div class="block-content collapse in">
                 </div>
             </div>
