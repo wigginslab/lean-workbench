@@ -1,25 +1,29 @@
  <div class="onboarding holder">
  <div class="container">
-    <div ng-controller="ViralityController" id="stick-engine" style="">
+    <div ng-controller="ViralityController" id="stick-engine">
       <h2 class="center"> Virality Engine</h2>
-      <div class="center">
-          <p>
-            <img src='/static/img/icons/twitter.png' style="float:left"></img>
-            <img src='/static/img/icons/facebook.png' style="float:left"></img>
-         </p>
-      </div>
-	  <p style="font-size:20px">The virality engine thrives on getting the word out about your product. Who's talking about your work and why? The key performance indicator is <u>viral coefficient</u>,the number of users each user brings on, and this can be measured using the Facebook and Twitter APIs. We estimate the viral coefficient with a formula that weighs product mentions and interactions with your product pages by the influence of the user interacting.<p></p>
-	  <p></b>Please enable popups for login windows</b></p>
-        <span class="help-block" ng-show="twitter_error">[[twitter_error ]]</span>
-        <p ng-show="has_twitter"><b>Your Twitter account is connected.</b></p>
-        <p ng-hide="has_twitter" class="center">
-          <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
-        </p>
-       <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
-        <p ng-show="has_fb"><b>Your Facebook account is connected.</b></p>
-        <p ng-hide="has_fb" class="center">
-          <button ng-click="fb_auth()" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>
-        </p>
+      <div class="row">
+        <div class="center" class="col-lg-3">
+            <p>
+              <img src='/static/img/icons/twitter.png' style="float:left"></img>
+              <img src='/static/img/icons/facebook.png' style="float:left"></img>
+           </p>
+        </div>
+  	  <div class="col-lg-9" style="font-size:20px">
+        The virality engine thrives on getting the word out about your product. Who's talking about your work and why? The key performance indicator is <u>viral coefficient</u>,the number of users each user brings on, and this can be measured using the Facebook and Twitter APIs. We estimate the viral coefficient with a formula that weighs product mentions and interactions with your product pages by the influence of the user interacting.</div>
+  	  <div>
+        </b>Please enable popups for login windows</b>
+        </div>
+          <span class="help-block" ng-show="twitter_error">[[twitter_error ]]</span>
+          <div ng-show="has_twitter"><b>Your Twitter account is connected.</b></p>
+          <div ng-hide="has_twitter" class="center">
+            <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
+          </div>
+         <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
+          <div ng-show="has_fb"><b>Your Facebook account is connected.</b></div>
+          <div ng-hide="has_fb" class="center">
+            <button ng-click="fb_auth()" type="button" class="btn btn-primary btn-lg">Connect to Facebook</button>
+          </div>
         <div class="center">
           <ul class="pager">
             <li><a href="http://quickbooks.leanworkbench.com">Next</a></li>

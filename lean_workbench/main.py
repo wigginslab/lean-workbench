@@ -19,7 +19,7 @@ from users.user_resource import UserResource
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
-		protected_templates = ['partials/dashboard2.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html']
+		protected_templates = ['partials/dashboard2.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html', 'partials/onboarding/welcome.html']
 		# Get user from session
 		if not current_user.is_anonymous() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
@@ -166,7 +166,7 @@ def configure_views(app):
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)
 	
-        @app.route('/')
+	@app.route('/')
 	def index():
 		if current_user.is_authenticated():
 			logged_in = True
@@ -178,28 +178,40 @@ def configure_views(app):
 	@app.route('/signin', methods=["POST", "GET"])
 	@app.route('/signup', methods=["POST", "GET"])
 	def sign():
-                if current_user.is_authenticated():
-                    return redirect(url_for('dashboard'))
-		return render_template('public.html', logged_in=current_user.is_authenticated())
+		if current_user.is_authenticated():
+			return redirect(url_for('dashboard'))
+		return render_template('public.html', logged_in=False)
 
 	@auth_token_required
 	@app.route('/stats', methods=['POST','GET'])
 	@app.route('/stats/1',methods=['POST','GET'])
 	@app.route('/onboarding/stick', methods=['POST', 'GET'])
-        @app.route('/onboarding/scale', methods=['POST', 'GET'])
+	@app.route('/onboarding/scale', methods=['POST', 'GET'])
 	@app.route('/onboarding/virality', methods=['POST','GET'])
 	@app.route('/onboarding/pay', methods=['POST','GET'])
-        @app.route('/onboarding/empathy', methods=['POST','GET'])
+	@app.route('/onboarding/empathy', methods=['POST','GET'])
 	@app.route('/export', methods=['POST','GET'])
-        @app.route('/scale', methods=['POST', 'GET'])    
-        @app.route('/results', methods=['POST', 'GET'])  
-        @app.route('/privacy', methods=['POST','GET'])
-        @app.route('/eula', methods=['POST','GET'])
-        @app.route('/dashboard', methods=['POST', 'GET'])    
+	@app.route('/scale', methods=['POST', 'GET'])    
+	@app.route('/results', methods=['POST', 'GET'])  
+	@app.route('/privacy', methods=['POST','GET'])
+	@app.route('/eula', methods=['POST','GET'])
+	@app.route('/dashboard', methods=['POST', 'GET'])    
 	def dashboard():
 		"""
 		"""
-        
+		if not current_user.is_authenticated():
+			return render_template('public.html', logged_in=False)
+		if current_user.onboarded:
+			print current_user.onboarded
+			return render_template('public.html', logged_in=True)
+		else:
+			current_user.onboarded = True
+			db.session.add(current_user)
+			db.session.commit()
+			return redirect(url_for('welcome'))
+
+	@app.route('/welcome', methods=['POST','GET'])
+	def welcome():
 		return render_template('public.html', logged_in=True)
 
 	api = restful.Api(app, decorators=[csrf.exempt])
@@ -210,5 +222,5 @@ def configure_views(app):
 	api.add_resource(GoogleAnalyticsResource, '/api/v1/google-analytics')
 	api.add_resource(Quickbooks_resource, '/api/v1/quickbooks')
 	api.add_resource(UserResource, '/api/v1/users')
-        api.add_resource(Ghosting_resource, '/api/v1/ghosting')
-        api.add_resource(Scale_resource, '/api/v1/scale')
+	api.add_resource(Ghosting_resource, '/api/v1/ghosting')
+	api.add_resource(Scale_resource, '/api/v1/scale')

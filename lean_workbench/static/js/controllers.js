@@ -19,6 +19,10 @@ function ExportController(){
 
 }
 
+function WelcomeController(){
+
+}
+
 function EULAController(){
 }
 
@@ -738,23 +742,24 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	}
 })
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    $routeProvider
-    .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-    .when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
-    .when('/dashboard', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
-    .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
-    .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
-    .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
-    .when('/signin', {templateUrl: 'static/partials/signin.html'})
-    .when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
-    .when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
-    .when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
-    .when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
+$routeProvider
+.when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+.when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
+.when('/dashboard', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
+.when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
+.when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
+.when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
+.when('/signin', {templateUrl: 'static/partials/signin.html'})
+.when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
+.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
+.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
 .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
 .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
 .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
 .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
 .when('/eula', {templateUrl: '/static/partials/eula.html', controller:EULAController})
+.when('/welcome', {templateUrl: '/static/partials/onboarding/welcome.html', controller:WelcomeController})
 // enable push state
 $locationProvider.html5Mode(true);
 }])
