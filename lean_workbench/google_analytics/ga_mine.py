@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsReferralsModel, GoogleAnalyticsUserModel, db
 from google_analytics_client import GoogleAnalyticsAPI
 import json 
+import sys
 
 def mine_visits(username=None):
 	if not username:
@@ -14,16 +15,16 @@ def mine_visits(username=None):
                 db.session.commit()
 	if ga_users:
 		for ga_user in ga_users:
-			try:
-				ga = Google_Analytics_User_Querier(username=ga_user.username)
+			#try:
+			ga = Google_Analytics_User_Querier(username=ga_user.username)
 				#get the latest visit data
 				#ga.get_new_user_visit_data()
 				#ga.get_referral_data()
 				#ga.get_new_user_funnel_data()
-				print '%s ga data mined' %(ga_user.username)
-			except:
-				print 'exception mining %s ga data' %(ga_user.username)
-		ga.get_signup_goal()
+				#print '%s ga data mined' %(ga_user.username)
+			#except:
+			#	print 'exception mining %s ga data' %(ga_user.username)
+			ga.get_signup_goal()
 
 
 class Google_Analytics_User_Querier:
@@ -32,8 +33,10 @@ class Google_Analytics_User_Querier:
 	"""
 	def __init__(self, username):
 		self.username = username
-		self.profile_id =  GoogleAnalyticsAPI(username).get_profile_id()
-		print self.profile_id
+		self.model = GoogleAnalyticsAPI(username)
+		self.profile_id =  self.model.credentials.profile_id
+		self.account_id = self.model.credentials.account_id
+		self.webproperty_id = self.model.credentials.webproperty_id
         
         def get_referral_data(self):
 	    # check to see if mined before
@@ -192,17 +195,14 @@ class Google_Analytics_User_Querier:
 			for backwards_days in range(1,366):
 				# create google query object	
 				g = GoogleAnalyticsAPI(self.username)
-				web_property = "UA-"+self.profile_id+"-1";
-				account_id = g.client.management().accounts().list().execute().get('items')[-1].get('id')
-				webproperty_id = g.client.management().webproperties().list(accountId=account_id).execute()
-				print webproperty_id
 
-				sys.exit()
-				"""
+			
+	
 				signup_data = g.client.management().goals().get(
-					accountId=self.profile_id,
+					accountId=self.account_id,
 					profileId=self.profile_id,
 					goalId='1',
-					webPropertyId=web_property).execute()
-				print json.dumps(page_path_data)	
-				"""
+					webPropertyId=self.webproperty_id).execute()
+				print json.dumps(signup_data)	
+				sys.exit()
+		

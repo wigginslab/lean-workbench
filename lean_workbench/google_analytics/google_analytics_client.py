@@ -151,17 +151,17 @@ class GoogleAnalyticsAPI:
             print accounts
             return accounts
 
-	def get_profile_id(self):
-		account_id = self.get_user_accounts().get('items')[-1].get('id')
-		print account_id
-		webproperties = self.client.management().webproperties().list(accountId=account_id).execute()
-		if webproperties.get('items'):
-		# Get the first Web Property ID
-			firstWebpropertyId = webproperties.get('items')[0].get('id')
-
-		# Get a list of all Profiles for the first Web Property of the first Account
-		profiles = self.client.management().profiles().list(
+	def add_ids(self, account_id):
+		"""
+		add profile and webproperty id given account_id
+		"""
+		webproperty_id = self.client.management().webproperties().list(accountId=account_id).execute().get('items')[0].get('id')
+		#print webproperty_id
+		profile_id = self.client.management().profiles().list(
           accountId=account_id,
-          webPropertyId=firstWebpropertyId).execute()
-
-		return profiles.get('items')[0].get('id')
+          webPropertyId=webproperty_id).execute().get('items')[0].get('id')
+		self.credentials.webproperty_id = webproperty_id
+		self.credentials.profile_id = profile_id
+		db.session.add(self.credentials)
+		db.session.commit()
+		db.session.close()

@@ -187,12 +187,12 @@ class GoogleAnalyticsResource(Resource):
         if metric == 'profile-id':
             print 'inside profile id'
             ga_cred = GoogleAnalyticsUserModel.query.filter_by(username=current_user.email).first()
-            print ga_cred.profile_id
-            ga_cred.profile_id = profile_id
+            ga_cred.account_id = profile_id
             db.session.add(ga_cred)
             db.session.commit()
+            g = GoogleAnalyticsAPI(username)
+            g.add_ids(profile_id)
             print 'committed data' 
-            db.session.close()
             return jsonify(status=200,message="success!")
 	if metric == "visits":
             visits =  GA.get_user_profile_visits()
