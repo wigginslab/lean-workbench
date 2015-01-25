@@ -49,9 +49,9 @@ class GoogleAnalyticsDAO(object):
 
     def get_user_profile_visits(self, username):
         """
-	return JSON of user and cohort visits (if available)
+        return JSON of user and cohort visits (if available)
         """
-	cohorts = current_user.roles
+        cohorts = current_user.roles
         print 'cohorts'
         print cohorts
         user_visitors = GoogleAnalyticsVisitors.query.filter_by(username=username).all()
@@ -62,27 +62,27 @@ class GoogleAnalyticsDAO(object):
                 date = visit_dict['date']
                 count = visit_dict['visitors']
                 user_visits.append([date,count])
-	if cohorts:
-	    return make_response(dumps([{'key':"Your visitors", 'values':user_visits}]))
-	else:
-	    start = user_visitors[-1].date
-	    end = user_visitors[0].date
-	    lines = []
-	    for cohort in cohorts:
-		cohort_name = cohort.name
-		cohort_visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.date >= start, GoogleAnalyticsVisitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
-		values = []
-		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
-	
-		for visit_dict in cohort_visitors_dict_list:
-		    date = visit_dict['date']
-		    count = visit_dict['visitors']
-		    values = [[date,count]] + values
-		if values:
-		    lines.append({'key':cohort_name +'\'s visitors','values':values})
-	    lines.append({'key':"Your visitors",'values':user_visits})
+    	if cohorts:
+    	    return make_response(dumps([{'key':"Your visitors", 'values':user_visits}]))
+    	else:
+    	    start = user_visitors[-1].date
+    	    end = user_visitors[0].date
+    	    lines = []
+    	    for cohort in cohorts:
+    		cohort_name = cohort.name
+    		cohort_visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.date >= start, GoogleAnalyticsVisitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
+    		values = []
+    		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
+    	
+    		for visit_dict in cohort_visitors_dict_list:
+    		    date = visit_dict['date']
+    		    count = visit_dict['visitors']
+    		    values = [[date,count]] + values
+    		if values:
+    		    lines.append({'key':cohort_name +'\'s visitors','values':values})
+    	    lines.append({'key':"Your visitors",'values':user_visits})
 
-	    return make_response(dumps(lines))
+    	    return make_response(dumps(lines))
 
     def get_user_referrals(self, username, metric='source', start_date=None, end_date=None):
 	"""

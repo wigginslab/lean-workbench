@@ -16,6 +16,7 @@ from google_analytics.google_analytics_resource import GoogleAnalyticsResource
 from ghosting.ghosting_resource import Ghosting_resource
 from scale.scale_resource import Scale_resource
 from users.user_resource import UserResource
+from flask.ext.migrate import Migrate, MigrateCommand
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -165,6 +166,8 @@ def configure_views(app):
 	user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)
+	migrate = Migrate(app, db)
+
 	
 	@app.route('/')
 	def index():
@@ -213,6 +216,8 @@ def configure_views(app):
 	@app.route('/welcome', methods=['POST','GET'])
 	def welcome():
 		return render_template('public.html', logged_in=True)
+
+
 
 	api = restful.Api(app, decorators=[csrf.exempt])
 	api.add_resource(HypothesisResource, '/api/v1/hypotheses')

@@ -17,6 +17,7 @@ class GoogleAnalyticsUserModel(db.Model):
     client_id = db.Column(db.String)
     client_secret = db.Column(db.String)
     profile_id = db.Column(db.String)
+    account_id = db.Column(db.String)
     refresh_token = db.Column(db.String)
     revoke_uri = db.Column(db.String)
     id_token = db.Column(db.String)

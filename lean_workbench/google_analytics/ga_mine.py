@@ -14,14 +14,17 @@ def mine_visits(username=None):
                 db.session.commit()
 	if ga_users:
 		for ga_user in ga_users:
-                    try:
-                        ga = Google_Analytics_User_Querier(username=ga_user.username)
-                        # get the latest visit data
-                        ga.get_new_user_visit_data()
-                        ga.get_referral_data()
-                        print '%s ga data mined' %(ga_user.username)
-                    except:
-                        print 'exception mining %s ga data' %(ga_user.username)
+			try:
+				ga = Google_Analytics_User_Querier(username=ga_user.username)
+				#get the latest visit data
+				#ga.get_new_user_visit_data()
+				#ga.get_referral_data()
+				#ga.get_new_user_funnel_data()
+				print '%s ga data mined' %(ga_user.username)
+			except:
+				print 'exception mining %s ga data' %(ga_user.username)
+		ga.get_signup_goal()
+
 
 class Google_Analytics_User_Querier:
 	"""
@@ -161,6 +164,7 @@ class Google_Analytics_User_Querier:
 
 		Get all the funnels data available for a user who just connected their Google Analytics account
 
+
 		args: 
 			username: username/email of the user whose account it is
 		"""
@@ -172,9 +176,33 @@ class Google_Analytics_User_Querier:
 		for backwards_days in range(1,366):
 			# create google query object	
 			g = GoogleAnalyticsAPI(self.username)
-			page_path_data = g.client.data().ga().get(
+			page_path_data = g.client.data().mcf().get(
 				ids='ga:' + self.profile_id,
-				start_date=str(google_date),
+				start_date='2012-01-01',
 				end_date=str(google_date),
-				metrics='ga:hostname').execute()
+				metrics='mcf:totalConversions,mcf:totalConversionValue').execute()
 			print json.dumps(page_path_data)	
+
+	def get_signup_goal(self):
+			# start at yesterday
+			date = datetime.now()-timedelta(days=1)
+			# google string formatted date
+			google_date = GoogleTimeString(str(date))
+			# go backwards in time up to a year
+			for backwards_days in range(1,366):
+				# create google query object	
+				g = GoogleAnalyticsAPI(self.username)
+				web_property = "UA-"+self.profile_id+"-1";
+				account_id = g.client.management().accounts().list().execute().get('items')[-1].get('id')
+				webproperty_id = g.client.management().webproperties().list(accountId=account_id).execute()
+				print webproperty_id
+
+				sys.exit()
+				"""
+				signup_data = g.client.management().goals().get(
+					accountId=self.profile_id,
+					profileId=self.profile_id,
+					goalId='1',
+					webPropertyId=web_property).execute()
+				print json.dumps(page_path_data)	
+				"""

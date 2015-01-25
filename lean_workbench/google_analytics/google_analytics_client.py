@@ -98,7 +98,7 @@ class GoogleAnalyticsAPI:
 		http = credentials.authorize(http)  
 		#  Build the Analytics Service Object with the authorized http object
 		client = build('analytics', 'v3', http=http)
-                print 'client built'
+		print 'client built'
 		return client
 
 	def step_one(self, google_analytics_callback_url, google_analytics_client_id):
@@ -124,7 +124,6 @@ class GoogleAnalyticsAPI:
 		credentials = flow.step2_exchange(code=str(ga_api_code))
 		credentials_json = json.loads(credentials.to_json())
 		credentials_json['username'] = username
-		print credentials_json
 		http = httplib2.Http()
 		http = credentials.authorize(http)  
 		self.save_google_analytics_credentials(credentials_json)

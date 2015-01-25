@@ -7,6 +7,9 @@ import commands
 from main import app_factory
 import config
 
+from flask.ext.migrate import Migrate, MigrateCommand
+
+
 
 if __name__ == "__main__":
 	from main import app_factory
@@ -20,9 +23,11 @@ if __name__ == "__main__":
 	manager.add_command("drop_db", commands.DropDB())
 	manager.add_command("mine", commands.Mine())
 	manager.add_command("users", commands.PrintUsers())
-        manager.add_command("scale", commands.Scale())
-        manager.add_command("cohort", commands.Cohort())
-        manager.add_command("delete_ga", commands.DeleteGACreds())
-        manager.add_command("refresh_ga", commands.RefreshGA())
-        manager.add_command("migrate_users", commands.MigrateUsers())
+	manager.add_command("scale", commands.Scale())
+	manager.add_command("cohort", commands.Cohort())
+	manager.add_command("delete_ga", commands.DeleteGACreds())
+	manager.add_command("refresh_ga", commands.RefreshGA())
+	manager.add_command("migrate_users", commands.MigrateUsers())
+	manager.add_command('db', MigrateCommand)
 	manager.run()
+
