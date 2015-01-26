@@ -11,6 +11,7 @@ import json
 from flask.ext.migrate import Migrate, MigrateCommand
 import requests
 
+    
 class CreateDB(Command):
     """
     Creates sqlalchemy database

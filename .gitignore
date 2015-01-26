@@ -1,5 +1,5 @@
 *.py[cod]
-
+*/api_key.txt
 # C extensions
 *.so
 logs
