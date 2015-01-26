@@ -104,3 +104,16 @@ class GoogleAnalyticsReferralsModel(db.Model):
     pageviews = db.Column(db.Integer)
     session_duration = db.Column(db.Float)
     exits = db.Column(db.Integer)
+
+class GoogleAnalyticsSignups(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    date = db.Column(db.DateTime, default=datetime.datetime.now())
+    signups = db.Column(db.Integer)
+
+class GoogleAnalyticsReturningVisitors(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    date = db.Column(db.DateTime, default=datetime.datetime.now())
+    returning_visitors = db.Column(db.Integer)
+    all_visitors = db.Column(db.Integer)

@@ -1,6 +1,7 @@
 from google_time_string import GoogleTimeString
 from datetime import datetime, timedelta
-from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsReferralsModel, GoogleAnalyticsUserModel, db
+from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsReferralsModel, GoogleAnalyticsUserModel, db, \
+ GoogleAnalyticsSignups, GoogleAnalyticsReturningVisitors
 from google_analytics_client import GoogleAnalyticsAPI
 import json 
 import sys
@@ -24,7 +25,7 @@ def mine_visits(username=None):
 				#print '%s ga data mined' %(ga_user.username)
 			#except:
 			#	print 'exception mining %s ga data' %(ga_user.username)
-			ga.get_signup_goal()
+			ga.get_ga_data()
 
 
 class Google_Analytics_User_Querier:
@@ -186,23 +187,42 @@ class Google_Analytics_User_Querier:
 				metrics='mcf:totalConversions,mcf:totalConversionValue').execute()
 			print json.dumps(page_path_data)	
 
-	def get_signup_goal(self):
+	def get_ga_data(self):
+			user_data = GoogleAnalyticsReturningVisitors.query.filter_by(username=self.username).all()
+			if user_data:
+				days_back = 2
+			else:
+				days_back = 366
 			# start at yesterday
 			date = datetime.now()-timedelta(days=1)
 			# google string formatted date
 			google_date = GoogleTimeString(str(date))
+
 			# go backwards in time up to a year
-			for backwards_days in range(1,366):
+			for backwards_days in range(1,days_back):
 				# create google query object	
 				g = GoogleAnalyticsAPI(self.username)
 
-			
-	
 				signup_data = g.client.management().goals().get(
 					accountId=self.account_id,
 					profileId=self.profile_id,
 					goalId='1',
 					webPropertyId=self.webproperty_id).execute()
-				print json.dumps(signup_data)	
+
+				returning_visitor_data = g.client.data().ga().get(
+				ids='ga:' + self.profile_id,
+				start_date=str(google_date),
+				end_date=str(google_date),
+				dimensions='ga:userType',
+				metrics='ga:sessions').execute()
+
+				experiments = g.client.management().experiments().list(
+			      accountId=self.account_id,
+			      webPropertyId=self.webproperty_id,
+			      profileId=self.profile_id).execute()
+
+				print json.dumps(experiments)
+
+				date = date - timedelta(days=1)
+				google_date = GoogleTimeString(str(date))
 				sys.exit()
-		
