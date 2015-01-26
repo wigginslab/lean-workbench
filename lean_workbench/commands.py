@@ -9,6 +9,7 @@ from datetime import timedelta
 from sqlalchemy import func
 import json
 from flask.ext.migrate import Migrate, MigrateCommand
+import requests
 
 class CreateDB(Command):
     """
@@ -329,3 +330,12 @@ class MigrateUsers(Command):
                     db.session.add(new_user)
                     db.session.commit()
                     print 'user ' + email + 'migrated'
+
+class PingQB(Command):
+    """
+    ping quickbooks server to keep it awake
+    """
+    def run(self):
+        app = app_factory(config.Dev)
+        with app.app_context():
+            requests.get(app.config.get('QUICKBOOKS_SERVER_URL'))

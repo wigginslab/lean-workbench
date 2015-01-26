@@ -29,5 +29,5 @@ if __name__ == "__main__":
 	manager.add_command("refresh_ga", commands.RefreshGA())
 	manager.add_command("migrate_users", commands.MigrateUsers())
 	manager.add_command('db', MigrateCommand)
+	manager.add_command('ping_qb', commands.PingQB())
 	manager.run()
-

@@ -12,3 +12,6 @@
 
 # mine cohort daily
 20 0 * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py cohort
+
+# ping qb server every hour
+0 * * * * /usr/bin/python /var/www/lean-workbench/lean_workbench/manage.py ping_qb
