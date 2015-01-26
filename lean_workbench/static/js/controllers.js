@@ -209,6 +209,20 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 
 	     }
       )
+
+       $http.get(
+        '/api/v1/google-analytics?metric=returning-visitors'
+      ).success(
+        function(data) {
+
+          $scope.googleRVData = data;
+          $scope.has_ga_data = true;
+        }
+      ).error(function(data){
+          $scope.has_ga_data = false;
+
+	     }
+      )
     
 	  $http.get(
 	    '/api/v1/google-analytics?metric=referrals'

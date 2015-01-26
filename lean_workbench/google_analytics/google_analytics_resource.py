@@ -123,6 +123,13 @@ class GoogleAnalyticsDAO(object):
 		print medium_names
 		return ''
 
+
+    def get_returning_visitors(self, username):
+        returning_visitors = GoogleAnalyticsReturningVisitors.query.filter_by(username=username).all().as_count()
+        return make_response(dumps([{"key":"Returning Visitors", values:returning_visitors}]))
+
+
+
 class GoogleAnalyticsResource(Resource):
     """
     Handles requests and returns the resources they ask for
@@ -156,19 +163,23 @@ class GoogleAnalyticsResource(Resource):
                         return jsonify(status=666)
                 elif metric == "visits":
                         return GA.get_user_profile_visits(username = current_user.email)
-		elif metric == "referrals":
-			return GA.get_user_referrals(username = current_user.email)
-        else:
-                if profile:
-                    GA = GoogleAnalyticsDAO(username = current_user.email)
-                    print 'trying to get user profiles'
-                    try:
-                        
-                        print 'attempting to get user profiles'
-                        profiles = GA.get_user_profiles()
-                        return make_response(dumps(profiles))
-                    except:
-                        return jsonify(status=111)
+
+                elif metric == "returning-visitors":
+                    return GA.get_returning_visitors(username = current_user.email)
+
+                elif metric == "referrals":
+                    return GA.get_user_referrals(username = current_user.email)
+                else:
+                    if profile:
+                        GA = GoogleAnalyticsDAO(username = current_user.email)
+                        print 'trying to get user profiles'
+                        try:
+                            
+                            print 'attempting to get user profiles'
+                            profiles = GA.get_user_profiles()
+                            return make_response(dumps(profiles))
+                        except:
+                            return jsonify(status=111)
 
     def post(self, **kwargs):
         """
@@ -194,5 +205,8 @@ class GoogleAnalyticsResource(Resource):
             g.add_ids(profile_id)
             print 'committed data' 
             return jsonify(status=200,message="success!")
-	if metric == "visits":
+	    if metric == "visits":
             visits =  GA.get_user_profile_visits()
+
+        if metric == "returning-visitors":
+            return GA.get_returning_visitors(username = current_user.email)
