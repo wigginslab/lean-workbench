@@ -22,38 +22,24 @@ class WufooResource(Resource):
         data = request.args
         survey_id = data.get('survey_id')
         username = current_user.email
+        d3_json = []
         if username:
             if survey_id:
                 return make_response(dumps({'status':500}))
             else:
-                surveys = WufooSurveyModel.query.filter_by(username=username).all()
-                
-                surveys_list = [survey for survey in surveys]
-                surveys_dicts = [survey.as_dict() for survey in surveys]
-                #print entries
-                #entries = [entry.as_dict() for entry in entries[0]]
-                #return make_response(dumps(entries))
-                survey_fields = []
-                for survey in surveys_dicts:
-                 
-                
-                    
-                  d3_json = {'name':survey.get('name'), 'values':[]}
-                  survey_fields.append([])
-                  this_survey = survey_fields[-1]
-                  print survey
-                  for field in survey.get('fields'):
-                    fields = []
-                    title = field.get("title")
-                    values = field.get("values")
-                    values_list = [value.get('value') for value in values]
-                    unique_values = set(values_list)
-                    value_counts = [(value,values_list.count(value)) for value in unique_values]
-                    for value_tuple in value_counts:
-                        value_label = value_tuple[0]
-                        value_count = value_tuple[1]
-                        fields.append({"key":value_label, "y":value_count})
-                    d3_json['values'].append({"title":title,"fields":fields}) 
+                surveys = WufooSurveyModel.query.filter_by(username=username)
+                for survey in surveys:
+                    sentiment = survey.textareas.all()
+                    positive = len([x for x in sentiment if x.sentiment_type == "positive"])
+                    negative = len([x for x in sentiment if x.sentiment_type == "negative"])
+                    neutral = len([x for x in sentiment if x.sentiment_type == "neutral"])
+
+                    sent_dict = [
+                    {"key":"Positive","y":positive},
+                    {"key":"Negative","y":negative},
+                    {"key":"Neutral", "y":neutral}
+                    ]
+                    d3_json.append({"name":survey.name,"values":sent_dict}) 
                 return make_response(dumps(d3_json))
         else:
             pass 
@@ -125,12 +111,10 @@ class WufooResource(Resource):
                 if field_type == "textarea":
                     textareas.append(field.get("ID"))
 
-            print textareas
             alchemyapi = AlchemyAPI(os.getenv("ALCHEMYAPI_KEY"))
             for key in data:
                 if key in textareas:
                     text = data[key]
-                    print text
                     response = alchemyapi.sentiment('text', text)
                     if response['status'] == 'OK':
                         docsentiment = response.get("docSentiment")

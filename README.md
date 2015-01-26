@@ -96,7 +96,10 @@ For each of these APIs you want to use
 * GOOGLE_ANALYTICS_KEY_LOCATION
 * QUICKBOOKS_SERVER_API_TOKEN
 * QUICKBOOKS_SERVER_URL
-* ALCHEMY_API_KEY
+
+
+Except this which must be an environment variable:
+ ALCHEMY_API_KEY
 
 Example lean_workbench/user_config.py
 ```

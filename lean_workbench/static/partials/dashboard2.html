@@ -71,6 +71,24 @@
                 <div id="surveys">
                     When you create Wufoo surveys for your features, we can gauge the sentiment in the free text responses. Here are your surveys and their sentiments.
                     <!-- graphs -->
+                    <div>
+                        <b>[[wufooDataName]]</b>
+                           <nvd3-pie-chart
+                            data="wufooData"
+                            id="google_source"
+                            showLabels="true"
+                            x="donutXFunction()"
+                            y="donutYFunction()"
+                            tooltips="true"
+                            toolTipContent="donutToolTipContentFunction()" 
+
+                            donut="true"
+                            margin="{left:0,top:0,bottom:0,right:0}"
+                            donutRatio=".5"
+                            donutLabelsOutside="true">
+                        <svg></svg>
+                    </nvd3-pie-chart>
+                    </div>
                     <!-- graph copy-->
                 </div>
             </div>

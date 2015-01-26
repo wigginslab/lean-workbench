@@ -184,6 +184,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 
 
 
+
 	 $http.get(
         '/api/v1/twitter'
       ).success(
@@ -239,10 +240,9 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	    '/api/v1/wufoo'
 	  ).success(
 	    function(data) {
-	      $scope.wufooValues = data['values'][0].fields;
-              $scope.wufooQuestionTitle = data['values'][0]['title'];
-              console.log(data['values'][0]['title']);
-              $scope.wufooTitle = data['name'];
+	      $scope.wufooData = data[0]['values'];
+	      console.log($scope.wufooData)
+	      $scope.wufooDataName = data[0]['name'];
 	    }
 	  ).error(function(data){
 		 }
