@@ -229,8 +229,8 @@ class Mine(Command):
                     except:
                         print '% failed qb mine' %(user.username)
             else:        
-                #mine_fb_page_data()
-                mine_visits()
+                mine_fb_page_data()
+                #mine_visits()
                 #track_keywords()
                 #mine_qb_data(quickbooks_server_url,api_token)
 

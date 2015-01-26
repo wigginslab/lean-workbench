@@ -17,23 +17,25 @@ def mine_fb_page_data(username=None):
 		oauth_access_token = user.access_token
 		username = user.username
 		if oauth_access_token:
-                    try:
-		        # get graph
-			graph = facebook.GraphAPI(oauth_access_token)
-			# get pages
-			pages = graph.request('me/accounts')
-			page_access_token = pages['data'][0]['access_token']
-			# get likes per page for today
-			page_id = pages['data'][0]['category_list'][0]['id']
-			page = graph.request(str(page_id)+'?access_token='+page_access_token)
-			print page
-			try:
-				likes = page['likes']
+				#try:
+					# get graph
+				graph = facebook.GraphAPI(oauth_access_token)
+				# get pages
+				pages = graph.request('me/accounts')
+				# get likes per page for today
+				
+				try:
+					page_access_token = pages['data'][0]['access_token']
+					page_id = pages['data'][0].get('category_list')[0]['id']
+					page = graph.request(str(page_id)+'?access_token='+page_access_token)
+					likes = page['likes']
+					page_name = page.get('name')
+				except:
+					likes = 0
+					page_name=None
+				
+				page_today = FacebookPageData(username = username, likes=likes, page_name=page_name)
+				db.session.add(page_today)
+				db.session.commit()
 			except:
-				likes = 0
-			page_name = page.get('name')
-			page_today = FacebookPageData(username = username, likes=likes, page_name=page_name)
-			db.session.add(page_today)
-			db.session.commit()
-                    except:
-                        print 'error in fb_mine.py for %s' %(user.username)
+				print 'error in fb_mine.py for %s' %(user.username)
