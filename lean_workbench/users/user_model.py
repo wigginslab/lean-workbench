@@ -9,7 +9,7 @@ from flask.ext.security import UserMixin, RoleMixin
 from itsdangerous import URLSafeTimedSerializer
 import md5
 from database import db
-from google_analytics.google_analytics_models import GoogleAnalyticsReturningVisitors
+from google_analytics.google_analytics_models import GoogleAnalyticsReturningVisitors, GoogleAnalyticsSignups
 
 apis = db.Table('apis',
 		db.Column('api_id', db.Integer, db.ForeignKey('api.id')),
@@ -26,6 +26,13 @@ returning_visitors = db.Table('user_google_analytics_returning_visitors',
         db.Column('google_analytics_returning_visitors_id', 
         db.Integer(), 
         db.ForeignKey('google_analytics_returning_visitors.id')))
+
+signups = db.Table('user_google_analytics_returning_signups',
+	  	db.Column('user_id', db.Integer(), 
+	  	db.ForeignKey('user.id')),
+        db.Column('google_analytics_signups_id', 
+        db.Integer(), 
+        db.ForeignKey('google_analytics_signups.id')))
 
 class Role(db.Model, RoleMixin):
 	"""
@@ -63,6 +70,11 @@ class User(db.Model, UserMixin):
 		secondary=returning_visitors,
 		backref=db.backref('user')
 	)
+	signups = db.relationship('GoogleAnalyticsSignups', 
+	secondary=signups,
+	backref=db.backref('user')
+	)
+		
 		
 	def __repr__(self):
 		return '<User %s>' %self.email

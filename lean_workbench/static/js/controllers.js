@@ -196,19 +196,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	     }
       )
 
-       $http.get(
-        '/api/v1/google-analytics?metric=visits'
-      ).success(
-        function(data) {
-
-          $scope.googleData = data;
-          $scope.has_ga_data = true;
-        }
-      ).error(function(data){
-          $scope.has_ga_data = false;
-
-	     }
-      )
 
        $http.get(
         '/api/v1/google-analytics?metric=returning-visitors'
@@ -220,6 +207,18 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         }
       ).error(function(data){
           $scope.has_ga_data = false;
+
+	     }
+      )
+
+       $http.get(
+        '/api/v1/google-analytics?metric=signups'
+      ).success(
+        function(data) {
+
+          $scope.googleSignupData = data;
+        }
+      ).error(function(data){
 
 	     }
       )

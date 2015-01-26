@@ -136,9 +136,29 @@ class GoogleAnalyticsDAO(object):
             cohort_len = len(cohort_usernames)
             cohort_visits = db.session.query(GoogleAnalyticsReturningVisitors).filter(GoogleAnalyticsReturningVisitors.username.in_(cohort_usernames)).all()
             cohort_visits = [[x.as_count()[0], x.as_count()[1]/cohort_len] for x in cohort_visits]
-        return make_response(dumps([{"key":"Returning Visitors", "values":returning_visitors},
-            {"key":cohort_name + " average returning visitors", "values":cohort_visits
-            }]))
+            return make_response(dumps([{"key":"Returning Visitors", "values":returning_visitors},
+                {"key":cohort_name + " average returning visitors", "values":cohort_visits
+                }]))
+        else:
+            return make_response(dumps([{"key":"Returning Visitors", "values":returning_visitors}]))
+
+    def get_signups(self, username):
+        signups = [x.as_count() for x in GoogleAnalyticsSignups.query.filter_by(username=username).all()]
+        cohort = User.query.filter_by(email=username).first().roles
+        if cohort:
+            cohort_id = cohort[-1].id
+            cohort_name = cohort[-1].name
+            cohort_members = db.session.query(User).filter(User.roles.any(Role.id.in_([cohort_id]))).all()
+            cohort_usernames = [x.email for x in cohort_members]
+            cohort_len = len(cohort_usernames)
+            cohort_visits = db.session.query(GoogleAnalyticsSignups).filter(GoogleAnalyticsSignups.username.in_(cohort_usernames)).all()
+            cohort_visits = [[x.as_count()[0], x.as_count()[1]/cohort_len] for x in cohort_visits]
+            return make_response(dumps([{"key":"Signups", "values":signups},
+                {"key":cohort_name + " average signups", "values":cohort_visits
+                }]))
+        else:
+            return make_response(dumps([{"key":"Signups", "values":returning_visitors}]))
+
 
 
 
@@ -181,6 +201,10 @@ class GoogleAnalyticsResource(Resource):
 
                 elif metric == "referrals":
                     return GA.get_user_referrals(username = current_user.email)
+
+                elif metric == "signups":
+                    return GA.get_signups(username = current_user.email)
+
                 else:
                     if profile:
                         GA = GoogleAnalyticsDAO(username = current_user.email)
@@ -222,3 +246,6 @@ class GoogleAnalyticsResource(Resource):
 
         if metric == "returning-visitors":
             return GA.get_returning_visitors(username = current_user.email)
+
+        if metric == "signups":
+            return GA.get_signups(username = current_user.email)
