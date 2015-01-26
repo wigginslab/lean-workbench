@@ -111,9 +111,16 @@ class GoogleAnalyticsSignups(db.Model):
     date = db.Column(db.DateTime, default=datetime.datetime.now())
     signups = db.Column(db.Integer)
 
+    def as_count(self):
+        return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.signups]
+
+
 class GoogleAnalyticsReturningVisitors(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String)
     date = db.Column(db.DateTime, default=datetime.datetime.now())
     returning_visitors = db.Column(db.Integer)
     all_visitors = db.Column(db.Integer)
+
+    def as_count(self):
+        return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.returning_visitors]

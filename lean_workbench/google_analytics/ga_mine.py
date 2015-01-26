@@ -209,6 +209,14 @@ class Google_Analytics_User_Querier:
 					goalId='1',
 					webPropertyId=self.webproperty_id).execute()
 
+				print json.dumps(signup_data)
+				new_sd = GoogleAnalyticsSignups(
+					username=self.username,
+					date = date,
+					signups = signup_data['value']
+				)
+				db.session.add(new_sd)
+
 				returning_visitor_data = g.client.data().ga().get(
 				ids='ga:' + self.profile_id,
 				start_date=str(google_date),
@@ -216,12 +224,24 @@ class Google_Analytics_User_Querier:
 				dimensions='ga:userType',
 				metrics='ga:sessions').execute()
 
+				rows = returning_visitor_data.get('rows')
+				returning_visitors = int(rows[1][1])
+				new_visitors = int(rows[0][1])
+				all_visitors = new_visitors + returning_visitors
+				new_rvd = GoogleAnalyticsReturningVisitors(
+					username=self.username,
+					all_visitors = all_visitors,
+					returning_visitors = returning_visitors
+					)
+
+				db.session.add(new_rvd)
+				db.session.commit()
 				experiments = g.client.management().experiments().list(
 			      accountId=self.account_id,
 			      webPropertyId=self.webproperty_id,
 			      profileId=self.profile_id).execute()
 
-				print json.dumps(experiments)
+				print json.dumps(returning_visitor_data)
 
 				date = date - timedelta(days=1)
 				google_date = GoogleTimeString(str(date))
