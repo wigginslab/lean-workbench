@@ -5,6 +5,7 @@ from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsRefe
 from google_analytics_client import GoogleAnalyticsAPI
 import json 
 import sys
+from users.user_model import User
 
 def mine_visits(username=None):
 	if not username:
@@ -188,6 +189,7 @@ class Google_Analytics_User_Querier:
 			print json.dumps(page_path_data)	
 
 	def get_ga_data(self):
+			this_user = User.query.filter_by(email=self.username).first()
 			user_data = GoogleAnalyticsReturningVisitors.query.filter_by(username=self.username).all()
 			if user_data:
 				days_back = 2
@@ -234,7 +236,9 @@ class Google_Analytics_User_Querier:
 					returning_visitors = returning_visitors
 					)
 
+				this_user.returning_visitors.append(new_rvd)
 				db.session.add(new_rvd)
+				db.session.add(this_user)
 				db.session.commit()
 				experiments = g.client.management().experiments().list(
 			      accountId=self.account_id,
