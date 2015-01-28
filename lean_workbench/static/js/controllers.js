@@ -213,6 +213,19 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
       )
 
        $http.get(
+        '/api/v1/google-analytics?metric=experiments'
+      ).success(
+        function(data) {
+
+          $scope.googleExperiments = data;
+        }
+      ).error(function(data){
+
+	     }
+      )
+
+
+       $http.get(
         '/api/v1/google-analytics?metric=signups'
       ).success(
         function(data) {
