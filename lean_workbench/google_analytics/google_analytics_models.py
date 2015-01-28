@@ -141,7 +141,7 @@ class GoogleAnalyticsExperiment(db.Model):
       backref='GoogleAnalyticsExperiment',
       lazy='dynamic')
   
-  def __init__(self, status, winner_found, start_time, end_time, experiment_id, username=username):
+    def __init__(self, status, winner_found, start_time, end_time, experiment_id, username=username):
       self.status = status
       self.winner_found = winner_found
       self.start_time = start_time
@@ -149,6 +149,12 @@ class GoogleAnalyticsExperiment(db.Model):
       self.experiment_id = experiment_id
       self.username = username
 
+    def as_dict(self):
+        return {
+                "experiment_id":self.experiment_id,
+                "winner_found":self.winner_found,
+                "variations": [x.as_dict for x in self.variations]
+                }
 class GoogleAnalyticsExperimentVariation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, default=datetime.datetime.now())
@@ -166,3 +172,10 @@ class GoogleAnalyticsExperimentVariation(db.Model):
         self.won = won
         self.name = name
 
+    def as_dict(self):
+        return{
+                "name":self.name,
+                "url":self.url,
+                "won":self.won,
+                "status":self.status
+        }
