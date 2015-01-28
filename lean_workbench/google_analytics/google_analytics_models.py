@@ -124,3 +124,45 @@ class GoogleAnalyticsReturningVisitors(db.Model):
 
     def as_count(self):
         return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.returning_visitors]
+
+class GoogleAnalyticsExperiment(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String)
+  updated_at = db.Column(db.DateTime, default=datetime.datetime.now())
+  status = db.Column(db.String)
+  experiment_id = db.Column(db.String)
+  objective_metric = db.Column(db.String)
+  start_time = db.Column(db.DateTime)
+  end_time = db.Column(db.DateTime)
+  minimum_experiment_length_in_days = db.Column(db.Integer)
+  winner_id = db.Column(db.String)
+  winner_found = db.Column(db.Boolean)
+  variations = db.relationship('GoogleAnalyticsExperimentVariation',
+      backref='GoogleAnalyticsExperiment',
+      lazy='dynamic')
+  
+  def __init__(self, status, winner_found, start_time, end_time, experiment_id, username=username):
+      self.status = status
+      self.winner_found = winner_found
+      self.start_time = start_time
+      self.end_time = end_time
+      self.experiment_id = experiment_id
+      self.username = username
+
+class GoogleAnalyticsExperimentVariation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(db.DateTime, default=datetime.datetime.now())
+    url = db.Column(db.String)
+    status = db.Column(db.String)
+    name = db.Column(db.String)
+    weight = db.Column(db.Float(5))
+    experiment_id = db.Column(db.Integer, db.ForeignKey('google_analytics_experiment.id'))
+    won = db.Column(db.Boolean)
+
+    def __init__(self, url,status,weight, won, name):
+        self.url = url
+        self.status = status
+        self.weight = weight
+        self.won = won
+        self.name = name
+

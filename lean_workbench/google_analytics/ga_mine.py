@@ -1,11 +1,13 @@
 from google_time_string import GoogleTimeString
 from datetime import datetime, timedelta
 from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsReferralsModel, GoogleAnalyticsUserModel, db, \
- GoogleAnalyticsSignups, GoogleAnalyticsReturningVisitors
+ GoogleAnalyticsSignups, GoogleAnalyticsReturningVisitors, GoogleAnalyticsExperimentVariation, GoogleAnalyticsExperiment
 from google_analytics_client import GoogleAnalyticsAPI
 import json 
 import sys
 from users.user_model import User
+
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
 def mine_visits(username=None):
 	if not username:
@@ -204,49 +206,89 @@ class Google_Analytics_User_Querier:
 			for backwards_days in range(1,days_back):
 				# create google query object	
 				g = GoogleAnalyticsAPI(self.username)
+                                try:
+                                    signup_data = g.client.management().goals().get(
+                                            accountId=self.account_id,
+                                            profileId=self.profile_id,
+                                            goalId='1',
+                                            webPropertyId=self.webproperty_id).execute()
+                                    new_sd = GoogleAnalyticsSignups(
+                                            username=self.username,
+                                            date = date,
+                                            signups = signup_data['value']
+                                    )
+                                    db.session.add(new_sd)
+                                except:
+                                    print '%s ga signup data error' %(self.username)
+                    
+                                try:
+                                    returning_visitor_data = g.client.data().ga().get(
+                                    ids='ga:' + self.profile_id,
+                                    start_date=str(google_date),
+                                    end_date=str(google_date),
+                                    dimensions='ga:userType',
+                                    metrics='ga:sessions').execute()
+                                    rows = returning_visitor_data.get('rows')
+                                    returning_visitors = int(rows[1][1])
+                                    new_visitors = int(rows[0][1])
+                                    all_visitors = new_visitors + returning_visitors
+                                    new_rvd = GoogleAnalyticsReturningVisitors(
+                                            username=self.username,
+                                            all_visitors = all_visitors,
+                                            returning_visitors = returning_visitors
+                                            )
+                                    this_user.returning_visitors.append(new_rvd)
+                                    db.session.add(new_rvd)
+                                    db.session.add(this_user)
+                                    db.session.commit()
+                                except:
+                                    print '%s ga returning visitor data error' %(self.username)
 
-				signup_data = g.client.management().goals().get(
-					accountId=self.account_id,
-					profileId=self.profile_id,
-					goalId='1',
-					webPropertyId=self.webproperty_id).execute()
+                                experiments = g.client.management().experiments().list(
+                                    accountId=self.account_id,
+                                    webPropertyId=self.webproperty_id,
+                                    profileId=self.profile_id).execute()
 
-				print json.dumps(signup_data)
-				new_sd = GoogleAnalyticsSignups(
-					username=self.username,
-					date = date,
-					signups = signup_data['value']
-				)
-				db.session.add(new_sd)
+                                user_experiment_ids = [x.experiment_id for x in GoogleAnalyticsExperiment.query.filter_by(username=self.username).all()]
+                                for experiment in experiments.get('items', []):
+                                    experiment_id = experiment.get('id')
+                                    
+                                    status = experiment.get('status')
+                                    winner_found = experiment.get('winnerFound')
+                                    start_time = experiment.get('created')
+                                    
+                                    start_time = datetime.strptime(start_time, DATETIME_FORMAT)
+                                    duration = experiment.get('minimumExperimentLengthInDays')
+                                    end_time = start_time - timedelta(days=duration)
+                                    if experiment_id not in user_experiment_ids:
+                                      experiment_model= GoogleAnalyticsExperiment(status=status, winner_found=winner_found, start_time=start_time, end_time=end_time, experiment_id=experiment_id, username = self.username)
+                                    else:
+                                      experiment_model = GoogleAnalyticsExperiment.query.filter_by(experiment_id=experiment_id).first()
+                                      experiment_model.status = status
+                                      experiment_model.winner_found = winner_found
+                                      
+                                    db.session.add(experiment_model)
+                                    db.session.commit()
+                                    
+                                    experiment_variations = [x.name for x in experiment_model.variations]
+                                    for variation in experiment.get('variations', []):
+                                      print variation
+                                      name =  variation.get('name')
+                                      url = variation.get('url')
+                                      status = variation.get('status')
+                                      weight= variation.get('weight')
+                                      won= variation.get('won')
+                                      if name in experiment_variations:
+                                        location = experiment_variations.index(name)
+                                        variation_model = experiment_variations[location]
+                                        variation_model.won = won
+                                        variation_model.status = status
+                                      else:
+                                        variation_model = GoogleAnalyticsExperimentVariation(url=url,status=status,weight=weight,name=name,won=won)
 
-				returning_visitor_data = g.client.data().ga().get(
-				ids='ga:' + self.profile_id,
-				start_date=str(google_date),
-				end_date=str(google_date),
-				dimensions='ga:userType',
-				metrics='ga:sessions').execute()
-
-				rows = returning_visitor_data.get('rows')
-				returning_visitors = int(rows[1][1])
-				new_visitors = int(rows[0][1])
-				all_visitors = new_visitors + returning_visitors
-				new_rvd = GoogleAnalyticsReturningVisitors(
-					username=self.username,
-					all_visitors = all_visitors,
-					returning_visitors = returning_visitors
-					)
-
-				this_user.returning_visitors.append(new_rvd)
-				db.session.add(new_rvd)
-				db.session.add(this_user)
-				db.session.commit()
-				experiments = g.client.management().experiments().list(
-			      accountId=self.account_id,
-			      webPropertyId=self.webproperty_id,
-			      profileId=self.profile_id).execute()
-
-				print json.dumps(returning_visitor_data)
+                                      experiment_model.variations.append(variation_model)
+                                      db.session.add(experiment_model)
+                                      db.session.commit()
 
 				date = date - timedelta(days=1)
 				google_date = GoogleTimeString(str(date))
-				sys.exit()

@@ -17,7 +17,7 @@ def mine_fb_page_data(username=None):
 		oauth_access_token = user.access_token
 		username = user.username
 		if oauth_access_token:
-				#try:
+			  try:
 					# get graph
 				graph = facebook.GraphAPI(oauth_access_token)
 				# get pages
@@ -37,5 +37,5 @@ def mine_fb_page_data(username=None):
 				page_today = FacebookPageData(username = username, likes=likes, page_name=page_name)
 				db.session.add(page_today)
 				db.session.commit()
-			except:
+			  except:
 				print 'error in fb_mine.py for %s' %(user.username)
