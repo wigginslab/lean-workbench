@@ -66,6 +66,30 @@
                 <div id="experiments">
                     Here are you experiments as quantified by the Google Analytics experiments API.
                     <!-- graphs -->
+                    <div ng-repeat="experiment in googleExperiments">
+                      Experiment [[experiment.experiment_id]]
+                        <table class="table">
+                          <thead>
+                            <tr>
+                            <th>Name</th>
+                            <th>Url</th>
+                            <th>Weight</th>
+                            <th>Won</th>
+                            <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          
+                            <tr ng-repeat="variation in experiment.varations">
+                                <th scope="row"></th>
+                                <td>[[variation.name]]</td>
+                                <td>[[variation.url]]</td>
+                                <td>[[variation.won]]</td>
+                                <td>[[variation.status]]</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
                     <!-- graphs with copy -->
                 </div>
                 <div id="surveys">

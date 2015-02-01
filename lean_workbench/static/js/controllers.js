@@ -218,6 +218,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         function(data) {
 
           $scope.googleExperiments = data;
+          
         }
       ).error(function(data){
 
