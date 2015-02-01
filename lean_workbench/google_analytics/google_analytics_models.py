@@ -126,18 +126,18 @@ class GoogleAnalyticsReturningVisitors(db.Model):
         return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.returning_visitors]
 
 class GoogleAnalyticsExperiment(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String)
-  updated_at = db.Column(db.DateTime, default=datetime.datetime.now())
-  status = db.Column(db.String)
-  experiment_id = db.Column(db.String)
-  objective_metric = db.Column(db.String)
-  start_time = db.Column(db.DateTime)
-  end_time = db.Column(db.DateTime)
-  minimum_experiment_length_in_days = db.Column(db.Integer)
-  winner_id = db.Column(db.String)
-  winner_found = db.Column(db.Boolean)
-  variations = db.relationship('GoogleAnalyticsExperimentVariation',
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now())
+    status = db.Column(db.String)
+    experiment_id = db.Column(db.String)
+    objective_metric = db.Column(db.String)
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+    minimum_experiment_length_in_days = db.Column(db.Integer)
+    winner_id = db.Column(db.String)
+    winner_found = db.Column(db.Boolean)
+    variations = db.relationship('GoogleAnalyticsExperimentVariation',
       backref='GoogleAnalyticsExperiment',
       lazy='dynamic')
   
@@ -153,7 +153,7 @@ class GoogleAnalyticsExperiment(db.Model):
         return {
                 "experiment_id":self.experiment_id,
                 "winner_found":self.winner_found,
-                "variations": [x.as_dict for x in self.variations]
+                "variations": [x.as_dict() for x in self.variations]
                 }
 class GoogleAnalyticsExperimentVariation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -174,8 +174,8 @@ class GoogleAnalyticsExperimentVariation(db.Model):
 
     def as_dict(self):
         return{
-                "name":self.name,
-                "url":self.url,
-                "won":self.won,
-                "status":self.status
+            "name":self.name,
+            "url":self.url,
+            "won":self.won,
+            "status":self.status
         }

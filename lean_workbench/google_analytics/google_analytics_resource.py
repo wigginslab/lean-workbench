@@ -157,16 +157,16 @@ class GoogleAnalyticsDAO(object):
                 {"key":cohort_name + " average signups", "values":cohort_visits
                 }]))
         else:
-            return make_response(dumps([{"key":"Signups", "values":returning_visitors}]))
+          return make_response(dumps([{"key":"Signups", "values":returning_visitors}]))
 
           
-      def get_experiments(self, username):
-        experiments = GoogleAnalyticsExperiment.query.filter_by(username=username).all()
-        data = []
-        for experiment in experiment:
-          data.append(experiment.as_dict())
+    def get_experiments(self, username):
+      experiments = GoogleAnalyticsExperiment.query.filter_by(username=username).all()
+      data = []
+      for experiment in experiments:
+        data.append(experiment.as_dict())
 
-        return make_response(dumps(data))
+      return make_response(dumps(data))
 
 class GoogleAnalyticsResource(Resource):
     """
