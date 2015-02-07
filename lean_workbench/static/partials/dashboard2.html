@@ -67,35 +67,23 @@
                     Here are you experiments as quantified by the Google Analytics experiments API.
                     <!-- graphs -->
                     <div ng-repeat="experiment in googleExperiments">
-                      Experiment [[experiment.experiment_id]]
-                        <table class="table">
-                          <thead>
-                            <tr>
-                            <th>Name</th>
-                            <th>Url</th>
-                            <th>Weight</th>
-                            <th>Won</th>
-                            <th>Status</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          
-                            <tr ng-repeat="variation in experiment.varations">
-                                <th scope="row"></th>
-                                <td>[[variation.name]]</td>
-                                <td>[[variation.url]]</td>
-                                <td>[[variation.won]]</td>
-                                <td>[[variation.status]]</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
+                      <h3>Experiment [[experiment.experiment_id]]</h3>
+                      <h4>Experiment Variations</h4>
+                      <div ng-repeat="var in experiment.variations">
+                        <h5>Variation Name:</h5> [[var.name]]
+                        <p><h5>Variation Url:</h5><a href="[[var.url]]" target="_blank">[[var.url]]</a>
+                        <p><h5>Variation Status:</h5>[[var.status]]
+                        <p><div ng-show="var.won"><h5> Variation Won:</h5>[[var.won]]</div>
+                        <hr></hr> 
+                      </div>
+                  </div>
                     <!-- graphs with copy -->
                 </div>
                 <div id="surveys">
                     When you create Wufoo surveys for your features, we can gauge the sentiment in the free text responses. Here are your surveys and their sentiments.
                     <!-- graphs -->
                     <div>
+                      <!--
                         <b>[[wufooDataName]]</b>
                            <nvd3-pie-chart
                             data="wufooData"
@@ -110,8 +98,8 @@
                             margin="{left:0,top:0,bottom:0,right:0}"
                             donutRatio=".5"
                             donutLabelsOutside="true">
-                        <svg></svg>
-                    </nvd3-pie-chart>
+                            </nvd3-pie-chart>
+                    --!>
                     </div>
                     <!-- graph copy-->
                 </div>
@@ -168,6 +156,7 @@
                     </div>
              
                 <h2>Quickbooks Data</h2>
+                <!--
                         <div ng-show="has_qb_data">
                            <nvd3-stacked-area-chart
                             data="quickbooksData"
@@ -188,7 +177,7 @@
                     </div>
                     <div ng-hide="has_qb_data">
                     You have not yet connected a Quickbooks account.
-                    </div>
+                    </div>--!>
                 </div>
                   <h2>Google Analytics Referral Data</h2>
                     <nvd3-pie-chart
