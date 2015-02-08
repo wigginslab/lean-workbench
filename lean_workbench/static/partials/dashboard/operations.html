@@ -1,0 +1,89 @@
+<div class="dashboard clearfix" >
+    <div class="container">
+    <div class="col-md-12" id="content" ng-controller="DashboardControllerTwo">
+        <div id="innovation-accounting">
+        <div id="lean-operations">
+            <h1>Lean Operations</h1>
+                <h3>Twitter Data</h3>
+                <div ng-show="has_twitterData">    
+                    <nvd3-stacked-area-chart
+                        data="twitterData"
+                        width="600"
+                        height="350"
+                        margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                        yAxisLabel="Company Mentions"
+                        xAxisLabel="Date"
+                        showXAxis="true"
+                		showYAxis="true"
+                		tooltips="true"
+                		interactive="true"
+                		useInteractiveGuideline="true"
+                        toolTipContent="toolTipContentFunction()" 
+    	            xAxisTickFormat="xAxisTickFormat()">
+                        </nvd3-stacked-area-chart>
+                    </div>
+                    <div ng-hide="has_twitterData">
+                        Connect your Twitter account <a href="/onboarding/virality">here</a>. </div>
+        </div>                 
+                          </div>
+                        <div ng-hide="has_ga_data">
+                          Connect your Google Analytics account <a href="/onboarding/stick">here</a>. 
+                        </div>
+                        <h2>Facebook Data</h2>
+                        <div ng-show="has_fb_data">
+                           <nvd3-stacked-area-chart
+                            data="facebookData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                            yAxisLabel="Number of likes"
+                            xAxisLabel="Date"
+                            interactive="true"
+                            useInteractiveGuideline="true"
+                            toolTipContent="toolTipContentFunction()" 
+			    tooltips="true"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+			    <svg></svg>  </nvd3-stacked-area-chart>
+                    </div>
+                    <div ng-hide="has_fb_data">
+                      Connect your Facebook account <a href="/onboarding/virality">here</a>.
+                    </div>
+             
+                <h2>Quickbooks Data</h2>
+                <!--
+                        <div ng-show="has_qb_data">
+                           <nvd3-stacked-area-chart
+                            data="quickbooksData"
+                            width="600"
+                            height="350"
+                            margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                            yAxisLabel="Runway"
+                            xAxisLabel="Date"
+                            interactive="true"
+                            useInteractiveGuideline="true"
+                            toolTipContent="toolTipContentFunction()" 
+			    tooltips="true"
+                            showXAxis="true"
+                            showYAxis="true"
+                            xAxisTickFormat="xAxisTickFormat()"
+                            yAxisTickFormat="yAxisFormatFunction()">
+			    <svg></svg>  </nvd3-stacked-area-chart>
+                    </div>
+                    <div ng-hide="has_qb_data">
+                    You have not yet connected a Quickbooks account.
+                    </div>--!>
+                </div>
+                  <h2>Google Analytics Referral Data</h2>
+                                   <div class="block-content collapse in">
+                </div>
+            </div>
+        </div>
+        <!-- /block -->
+    </div>
+    </div>
+    </div>
+</div>
+

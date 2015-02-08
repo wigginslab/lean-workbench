@@ -1,0 +1,64 @@
+<div class="dashboard clearfix" >
+    <div class="container">
+    
+    <!--/span-->
+    <div class="col-md-12" id="content" ng-controller="BaselineController">
+        <div id="innovation-accounting">
+            <h1>Innovation Accounting</h1>
+             The Lean methodology defines its own accounting -- Innovation Accounting -- with separate analyses appropriate to different points in the life-cycle of a business hypothesis: baseline quantification, optimization, and pivoting. 
+            <div id="baseline-quantification">
+                <h2>Baseline Quantification</h2>
+                In baseline quantification, we test your minimum viable product (MVP) and quantify the parameters on which your business projections rest.
+                <!-- customer signup rate -->
+                <div id="customer-signup-rate">
+                    You can track your customer signup rate using <a href="https://support.google.com/analytics/answer/2665210?hl=en">Google Analytics</a>. When you create this Google Analytics goal using the tutorial above, set it to GOAL ID 1/Goal Set 1, so we can track it here.
+                    <!-- graph -->
+                    <!-- graph copy -->
+                </div>
+                <!-- return rate -->
+                <div id="customer-return-rate">
+                    <!-- graph -->
+                    <!-- graph copy -->
+
+                      <h2>Google Analytics Returning Visitor Data</h2>
+                        <div ng-controller="BaselineReturningController" ng-show="has_ga_ret_data">
+                            <nvd3-stacked-area-chart
+                                data="googleRVData"
+                                width="700"
+                                height="500"
+                                margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                                showYAxis="true"
+                                tooltips="true"
+                                toolTipContent="toolTipContentFunction()" 
+                                yAxisLabel="Number of returning visitors"
+                                xAxisLabel="Date"
+                                showXAxis="true"
+                                showYAxis="true"
+                                interactive="true"
+                                useInteractiveGuideline="true"
+                                xAxisTickFormat="xAxisTickFormat()">
+                            </nvd3-stacked-area-chart>
+                         <h2>Signup Data</h2>
+                        <div ng-controller="BaselineSignupsController" ng-show="has_ga_signup_data">
+                            <nvd3-stacked-area-chart
+                                data="googleSignupData"
+                                width="700"
+                                height="500"
+                                margin="{left: 80, top: 40, right: 100, bottom: 100}"
+                                showYAxis="true"
+                                tooltips="true"
+                                toolTipContent="toolTipContentFunction()" 
+                                yAxisLabel="Number of signups"
+                                xAxisLabel="Date"
+                                showXAxis="true"
+                                showYAxis="true"
+                                interactive="true"
+                                useInteractiveGuideline="true"
+                                xAxisTickFormat="xAxisTickFormat()">
+                            </nvd3-stacked-area-chart>                              
+                </div>
+            <div>
+        </div>
+      </div>
+</div>
+

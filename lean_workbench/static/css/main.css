@@ -198,9 +198,6 @@ body {
   .container.navbar-wrapper {
     margin-bottom: 0;
     width: auto; }
-  .container {
-    border-radius: 0;
-    margin: -20px 0; }
   .carousel .item {
     height: 500px; }
   .carousel img {

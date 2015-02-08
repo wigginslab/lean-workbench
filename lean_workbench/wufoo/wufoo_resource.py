@@ -33,12 +33,13 @@ class WufooResource(Resource):
                     positive = len([x for x in sentiment if x.sentiment_type == "positive"])
                     negative = len([x for x in sentiment if x.sentiment_type == "negative"])
                     neutral = len([x for x in sentiment if x.sentiment_type == "neutral"])
-
-                    sent_dict = [
-                    {"key":"Positive","y":positive},
-                    {"key":"Negative","y":negative},
-                    {"key":"Neutral", "y":neutral}
-                    ]
+                    sent_dict = []
+                    if positive:
+                        sent_dict.append({"key":"Positive","y":positive})
+                    if negative:
+                        sent_dict.append({"key":"Negative","y":negative})
+                    if neutral:
+                       sent_dict.appen({"key":"Neutral", "y":neutral})
                     d3_json.append({"name":survey.name,"values":sent_dict}) 
                 return make_response(dumps(d3_json))
         else:

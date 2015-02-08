@@ -20,7 +20,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
-		protected_templates = ['partials/dashboard2.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html', 'partials/onboarding/welcome.html']
+		protected_templates = ['partials/dashboard2.html', 'partials/onboarding/stick.html', 'partials/onboarding/scale.html','partials/onboarding/virality.html', 'partials/measurements.html', 'partials/measurements2.html', 'partials/onboarding/wufoo.html', 'partials/onboarding/pay.html', 'partials/scale.html', 'partials/onboarding/welcome.html', 'partials/dashboard/optimization.html','partials/dashboard/baseline.html''partials/dashboard/operations.html']
 		# Get user from session
 		if not current_user.is_anonymous() or filename not in protected_templates:
 			return super(SecuredStaticFlask, self).send_static_file(filename)
@@ -198,6 +198,9 @@ def configure_views(app):
 	@app.route('/results', methods=['POST', 'GET'])  
 	@app.route('/privacy', methods=['POST','GET'])
 	@app.route('/eula', methods=['POST','GET'])
+        @app.route('/optimization', methods=['POST','GET'])
+        @app.route('/baseline', methods=['POST','GET'])
+        @app.route('/operations', methods=['POST','GET'])
 	@app.route('/dashboard', methods=['POST', 'GET'])    
 	def dashboard():
 		"""
