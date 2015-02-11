@@ -8,6 +8,7 @@ from flask.ext.security import current_user
 from flask import session, escape, request, jsonify, make_response, Response
 from database import db
 from json import dumps
+from users.user_model import Role,User
 
 path = os.getenv("path")
 sys.path.append(path)
@@ -49,9 +50,9 @@ class GoogleAnalyticsDAO(object):
 
     def get_user_profile_visits(self, username):
         """
-	return JSON of user and cohort visits (if available)
+        return JSON of user and cohort visits (if available)
         """
-	cohorts = current_user.roles
+        cohorts = current_user.roles
         print 'cohorts'
         print cohorts
         user_visitors = GoogleAnalyticsVisitors.query.filter_by(username=username).all()
@@ -62,27 +63,27 @@ class GoogleAnalyticsDAO(object):
                 date = visit_dict['date']
                 count = visit_dict['visitors']
                 user_visits.append([date,count])
-	if cohorts:
-	    return make_response(dumps([{'key':"Your visitors", 'values':user_visits}]))
-	else:
-	    start = user_visitors[-1].date
-	    end = user_visitors[0].date
-	    lines = []
-	    for cohort in cohorts:
-		cohort_name = cohort.name
-		cohort_visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.date >= start, GoogleAnalyticsVisitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
-		values = []
-		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
-	
-		for visit_dict in cohort_visitors_dict_list:
-		    date = visit_dict['date']
-		    count = visit_dict['visitors']
-		    values = [[date,count]] + values
-		if values:
-		    lines.append({'key':cohort_name +'\'s visitors','values':values})
-	    lines.append({'key':"Your visitors",'values':user_visits})
+    	if cohorts:
+    	    return make_response(dumps([{'key':"Your visitors", 'values':user_visits}]))
+    	else:
+    	    start = user_visitors[-1].date
+    	    end = user_visitors[0].date
+    	    lines = []
+    	    for cohort in cohorts:
+    		cohort_name = cohort.name
+    		cohort_visitors = GoogleAnalyticsVisitors.query.filter(GoogleAnalyticsVisitors.date >= start, GoogleAnalyticsVisitors.date <= end).filter_by(username="cohort:"+cohort_name).all() 
+    		values = []
+    		cohort_visitors_dict_list = [x.as_dict() for x in cohort_visitors]
+    	
+    		for visit_dict in cohort_visitors_dict_list:
+    		    date = visit_dict['date']
+    		    count = visit_dict['visitors']
+    		    values = [[date,count]] + values
+    		if values:
+    		    lines.append({'key':cohort_name +'\'s visitors','values':values})
+    	    lines.append({'key':"Your visitors",'values':user_visits})
 
-	    return make_response(dumps(lines))
+    	    return make_response(dumps(lines))
 
     def get_user_referrals(self, username, metric='source', start_date=None, end_date=None):
 	"""
@@ -123,6 +124,50 @@ class GoogleAnalyticsDAO(object):
 		print medium_names
 		return ''
 
+
+    def get_returning_visitors(self, username):
+        returning_visitors = [x.as_count() for x in GoogleAnalyticsReturningVisitors.query.filter_by(username=username).all()]
+        cohort = User.query.filter_by(email=username).first().roles
+        if cohort:
+            cohort_id = cohort[-1].id
+            cohort_name = cohort[-1].name
+            cohort_members = db.session.query(User).filter(User.roles.any(Role.id.in_([cohort_id]))).all()
+            cohort_usernames = [x.email for x in cohort_members]
+            cohort_len = len(cohort_usernames)
+            cohort_visits = db.session.query(GoogleAnalyticsReturningVisitors).filter(GoogleAnalyticsReturningVisitors.username.in_(cohort_usernames)).all()
+            cohort_visits = [[x.as_count()[0], x.as_count()[1]/cohort_len] for x in cohort_visits]
+            return make_response(dumps([{"key":"Returning Visitors", "values":returning_visitors},
+                {"key":cohort_name + " average returning visitors", "values":cohort_visits
+                }]))
+        else:
+            return make_response(dumps([{"key":"Returning Visitors", "values":returning_visitors}]))
+
+    def get_signups(self, username):
+        signups = [x.as_count() for x in GoogleAnalyticsSignups.query.filter_by(username=username).all()]
+        cohort = User.query.filter_by(email=username).first().roles
+        if cohort:
+            cohort_id = cohort[-1].id
+            cohort_name = cohort[-1].name
+            cohort_members = db.session.query(User).filter(User.roles.any(Role.id.in_([cohort_id]))).all()
+            cohort_usernames = [x.email for x in cohort_members]
+            cohort_len = len(cohort_usernames)
+            cohort_visits = db.session.query(GoogleAnalyticsSignups).filter(GoogleAnalyticsSignups.username.in_(cohort_usernames)).all()
+            cohort_visits = [[x.as_count()[0], x.as_count()[1]/cohort_len] for x in cohort_visits]
+            return make_response(dumps([{"key":"Signups", "values":signups},
+                {"key":cohort_name + " average signups", "values":cohort_visits
+                }]))
+        else:
+          return make_response(dumps([{"key":"Signups", "values":returning_visitors}]))
+
+          
+    def get_experiments(self, username):
+      experiments = GoogleAnalyticsExperiment.query.filter_by(username=username).all()
+      data = []
+      for experiment in experiments:
+        data.append(experiment.as_dict())
+
+      return make_response(dumps(data))
+
 class GoogleAnalyticsResource(Resource):
     """
     Handles requests and returns the resources they ask for
@@ -156,19 +201,30 @@ class GoogleAnalyticsResource(Resource):
                         return jsonify(status=666)
                 elif metric == "visits":
                         return GA.get_user_profile_visits(username = current_user.email)
-		elif metric == "referrals":
-			return GA.get_user_referrals(username = current_user.email)
-        else:
-                if profile:
-                    GA = GoogleAnalyticsDAO(username = current_user.email)
-                    print 'trying to get user profiles'
-                    try:
-                        
-                        print 'attempting to get user profiles'
-                        profiles = GA.get_user_profiles()
-                        return make_response(dumps(profiles))
-                    except:
-                        return jsonify(status=111)
+
+                elif metric == "returning-visitors":
+                    return GA.get_returning_visitors(username = current_user.email)
+
+                elif metric == "referrals":
+                    return GA.get_user_referrals(username = current_user.email)
+
+                elif metric == "signups":
+                    return GA.get_signups(username = current_user.email)
+                
+                elif metric == "experiments":
+                    return GA.get_experiments(username = current_user.email)
+
+                else:
+                    if profile:
+                        GA = GoogleAnalyticsDAO(username = current_user.email)
+                        print 'trying to get user profiles'
+                        try:
+                            
+                            print 'attempting to get user profiles'
+                            profiles = GA.get_user_profiles()
+                            return make_response(dumps(profiles))
+                        except:
+                            return jsonify(status=111)
 
     def post(self, **kwargs):
         """
@@ -187,12 +243,18 @@ class GoogleAnalyticsResource(Resource):
         if metric == 'profile-id':
             print 'inside profile id'
             ga_cred = GoogleAnalyticsUserModel.query.filter_by(username=current_user.email).first()
-            print ga_cred.profile_id
-            ga_cred.profile_id = profile_id
+            ga_cred.account_id = profile_id
             db.session.add(ga_cred)
             db.session.commit()
+            g = GoogleAnalyticsAPI(username)
+            g.add_ids(profile_id)
             print 'committed data' 
-            db.session.close()
             return jsonify(status=200,message="success!")
-	if metric == "visits":
+        if metric == "visits":
             visits =  GA.get_user_profile_visits()
+
+        if metric == "returning-visitors":
+            return GA.get_returning_visitors(username = current_user.email)
+
+        if metric == "signups":
+            return GA.get_signups(username = current_user.email)

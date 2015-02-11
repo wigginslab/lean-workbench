@@ -1,26 +1,12 @@
 *.py[cod]
-*/api_key.txt
+
 # C extensions
 *.so
-logs
-
-user_config.py
-*pyc
-#local
-venv
-*~
-*swo
-*swp
-*swn
-#assets
-node_modules
-
-# credentials
- ga_client_secrets.json
 
 # Packages
 *.egg
 *.egg-info
+dist
 build
 eggs
 parts
@@ -29,8 +15,8 @@ var
 sdist
 develop-eggs
 .installed.cfg
+lib
 lib64
-__pycache__
 
 # Installer logs
 pip-log.txt
@@ -48,7 +34,5 @@ nosetests.xml
 .project
 .pydevproject
 
-envs.sh
-*swo
-*swp
-*~
+# API Key (This is secret so it should not go in the git repo!!!)
+api_key.txt

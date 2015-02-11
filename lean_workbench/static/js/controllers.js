@@ -19,10 +19,82 @@ function ExportController(){
 
 }
 
+function WelcomeController(){
+
+}
+
 function EULAController(){
 }
 
 function PrivacyController(){
+}
+
+function OperationsController(){
+
+}
+
+function OptimizationController($http, $scope){
+ $http.get(
+        '/api/v1/google-analytics?metric=experiments'
+      ).success(
+        function(data) {
+
+          $scope.googleExperiments = data;
+      }).error(function(data){
+
+      });
+      $http.get(
+	    '/api/v1/wufoo'
+	  ).success(
+	    function(data) {
+              // must have at least one value for each answer
+	      $scope.wufooData = data;
+	      console.log($scope.wufooData[0].values.length)
+	      $scope.wufooDataName = data[0]['name'];
+	    }
+	  ).error(function(data){
+		 }
+	  )
+
+
+}
+
+function BaselineReturningController($scope,$http){
+    $http.get(
+        '/api/v1/google-analytics?metric=returning-visitors'
+        ).success(
+        function(data) {
+
+          $scope.googleRVData = data;
+          $scope.has_ga_ret_data = true;
+        }).error(function(data){
+
+      })
+
+}
+function BaselineSignupsController($scope,$http){
+       $http.get(
+        '/api/v1/google-analytics?metric=signups'
+      ).success(
+        function(data) {
+          $scope.has_ga_signup_data = true;
+          $scope.googleSignupData = data;
+        }
+      ).error(function(data){
+
+      });
+ 
+}
+
+function BaselineController($scope,$http){
+    $scope.xAxisTickFormat = function(){
+                return function(d){
+                    return d3.time.format('%x')(new Date(d));  //uncomment for date format
+                }
+    }
+
+
+
 }
 
 function ViewScaleController($scope, $http){
@@ -180,10 +252,12 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 
 
 
+
 	 $http.get(
         '/api/v1/twitter'
       ).success(
         function(data) {
+          $scope.twitterData = data;
           $scope.has_twitterData = true;
         }
       ).error(function(data){
@@ -191,16 +265,41 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	     }
       )
 
+
        $http.get(
-        '/api/v1/google-analytics?metric=visits'
+        '/api/v1/google-analytics?metric=returning-visitors'
+        ).success(
+        function(data) {
+
+          $scope.googleRVData = data;
+          $scope.has_ga_data = true;
+        }).error(function(data){
+          $scope.has_ga_data = false;
+
+      })
+
+       $http.get(
+        '/api/v1/google-analytics?metric=experiments'
       ).success(
         function(data) {
 
-          $scope.googleData = data;
-          $scope.has_ga_data = true;
+          $scope.googleExperiments = data;
+          
         }
       ).error(function(data){
-          $scope.has_ga_data = false;
+
+	     }
+      )
+
+
+       $http.get(
+        '/api/v1/google-analytics?metric=signups'
+      ).success(
+        function(data) {
+
+          $scope.googleSignupData = data;
+        }
+      ).error(function(data){
 
 	     }
       )
@@ -210,6 +309,7 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	  ).success(
 	    function(data) {
               $scope.has_ga_data = true;
+              console.log(data);
 	      $scope.googleSourceData = data;
         }
 	  ).error(function(data){
@@ -221,10 +321,10 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 	    '/api/v1/wufoo'
 	  ).success(
 	    function(data) {
-	      $scope.wufooValues = data['values'][0].fields;
-              $scope.wufooQuestionTitle = data['values'][0]['title'];
-              console.log(data['values'][0]['title']);
-              $scope.wufooTitle = data['name'];
+              // must have at least one value for each answer
+	      $scope.wufooData = data;
+	      console.log($scope.wufooData)
+	      $scope.wufooDataName = data[0]['name'];
 	    }
 	  ).error(function(data){
 		 }
@@ -256,7 +356,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_qb_data = true;
-            console.log(data)
             $scope.quickbooksData = data;
           }
         }
@@ -280,7 +379,6 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
 				$scope.hypotheses = data.hypotheses;
 			}
 		).error(function(data){
-				console.log(data)
 			}
 		)
 
@@ -488,15 +586,15 @@ function ViralityController($scope, $http, Facebook, Twitter){
 	}
 	
 	$scope.has_twitter = false;
-		$http.post('/api/v1/twitter?metric=authed'
+		$http.get('/api/v1/twitter'
 		).success(
 			function(data){
 				console.log(data)
-					$scope.has_twitter = true;
+				$scope.has_twitter = true;
 			}
-		).error( function(data){
-
-		$scope.has_twitter = false;})
+		).error(function(data){
+		  $scope.has_twitter = false;
+        })
 		$http.post(
 				'/api/v1/facebook?metric=authed'
 		).success(
@@ -600,6 +698,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                                     // if success
                                     console.log(data['response']['user']);
                                     if (data['response']['user']){
+                                        
                                         $("#login").hide();
                                         $("#logout").show();
                                         $http.post(
@@ -694,7 +793,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
 })
 .controller({
-  NavController: function ($scope, $http, authService, $location) {
+  NavController: function ($scope, $http, authService, $location, $anchorScroll) {
   	 
       $scope.click_login = function(){
 		$location.path('/signin');  
@@ -708,21 +807,21 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	      $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
 	      $scope.logged_in = false;
 	      $http.get('/logout').success(function() {
-	        $scope.restrictedContent = [];
-	        $.cookie('auth_token', null);
-	        $.cookie('email',null);
-	        $http.defaults.headers.common['Authorization'] = null;
-	        $http.defaults.headers.common['Authentication-Token'] = null;
-	        window.location = "/";
-	      }).error(function() {
-	        // This should happen after the .post call either way.
-	        $.cookie('auth_token', null);
-	        $http.defaults.headers.common['Authorization'] = null;
-	        window.location = "/";
+              $scope.restrictedContent = [];
+              $.cookie('auth_token', null);
+              $.cookie('email',null);
+              $http.defaults.headers.common['Authorization'] = null;
+              $http.defaults.headers.common['Authentication-Token'] = null;
+              window.location = "/";
+            }).error(function() {
+              // This should happen after the .post call either way.
+              $.cookie('auth_token', null);
+              $http.defaults.headers.common['Authorization'] = null;
+              window.location = "/";
 	      }); 
 	    };
 
-	    $scope.scroll_to = function(id) {
+	    $scope.scrollTo = function(id) {
 	      $location.hash(id);
 	      $anchorScroll();
 	   }
@@ -738,23 +837,27 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 	}
 })
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
-    $routeProvider
-    .when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
-    .when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
-    .when('/dashboard', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
-    .when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
-    .when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
-    .when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
-    .when('/signin', {templateUrl: 'static/partials/signin.html'})
-    .when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
-    .when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
-    .when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
-    .when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
+$routeProvider
+.when('/', {templateUrl: 'static/partials/public.html', controller: MyCtrl1})
+.when('/baseline', {templateUrl: 'static/partials/dashboard/baseline.html', controller: BaselineController})
+.when('/optimization', {templateUrl: 'static/partials/dashboard/optimization.html', controller: OptimizationController})
+.when('/operations', {templateUrl: 'static/partials/dashboard/operations.html', controller: OperationsController})
+.when('/results', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
+.when('/dashboard', {templateUrl: 'static/partials/dashboard2.html', controller: DashboardControllerTwo})
+.when('/onboarding/stick', {templateUrl: '/static/partials/onboarding/stick.html', controller: StickController})
+.when('/onboarding/virality', {templateUrl: '/static/partials/onboarding/virality.html', controller: ViralityController})
+.when('/onboarding/pay', {templateUrl: '/static/partials/onboarding/pay.html', controller: PayController})
+.when('/signin', {templateUrl: 'static/partials/signin.html'})
+.when('/stats', {templateUrl: '/static/partials/measurements2.html', controller: MeasurementsController})
+.when('/stats/1', {templateUrl: '/static/partials/measurements.html', controller: MeasurementsController})
+.when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
+.when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
 .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
 .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
 .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
 .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
 .when('/eula', {templateUrl: '/static/partials/eula.html', controller:EULAController})
+.when('/welcome', {templateUrl: '/static/partials/onboarding/welcome.html', controller:WelcomeController})
 // enable push state
 $locationProvider.html5Mode(true);
 }])

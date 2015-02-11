@@ -22,4 +22,6 @@ grunt sass
 
 # fire db & server
 python lean_workbench/manage.py create_db
+python lean_workbench/manage.py db upgrade
+python lean_workbench/manage.py db migrate
 python lean_workbench/manage.py runserver

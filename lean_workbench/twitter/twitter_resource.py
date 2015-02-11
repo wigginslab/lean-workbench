@@ -27,14 +27,17 @@ class TwitterResource(Resource):
     def get(self, **kwargs):
         metric = request.args.get('metric')
         if current_user.is_anonymous():
-        
             error = dumps({'error':'The user is not logged in.'})
             resp = Response(response=error,status=400,mimetype="application/json")
             return resp
 
         twitter = TwitterDAO()
-        if twitter.user_twitter:
-	    cohorts = current_user.roles
+        if not twitter.user_twitter:
+            error = dumps({'error':'No Twitter account is associated with this user.'})
+            resp = Response(response=error,status=400,mimetype="application/json")
+            return resp
+        else:
+            cohorts = current_user.roles
             tracked_words = twitter.user_twitter.words
             counts = [x.as_dict() for x in tracked_words]
             date_count = {}
@@ -58,29 +61,25 @@ class TwitterResource(Resource):
                 
                 values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now())) * 100, 0]]
 
-	    if not cohorts:
-                
-		return make_response(dumps([{'values':values, key:"Tweets"}]))
-	    else:
-		cohort_objs = []
-		for cohort in cohorts:
-		    cohort_name = cohort.name
-		    cohort_tweet_counts = CohortTweetCountModel.query.filter_by(cohort_name=cohort_name).all()
-		    cohort_values = [x.as_count() for x in cohort_tweet_counts]
-                    if not cohort_values:
-                        cohort_values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now())) * 100, 0] for i in range(len(values))]
+    	    if not cohorts:
+                return make_response(dumps([{'values':values, key:"Tweets"}]))
+    	    else:
+        		cohort_objs = []
+        		for cohort in cohorts:
+        		    cohort_name = cohort.name
+        		    cohort_tweet_counts = CohortTweetCountModel.query.filter_by(cohort_name=cohort_name).all()
+        		    cohort_values = [x.as_count() for x in cohort_tweet_counts]
+                            if not cohort_values:
+                                cohort_values = [[time.mktime(datetime.datetime.timetuple(datetime.datetime.now())) * 100, 0] for i in range(len(values))]
 
-		    cohort_obj = {'values':cohort_values, 'key': cohort_name+'\'s average tweets'}
-		    cohort_objs.append(cohort_obj)
+        		    cohort_obj = {'values':cohort_values, 'key': cohort_name+'\'s average tweets'}
+        		    cohort_objs.append(cohort_obj)
 
-		cohort_objs.append({'values':values, 'key':"Your Tweets"})
-		return make_response(dumps(cohort_objs))
+        		cohort_objs.append({'values':values, 'key':"Your Tweets"})
+        		return make_response(dumps(cohort_objs))
 
-        else:
-            error = dumps({'error':'No Twitter account is associated with this user.'})
-            resp = Response(response=error,status=400,mimetype="application/json")
-            return resp
-
+        
+            
 
     def post(self):
         print 'inside twitter post\n'

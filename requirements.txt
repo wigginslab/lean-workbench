@@ -20,3 +20,4 @@ redis
 oauth2
 rauth
 nose
+Flask-Migrate

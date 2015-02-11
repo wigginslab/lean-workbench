@@ -8,7 +8,10 @@ import datetime
 from datetime import timedelta
 from sqlalchemy import func
 import json
+from flask.ext.migrate import Migrate, MigrateCommand
+import requests
 
+    
 class CreateDB(Command):
     """
     Creates sqlalchemy database
@@ -196,6 +199,7 @@ class Mine(Command):
         from quickbooks.qb_mine import mine_qb_data
         
         app = app_factory(config.Dev)
+        print 'inside mine'
         with app.app_context():
             api_token = app.config.get('QUICKBOOKS_SERVER_API_TOKEN')
             quickbooks_server_url = app.config.get('QUICKBOOKS_SERVER_URL') + "/data"
@@ -226,10 +230,10 @@ class Mine(Command):
                     except:
                         print '% failed qb mine' %(user.username)
             else:        
-               # mine_fb_page_data()
-               # mine_visits()
-               # track_keywords()
-                mine_qb_data(quickbooks_server_url,api_token)
+                #mine_fb_page_data()
+                mine_visits()
+                #track_keywords()
+                #mine_qb_data(quickbooks_server_url,api_token)
 
 class PrintUsers(Command):
 	"""
@@ -327,3 +331,12 @@ class MigrateUsers(Command):
                     db.session.add(new_user)
                     db.session.commit()
                     print 'user ' + email + 'migrated'
+
+class PingQB(Command):
+    """
+    ping quickbooks server to keep it awake
+    """
+    def run(self):
+        app = app_factory(config.Dev)
+        with app.app_context():
+            requests.get(app.config.get('QUICKBOOKS_SERVER_URL'))

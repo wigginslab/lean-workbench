@@ -1,6 +1,8 @@
 from database import db
 import datetime
 
+
+
 class WufooSurveyModel(db.Model):
     __tablename__ = "wufoo_survey"
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +17,7 @@ class WufooSurveyModel(db.Model):
     handshake = db.Column(db.String)
     # responses to survey
     entries = db.relationship('WufooEntryModel', backref='wufoo_survey', lazy='dynamic')
+    textareas = db.relationship('WufooTextareaSentiment', backref='wufoo_survey', lazy='dynamic')
 
     def __init__(self, name=None, url=None, username=None, wufoo_email=None, handshake=None):
         self.created = datetime.datetime.now()
@@ -33,6 +36,19 @@ class WufooSurveyModel(db.Model):
             'username': self.username,
             'entries': [x.as_dict() for x in self.entries.all()]
         }
+
+class WufooTextareaSentiment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    survey_id = db.Column(db.Integer, db.ForeignKey('wufoo_survey.id'))
+    created = db.Column(db.DateTime, default=datetime.datetime.now())
+    score = db.Column(db.Float(15), default=0.0)
+    sentiment_type = db.Column(db.String)
+    text = db.Column(db.Text)
+
+    def __init__(self,score,sentiment_type, text):
+        self.score = score
+        self.sentiment_type = sentiment_type
+        self.text = text
 
 class WufooFieldModel(db.Model):
     __tablename__ = "wufoo_field"

@@ -1,6 +1,6 @@
 import sys
 import os
-from wufoo_model import WufooSurveyModel, WufooFieldModel, WufooEntryModel, WufooValueModel, WufooSubfieldModel
+from wufoo_model import WufooSurveyModel, WufooFieldModel, WufooEntryModel, WufooValueModel, WufooSubfieldModel, WufooTextareaSentiment
 from flask.ext.restful import Resource
 from flask import Flask, request, make_response, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -8,6 +8,7 @@ from database import db
 from json import dumps, loads
 from flask.ext.security import current_user
 import traceback
+from alchemyapi_python.alchemyapi import AlchemyAPI
 
 """
 class WufooDAO(object):
@@ -21,38 +22,25 @@ class WufooResource(Resource):
         data = request.args
         survey_id = data.get('survey_id')
         username = current_user.email
+        d3_json = []
         if username:
             if survey_id:
                 return make_response(dumps({'status':500}))
             else:
-                surveys = WufooSurveyModel.query.filter_by(username=username).all()
-                
-                surveys_list = [survey for survey in surveys]
-                surveys_dicts = [survey.as_dict() for survey in surveys]
-                #print entries
-                #entries = [entry.as_dict() for entry in entries[0]]
-                #return make_response(dumps(entries))
-                survey_fields = []
-                for survey in surveys_dicts:
-                 
-                
-                    
-                  d3_json = {'name':survey.get('name'), 'values':[]}
-                  survey_fields.append([])
-                  this_survey = survey_fields[-1]
-                  print survey
-                  for field in survey.get('fields'):
-                    fields = []
-                    title = field.get("title")
-                    values = field.get("values")
-                    values_list = [value.get('value') for value in values]
-                    unique_values = set(values_list)
-                    value_counts = [(value,values_list.count(value)) for value in unique_values]
-                    for value_tuple in value_counts:
-                        value_label = value_tuple[0]
-                        value_count = value_tuple[1]
-                        fields.append({"key":value_label, "y":value_count})
-                    d3_json['values'].append({"title":title,"fields":fields}) 
+                surveys = WufooSurveyModel.query.filter_by(username=username)
+                for survey in surveys:
+                    sentiment = survey.textareas.all()
+                    positive = len([x for x in sentiment if x.sentiment_type == "positive"])
+                    negative = len([x for x in sentiment if x.sentiment_type == "negative"])
+                    neutral = len([x for x in sentiment if x.sentiment_type == "neutral"])
+                    sent_dict = []
+                    if positive:
+                        sent_dict.append({"key":"Positive","y":positive})
+                    if negative:
+                        sent_dict.append({"key":"Negative","y":negative})
+                    if neutral:
+                       sent_dict.appen({"key":"Neutral", "y":neutral})
+                    d3_json.append({"name":survey.name,"values":sent_dict}) 
                 return make_response(dumps(d3_json))
         else:
             pass 
@@ -116,63 +104,29 @@ class WufooResource(Resource):
                 print 'handshake not equal'
                 return jsonify(status="Handshake invalid")
 
-            # create new entry
-            print 'create new entry for survey'
-            new_entry = WufooEntryModel(entry_id=entry_id)
-            survey_values = survey.fields.all()
-            if survey_values:
-                values = True
-            else:
-                values = False
-            field_ids = [field.field_id for field in survey_values]
+            # get textareas
+            textareas = [] 
             for field in fields:
-                # keep track if any modifications
-                modified_field = True
-                new_field = True
-                field_id = field.get("ID")
-                title = field.get("Title")
+                print field
                 field_type = field.get("Type")
-                subfields = field.get("SubFields")
-                subfields_list = []
-                if subfields:
-                    for subfield in subfields:
-                        field_id = subfield.get('ID')
-                        label = subfield.get('Label')
-                        new_sub = WufooSubfieldModel(field_id=field_id,label=label)
-                        subfields_list.append(new_sub)
-                field_value = data.get(field_id)
+                if field_type == "textarea":
+                    textareas.append(field.get("ID"))
 
-                # check if field_id, field_type, and field_title are still the same
-                if field_id in field_ids:
-                    new_field = False
-                    old_field = survey.fields.filter_by(field_id=field_id).first()
-                    if old_field.field_id == field_id and old_field.title == title and old_field.field_type == field_type:
-                        print 'not modified field'
-                        modified_field = False
-                    else:
-                        print 'Modified field'
+            alchemyapi = AlchemyAPI(os.getenv("ALCHEMYAPI_KEY"))
+            for key in data:
+                if key in textareas:
+                    text = data[key]
+                    response = alchemyapi.sentiment('text', text)
+                    if response['status'] == 'OK':
+                        docsentiment = response.get("docSentiment")
+                        score = docsentiment.get("score")
+                        sent_type = docsentiment.get("type")
+                        new_sentiment = WufooTextareaSentiment(score=score, 
+                            sentiment_type= sent_type, text=text)
+                        survey.textareas.append(new_sentiment)
+                        db.session.add(survey)
+                        db.session.add(new_sentiment)
+                        db.session.commit()
                         
-                if new_field or modified_field: 
-                    new_field = WufooFieldModel(field_id=field_id, title = title, field_type = field_type)
-                    survey.fields.append(new_field)
-                    db.session.commit()
-                value_field = survey.fields.filter_by(field_id=field_id).first()
-                for subfield in subfields_list:
-                    value_field.subfields.append(subfield)
-                    db.session.add(value_field)
-                    db.session.add(subfield)
-                    db.session.commit()
-                    
-                # make new value
-                new_value = WufooValueModel(field_value)
-                value_field.values.append(new_value)
-                db.session.add(value_field)
-                db.session.add(new_value)
-                db.session.commit() 
-                # add new value to new entry
-                new_entry.values.append(new_value)
-            
-        db.session.add(new_entry)
-        # add new entries to survey
-        survey.entries.append(new_entry)
-        db.session.commit()
+                    else:
+                        print 'alchemy failed'
