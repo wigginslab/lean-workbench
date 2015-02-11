@@ -9,7 +9,7 @@ google-api-python-client
 flask-WTF
 gunicorn
 tornado
-flask-script
+flask-script==2.0.3
 py-bcrypt
 twython==3.1.1
 facebook-sdk

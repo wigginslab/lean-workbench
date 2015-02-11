@@ -3,7 +3,6 @@ from user_config import UserConfig
 
 project_name="leanworkbench"
 
-
 class Dev(UserConfig):
 	DEBUG = True
 
@@ -25,19 +24,18 @@ class Dev(UserConfig):
 
 	QUICKBOOKS_OAUTH_CONSUMER_KEY="qyprdRIvDMh1GfAyToh39mK1WFlIDW"
 	QUICKBOOKS_OAUTH_CONSUMER_SECRET="5FYBaYYwMJLNt7ZrQsvsCP1ZBgtAYRo0QJd7ea79"
-	QUICKBOOKS_CALLBACK_URL="http://127.0.0.1:5000/connect/quickbooks/callback/"
 	QUICKBOOKS_APP_TOKEN="e31e4187b9e5bb4bd2b94bdb9546dc76394a"
 	BLUEPRINTS = [
 	'google_analytics.app',
-        'hypotheses.app',
-        'twitter.app',
-        'facebook.app',
-        'quickbooks.app',
-        'users.app',
-        'ghosting.app',
-        'scale.app'
+ 	'hypotheses.app',
+ 	'twitter.app',
+   	'facebook.app',
+    	'quickbooks.app',
+     	'users.app',
+     	'ghosting.app',
+     	'scale.app'
             # or ('blog.views.app', {'url_prefix':'/blog'})
-        ]  # each as (blueprint_instance, url_preffix)
+     	 ]  # each as (blueprint_instance, url_preffix)
       
 	
 class Testing(UserConfig):
