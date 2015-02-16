@@ -207,17 +207,14 @@ def configure_views(app):
 		"""
 		if not current_user.is_authenticated():
 			return render_template('public.html', logged_in=False)
-		if current_user.onboarded:
-			print current_user.onboarded
+                else:
 			return render_template('public.html', logged_in=True)
-		else:
-			current_user.onboarded = True
-			db.session.add(current_user)
-			db.session.commit()
-			return redirect(url_for('welcome'))
-
+		
 	@app.route('/welcome', methods=['POST','GET'])
 	def welcome():
+		current_user.onboarded = True
+                db.session.add(current_user)
+                db.session.commit()
 		return render_template('public.html', logged_in=True)
 
 	api = restful.Api(app, decorators=[csrf.exempt])

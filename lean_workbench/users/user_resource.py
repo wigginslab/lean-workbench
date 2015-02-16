@@ -3,7 +3,7 @@ import sys
 import os
 from user_model import User, Role
 from flask.ext.restful import Resource, reqparse
-from flask import jsonify, request
+from flask import jsonify, request, make_response
 from flask.ext.security import auth_token_required, current_user
 from mine import *
 from database import db
@@ -21,6 +21,7 @@ class UserResource(Resource):
                 users = User.query.all()
                 for user in users:
                         print user.as_dict()
+                        return make_response(json.dumps(user.as_dict()))
 
 	        if not current_user.is_authenticated():
 			return jsonify(message='Unauthorized', status_code=200)

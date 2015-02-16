@@ -159,19 +159,6 @@ function ScaleController($scope, $http){
           );
     }
 
-    $scope.done_onboarding = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-		$http.post(
-			'/api/v1/users',
-			JSON.stringify({'onboarded':true})
-		).success(
-			function(data){
-				window.location = '/dashboard';
-			}
-		)
-	}
-
-
 }
 
 
@@ -197,17 +184,6 @@ function WufooController($scope, $http){
       );
     }
 
-    $scope.done_onboarding = function(){
-		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
-		$http.post(
-			'/api/v1/users',
-			JSON.stringify({'onboarded':true})
-		).success(
-			function(data){
-				window.location = '/dashboard';
-			}
-		)
-	}
 }
 
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
@@ -731,7 +707,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 		}
 
 }).controller({
-  LoginController: function ($scope, $http, authService, $location) {
+  LoginController: function ($scope, $http, authService, $location, $window) {
 
     $scope.submit = function() {
    
@@ -745,29 +721,39 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          console.log(data);
-          var status_code = data.meta.code;
-          if (status_code == 200 || status_code == 302 || status_code == 301){        
-            $.cookie('email', $scope.email, { expires: 7 });
-            $.cookie('auth_token', data.authentication_token, { expires: 7 });
-            $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
-            authService.loginConfirmed();
-            window.location = "/dashboard";
-          }
-          else{
-          	if (data.hasOwnProperty('response')){
-	            var errors = data['response']['errors'];
-	            if (errors.hasOwnProperty('email')){
-	              $scope.email_error = errors['email'][0];
-	            }
-	            if (errors.hasOwnProperty('password')){
-	              $scope.password_error = errors['password'][0];
-	            }            
-	          }
-
-	        }
+          console.log(data)
+          if (data.hasOwnProperty('response')){
+            if (data.hasOwnProperty('errors')){
+              var errors = data['response']['errors'];
+                if (errors.hasOwnProperty('email')){
+                  $scope.email_error = errors['email'][0];
+                }
+                if (errors.hasOwnProperty('password')){
+                  $scope.password_error = errors['password'][0];
+                }            
+            } else {
+              $.cookie('email', $scope.email, { expires: 7 });
+              $.cookie('auth_token', data.authentication_token, { expires: 7 });
+              $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
+              
+            // check if onboarded
+            $http.get('/api/v1/users').success(
+              function(user){
+                console.log(user);
+                if (!user.onboarded){
+                  $window.location = "/welcome";
+                }
+                else{
+                  $window.location = "/dashboard";
+                }
+              authService.loginConfirmed();
+              })
+            
         }
-        ).error(
+
+        }
+
+          }).error(
         function(data) {
           $scope.errorMsg = data.reason;
           //debugger;

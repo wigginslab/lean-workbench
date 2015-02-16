@@ -82,7 +82,8 @@ class User(db.Model, UserMixin):
         def as_dict(self):
                 return {
                         'email':self.email,
-                        'roles':self.roles
+                        'roles':[str(role) for role in self.roles],
+                        'onboarded': self.onboarded
                 }
 class API(db.Model):
 	__tablename__ = "api"
