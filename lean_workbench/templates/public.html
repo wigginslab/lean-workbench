@@ -55,10 +55,10 @@
                         {% endif %}
                         <li><a href="mailto:jen@leanworkbench.com">Contact</a></li>
                         {% if not logged_in%}
-                        <li><a id="login" class="pointer" href="/signin">Login</a></li>
+                        <li><a id="login" class="pointer" ng-click="clickLogin()">Login</a></li>
                         {% endif %}
                         {% if logged_in %}
-                         <li><a id="logout" class="pointer" href="/logout">Logout</a></li>
+                         <li><a id="logout" class="pointer" ng-click="clickLogout()">Logout</a></li>
                          {% endif %}
                 </ul>
               </div><!-- /.navbar-collapse -->

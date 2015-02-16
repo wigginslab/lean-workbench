@@ -778,7 +778,14 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
 })
 .controller({
-  NavController: function ($scope, $http, authService, $location, $anchorScroll) {
+  NavController: function ($scope, $http, authService, $window, $anchorScroll) {
+      $scope.clickLogout = function(){
+        $window.location = '/logout';
+      }
+      $scope.clickLogin = function(){
+        console.log('inside clicklogin')
+        $window.location = '/signin';
+      }
     }  
 })
 .controller({
