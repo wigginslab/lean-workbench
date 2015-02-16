@@ -743,7 +743,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
 }).controller({
   LoginController: function ($scope, $http, authService, $location) {
-  	     $("#logout").hide();
+  	$("#logout").hide();
     	$("#login").show();
 
     $scope.submit = function() {
@@ -758,33 +758,29 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
           JSON.stringify({ email: $scope.email, password: $scope.password })
       ).success(
         function(data) {
-          console.log(data);
-          var status_code = data.meta.code;
-          if (status_code == 200 || status_code == 302 || status_code == 301){        
+
+  if (data.hasOwnProperty('response')){
+                var errors = data['response']['errors'];
+                if (errors.hasOwnProperty('email')){
+                  $scope.email_error = errors['email'][0];
+                }
+                if (errors.hasOwnProperty('password')){
+                  $scope.password_error = errors['password'][0];
+                }            
+              } else {
+
             $.cookie('email', $scope.email, { expires: 7 });
             $.cookie('auth_token', data.authentication_token, { expires: 7 });
             $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
             authService.loginConfirmed();
             $("#login").hide();
-    		$("#logout").show();
+    	    $("#logout").show();
             window.location = "/dashboard";
           }
-          else{
-          	if (data.hasOwnProperty('response')){
-	            var errors = data['response']['errors'];
-	            if (errors.hasOwnProperty('email')){
-	              $scope.email_error = errors['email'][0];
-	            }
-	            if (errors.hasOwnProperty('password')){
-	              $scope.password_error = errors['password'][0];
-	            }            
-	          }
-
-	        }
         }
         ).error(
         function(data) {
-          $scope.errorMsg = data.reason;
+          $scope.errorMsg = "Invalid username or password.";
           //debugger;
         }
       );
