@@ -98,7 +98,6 @@ function BaselineController($scope,$http){
 }
 
 function ViewScaleController($scope, $http){
-        $("#logout").show();
 
 	 $http.get(
         '/api/v1/scale'
@@ -212,7 +211,6 @@ function WufooController($scope, $http){
 }
 
 function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location) {
-    $("#logout").show();
 
 
     $scope.xAxisTickFormat = function(){
@@ -366,8 +364,6 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 }
 
 function DashboardController($scope, $http, Hypotheses, $resource, $location) {
-	$("#login").hide();
-   	$("#logout").show();
 
 
 	$( ".datepicker" ).datepicker({ minDate: 0 });
@@ -503,8 +499,6 @@ function OnboardingController(){
 
 
 function StickController($scope, $http, GoogleAnalytics){
-	$("#login").hide();
-   	$("#logout").show();
 	$scope.has_GA = false;
 
 	$scope.GA_auth = function(){
@@ -552,7 +546,6 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 function ViralityController($scope, $http, Facebook, Twitter){
-	$("#login").hide();
     $("#logout").show();
 	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	var FBQuery = Facebook.get();
@@ -675,8 +668,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 		$interpolateProvider.endSymbol(']]');
 }).controller({
  	RegistrationController: function($scope, $http, authService, $location) {
- 				$("#login").show();
- 				$('#logout').hide();
 
                 $scope.showModal = false;
                 $scope.toggleModal = function() {
@@ -699,8 +690,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
                                     console.log(data['response']['user']);
                                     if (data['response']['user']){
                                         
-                                        $("#login").hide();
-                                        $("#logout").show();
                                         $http.post(
                                                 '/api/v1/users',
                                                 JSON.stringify({'cohort':$scope.cohort})
@@ -743,8 +732,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 
 }).controller({
   LoginController: function ($scope, $http, authService, $location) {
-  	     $("#logout").hide();
-    	$("#login").show();
 
     $scope.submit = function() {
    
@@ -765,8 +752,6 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
             $.cookie('auth_token', data.authentication_token, { expires: 7 });
             $http.defaults.headers.common['Authentication-Token'] = data.authentication_token;
             authService.loginConfirmed();
-            $("#login").hide();
-    		$("#logout").show();
             window.location = "/dashboard";
           }
           else{
@@ -794,40 +779,7 @@ var LWBApp = angular.module('LWBApp', ['ngRoute','http-auth-interceptor', 'LWBSe
 })
 .controller({
   NavController: function ($scope, $http, authService, $location, $anchorScroll) {
-  	 
-      $scope.click_login = function(){
-		$location.path('/signin');  
-	  }
-
-
-
-     $scope.click_logout = function() {
-    	$("#logout").hide();
-    	$("#login").show();
-	      $http.defaults.headers.post['X-CSRFToken'] = $("#csrf").val();
-	      $scope.logged_in = false;
-	      $http.get('/logout').success(function() {
-              $scope.restrictedContent = [];
-              $.cookie('auth_token', null);
-              $.cookie('email',null);
-              $http.defaults.headers.common['Authorization'] = null;
-              $http.defaults.headers.common['Authentication-Token'] = null;
-              window.location = "/";
-            }).error(function() {
-              // This should happen after the .post call either way.
-              $.cookie('auth_token', null);
-              $http.defaults.headers.common['Authorization'] = null;
-              window.location = "/";
-	      }); 
-	    };
-
-	    $scope.scrollTo = function(id) {
-	      $location.hash(id);
-	      $anchorScroll();
-	   }
-	  }
-
-
+    }  
 })
 .controller({
 	HypothesesListController: function ($scope, $http, Hypotheses) {
