@@ -483,6 +483,7 @@ function StickController($scope, $http, GoogleAnalytics){
                     '/connect/google-analytics'
                     ).success(
                     function(data){
+                            console.log(data)
                             if (data.hasOwnProperty('redirect_url')){
 
                                 var redirect_url = data['redirect_url']
@@ -501,6 +502,7 @@ function StickController($scope, $http, GoogleAnalytics){
 			).success(
 			function(data){
 				$scope.GA_profiles = data;
+                                $scope.has_GA = true;
 			}
 		).error(function(data){
 			}

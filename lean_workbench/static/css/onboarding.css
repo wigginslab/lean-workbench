@@ -1,5 +1,12 @@
 .onboarding {
   /* google search */ }
+  .onboarding #wufoo-form {
+    width: 80%;
+    margin: auto;
+    margin-top: 1%; }
+  .onboarding #stick-what {
+    font-size: 20px;
+    margin-top: 1%; }
   .onboarding #goog-fixurl ul {
     list-style: none;
     padding: 0;

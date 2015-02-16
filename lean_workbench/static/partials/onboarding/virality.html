@@ -3,24 +3,24 @@
     <div ng-controller="ViralityController" id="stick-engine">
       <h2 class="center"> Virality Engine</h2>
       <div class="row">
-        <div class="center" class="col-lg-3">
+        <div class="center" class="col-lg-12">
             <p>
-              <img src='/static/img/icons/twitter.png' style="float:left"></img>
-              <img src='/static/img/icons/facebook.png' style="float:left"></img>
+              <img src='/static/img/icons/twitter.png'></img>
+              <img src='/static/img/icons/facebook.png'></img>
            </p>
         </div>
-  	  <div class="col-lg-9" style="font-size:20px">
+  	  <div class="col-lg-12" style="font-size:20px">
         The virality engine thrives on getting the word out about your product. Who's talking about your work and why? The key performance indicator is <u>viral coefficient</u>,the number of users each user brings on, and this can be measured using the Facebook and Twitter APIs. We estimate the viral coefficient with a formula that weighs product mentions and interactions with your product pages by the influence of the user interacting.
       </b>Please enable popups for login windows</b>
           <span class="help-block" ng-show="twitter_error">[[twitter_error ]]</span>
-          <div ng-show="has_twitter">
+          <div ng-show="has_twitter" class="center">
             <b>Your Twitter account is connected.</b>
           </div>
           <div ng-hide="has_twitter" class="center">
             <button ng-click="twitter_auth()" type="button" class="btn btn-primary btn-lg">Connect to Twitter</button>
           </div>
          <span class="help-block" ng-show="facebook_error">[[ facebook_error ]]</span>
-          <div ng-show="has_fb">
+          <div ng-show="has_fb" class="center">
             <b>Your Facebook account is connected.</b>
           </div>
           <div ng-hide="has_fb" class="center">

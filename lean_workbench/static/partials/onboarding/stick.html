@@ -1,9 +1,17 @@
-<div ng-controller="StickController" id="stick-engine" class="container">
+<div ng-controller="StickController" id="stick-engine" class="container onboarding">
   <h2 class="center"> Stick Engine</h2>
   <div class="center">
     <img src="/static/img/icons/social_google_box.png" style="width:128px;height:138px;">
   </div>
     <div style="font-size:20px">The stick engine focuses on getting users to return. The key performance indicator is <u>customer retention/churn rates</u>, and this can be measured using the Google Analytics API.</div>
+    <div id="stick-what">
+      We'll use the Google Analytics API for A/B testing and measure customer signups. You can learn about Google Analytic's full potential with these two courses.
+    <ul>
+      <li><a href="https://analyticsacademy.withgoogle.com/course01" target="_blank">Digital Analytics Fundamentals</li>
+        <li><a href="https://analyticsacademy.withgoogle.com/course02" target="_blank">Google Analytics Platform Principles
+        </a></li>
+    </ul>
+    </div>
     <div ng-show="has_GA"><b>Your Google Analytics account is connected.</b></div>
     <div  class="center">
       <button ng-hide="has_GA" ng-click="GA_auth()" type="button" class="btn btn-primary btn-lg">Connect to Google Analytics</button>
