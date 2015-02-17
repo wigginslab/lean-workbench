@@ -4,6 +4,10 @@
 function MyCtrl1(){
 }
 
+function OnboardingDoneController(){
+
+}
+
 function MeasurementsController($scope, $http, Hypotheses, GoogleAnalytics, Twitter){
     // Hypotheses query
     var hyp = Hypotheses.get();
@@ -800,6 +804,7 @@ $routeProvider
 .when('/export', {templateUrl: '/static/partials/export.html', controller: ExportController})
 .when('/connect/google-analytics/success', {templateUrl: '/static/partials/ga_success.html', controller: StickController})
 .when('/onboarding/empathy', { templateUrl: '/static/partials/onboarding/wufoo.html', controller: WufooController})
+.when('/onboarding/done', { templateUrl: '/static/partials/onboarding/done.html', controller: OnboardingDoneController})
 .when('/onboarding/scale', { templateUrl: '/static/partials/onboarding/scale.html', controller: ScaleController})
 .when('/scale', { templateUrl: '/static/partials/scale.html', controller: ViewScaleController})
 .when('/privacy', {templateUrl: '/static/partials/privacy.html', controller:PrivacyController})
