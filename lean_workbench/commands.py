@@ -223,12 +223,12 @@ class Mine(Command):
                     try:
                         mine_visits(username=user.username)
                     except:
-                        print '% failed ga visitor mine' %(user.username)
+                        print '%s failed ga visitor mine' %(user.username)
                 for user in new_qbs:
                     try:
                         mine_visits(username=user.username, quickbooks_server_url=quickbooks_server_url,api_token=api_token)
                     except:
-                        print '% failed qb mine' %(user.username)
+                        print '%s failed qb mine' %(user.username)
             else:        
                 #mine_fb_page_data()
                 mine_visits()

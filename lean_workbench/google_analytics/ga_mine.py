@@ -4,7 +4,6 @@ from google_analytics_models import GoogleAnalyticsVisitors, GoogleAnalyticsRefe
  GoogleAnalyticsSignups, GoogleAnalyticsReturningVisitors, GoogleAnalyticsExperimentVariation, GoogleAnalyticsExperiment
 from google_analytics_client import GoogleAnalyticsAPI
 import json 
-import sys
 from users.user_model import User
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -270,7 +269,7 @@ class Google_Analytics_User_Querier:
                                     db.session.add(experiment_model)
                                     db.session.commit()
                                     
-                                    experiment_variations = [x.name for x in experiment_model.variations]
+                                    experiment_variations = [x for x in experiment_model.variations]
                                     for variation in experiment.get('variations', []):
                                       print variation
                                       name =  variation.get('name')
