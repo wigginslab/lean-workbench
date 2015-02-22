@@ -111,25 +111,19 @@ class Google_Analytics_User_Querier:
 			for backwards_days in range(1,366):
 				# create google query object	
 				# get visitors and visitor types for the day
-				try:
+				#try:
 				    
-				    visitor_data = g.client.data().ga().get(
-					    ids='ga:' + self.profile_id,
-					    start_date=str(google_date),
-					    end_date=str(google_date),
-					    dimensions='ga:visitorType',
-					    metrics='ga:visits').execute()
+                                visitor_data = g.client.data().ga().get(
+                                        ids='ga:' + self.profile_id,
+                                        start_date=str(google_date),
+                                        end_date=str(google_date),
+                                        dimensions='ga:visitorType',
+                                        metrics='ga:visits').execute()
 
-				    # parse and save visitor data to database
-				    self.process_visitor_data(visitor_data, date)
+                                # parse and save visitor data to database
+                                self.process_visitor_data(visitor_data, date)
 
-				except:
-				    print 'ga new visitor mining exception, setting visitors to 0'
-				    visitors_data_model = GoogleAnalyticsVisitors(username=self.username,profile_id=self.profile_id,date=str(date),visitors=0,percent_new_visits=percent_new_visits,new_visits=new_visit)
-				    db.session.add(visitors_data_model)
-				    db.session.commit()
-		
-				date = date - timedelta(days=1)
+			        date = date - timedelta(days=1)
 				google_date = GoogleTimeString(str(date))
 
 	def process_visitor_data(self,visitor_data, date):
@@ -220,13 +214,15 @@ class Google_Analytics_User_Querier:
                                 except:
                                     print '%s ga signup data error' %(self.username)
                     
-                                try:
-                                    returning_visitor_data = g.client.data().ga().get(
-                                    ids='ga:' + self.profile_id,
-                                    start_date=str(google_date),
-                                    end_date=str(google_date),
-                                    dimensions='ga:userType',
-                                    metrics='ga:sessions').execute()
+                                #try:
+                                returning_visitor_data = g.client.data().ga().get(
+                                ids='ga:' + self.profile_id,
+                                start_date=str(google_date),
+                                end_date=str(google_date),
+                                dimensions='ga:userType',
+                                metrics='ga:sessions').execute()
+                                if returning_visitor_data.get('totalResults') != 0:
+                                    print json.dumps(returning_visitor_data)
                                     rows = returning_visitor_data.get('rows')
                                     returning_visitors = int(rows[1][1])
                                     new_visitors = int(rows[0][1])
@@ -240,8 +236,8 @@ class Google_Analytics_User_Querier:
                                     db.session.add(new_rvd)
                                     db.session.add(this_user)
                                     db.session.commit()
-                                except:
-                                    print '%s ga returning visitor data error' %(self.username)
+                                #except:
+                                 #   print '%s ga returning visitor data error' %(self.username)
 
                                 experiments = g.client.management().experiments().list(
                                     accountId=self.account_id,
