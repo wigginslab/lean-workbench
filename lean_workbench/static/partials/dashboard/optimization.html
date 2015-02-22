@@ -33,6 +33,7 @@
                         <b>[[wufooDataName]]</b>
                         <div ng-show="wufooData[0].values.length != 0">
                            <nvd3-pie-chart
+                            ng-if="wufooData[0].values.length !=0"
                             data="wufooData"
                             id="google_source"
                             showLabels="true"
