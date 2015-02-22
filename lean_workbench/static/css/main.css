@@ -5,6 +5,10 @@
     width: 80%;
     margin: auto;
     margin-top: 1%; }
+  .onboarding #scale-form {
+    width: 80%;
+    margin: auto;
+    margin-top: 1%; }
   .onboarding #stick-what {
     font-size: 20px;
     margin-top: 1%; }
@@ -105,7 +109,10 @@ body {
 
 /* Navbar links: increase padding for taller navbar */
 .navbar .nav > li > a {
+  color: #609288;
   padding: 15px 20px; }
+  .navbar .nav > li > a .active {
+    color: #609288; }
 
 /* Offset the responsive button for proper vertical alignment */
 .navbar .btn-navbar {
@@ -394,6 +401,8 @@ body {
     body .navbar-inverse .navbar-nav > .active > a:hover {
       background: transparent;
       color: #3ACAA8; }
+  body #ng-app .navbar-inverse .navbar-nav > li > a:hover, body .navbar-inverse .navbar-nav > li > a:focus {
+    color: #3ACAA8; }
   body .navbar-inverse .navbar-nav > li > a {
     transition: ease-in-out 0.3s;
     -moz-transition: ease-in-out 0.3s;

@@ -72,8 +72,9 @@ body {
         }
 
     }
-    .active {
 
+    #ng-app .navbar-inverse .navbar-nav>li>a:hover, .navbar-inverse .navbar-nav>li>a:focus{
+      color:#3ACAA8; 
     }
 
     .navbar-inverse .navbar-nav>li>a {
