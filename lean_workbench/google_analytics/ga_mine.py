@@ -270,6 +270,7 @@ class Google_Analytics_User_Querier:
                                     db.session.commit()
                                     
                                     experiment_variations = [x for x in experiment_model.variations]
+                                    experiment_variation_names = [x.name for x in experiment_variations]
                                     for variation in experiment.get('variations', []):
                                       print variation
                                       name =  variation.get('name')
@@ -277,12 +278,13 @@ class Google_Analytics_User_Querier:
                                       status = variation.get('status')
                                       weight= variation.get('weight')
                                       won= variation.get('won')
-                                      if name in experiment_variations:
-                                        location = experiment_variations.index(name)
+                                      if name in experiment_variation_names:
+                                        location = experiment_variation_names.index(name)
                                         variation_model = experiment_variations[location]
                                         variation_model.won = won
                                         variation_model.status = status
                                       else:
+                                        print 'new variation'
                                         variation_model = GoogleAnalyticsExperimentVariation(url=url,status=status,weight=weight,name=name,won=won)
 
                                       experiment_model.variations.append(variation_model)
