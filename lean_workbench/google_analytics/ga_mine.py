@@ -227,6 +227,10 @@ class Google_Analytics_User_Querier:
                                     returning_visitors = int(rows[1][1])
                                     new_visitors = int(rows[0][1])
                                     all_visitors = new_visitors + returning_visitors
+                                else:
+                                    returning_visitors = 0
+                                    new_visitors = 0
+                                    all_visitors = 0
                                     new_rvd = GoogleAnalyticsReturningVisitors(
                                             username=self.username,
                                             all_visitors = all_visitors,
