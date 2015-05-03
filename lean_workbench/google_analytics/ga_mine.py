@@ -224,9 +224,12 @@ class Google_Analytics_User_Querier:
                                 if returning_visitor_data.get('totalResults') != 0:
                                     print json.dumps(returning_visitor_data)
                                     rows = returning_visitor_data.get('rows')
-                                    returning_visitors = int(rows[1][1])
-                                    new_visitors = int(rows[0][1])
-                                    all_visitors = new_visitors + returning_visitors
+                                    try: 
+                                      returning_visitors = int(rows[1][1])
+                                      new_visitors = int(rows[0][1])
+                                      all_visitors = new_visitors + returning_visitors
+                                    except:
+                                      pass
                                 else:
                                     returning_visitors = 0
                                     new_visitors = 0

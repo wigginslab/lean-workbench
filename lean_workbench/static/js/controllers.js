@@ -371,9 +371,7 @@ function DashboardController($scope, $http, Hypotheses, $resource, $location) {
         function(data){
           // if success
           if (data['response']['user']){
-                 
-                 $location.path("/signin");
-
+                 $location.path("/welcome");
           }
 
           else{
@@ -484,29 +482,30 @@ function StickController($scope, $http, GoogleAnalytics){
 	$scope.GA_auth = function(){
 		$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 		$http.post(
-                    '/connect/google-analytics'
-                    ).success(
-                    function(data){
-                            console.log(data)
-                            if (data.hasOwnProperty('redirect_url')){
+        '/connect/google-analytics'
+        ).success(
+        function(data){
+                console.log(data)
+                if (data.hasOwnProperty('redirect_url')){
 
-                                var redirect_url = data['redirect_url']
-                                window.location = redirect_url;
-                            }
-                            $scope.has_GA = true;
+                    var redirect_url = data['redirect_url']
+                    window.location = redirect_url;
+                }
+                    $scope.has_GA = true;
 		    }).error(
-                      function(data){
-                        $scope.has_GA = false;
-                      })
+            function(data){
+            $scope.has_GA = false;
+        })
 
 	}
 
 	var profiles =  $http.get(
-			'/api/v1/google-analytics'
+			'/api/v1/google-analytics?metric=profiles'
 			).success(
 			function(data){
+        console.log(data);
 				$scope.GA_profiles = data;
-                                $scope.has_GA = true;
+        $scope.has_GA = true;
 			}
 		).error(function(data){
 			}
