@@ -4,10 +4,14 @@ import requests
 from database import db
 
 def mine_qb_data(quickbooks_server_url, api_token, username=None):
+        print quickbooks_server_url
+        print api_token
+        print username
         if username:
             users = [QuickbooksUser.query.filter_by(username=username)]
         else: 
             users = [x for x in QuickbooksUser.query.all()]
+        print users[0].username
         for user in users:
             try:
                 username = user.username

@@ -16,27 +16,29 @@ class Quickbooks_DAO(object):
 
     def __init__(self):
         self.user_qb = QuickbooksUser.query.filter_by(username=current_user.email).first()
-
+        print self.user_qb
     def as_dict(self):
-	return self.user_qb.as_dict()
+	   return self.user_qb.as_dict()
 
 class Quickbooks_resource(Resource):
     def get(self, **kwargs):
+        print 'getting qb'
         args = request.args
-	if current_user.is_anonymous():
-	    return jsonify(qb_authed=False)
-	qb = Quickbooks_DAO()
-	if qb.user_qb:
-            # get sum of balance for every day
+        if current_user.is_anonymous():
+            print 'anon user'
+            return jsonify(qb_authed=False)
+        qb = Quickbooks_DAO()
+        if qb.user_qb:
+        # get sum of balance for every day
             base_query = db.session.query(
                 QuickbooksDailyAccountBalance.date,
-                func.sum(QuickbooksDailyAccountBalance.balance).label('total')
-            ).filter(QuickbooksDailyAccountBalance.quickbooks_user_id == current_user.id).group_by(QuickbooksDailyAccountBalance.date)
+                    func.sum(QuickbooksDailyAccountBalance.balance).label('total')
+                ).filter(QuickbooksDailyAccountBalance.quickbooks_user_id == current_user.id).group_by(QuickbooksDailyAccountBalance.date)
             balances =  [(time.mktime(datetime.datetime.timetuple(x[0]))*1000,x[1]) for x in base_query.all()]
-            d3_data = [{"key":"Runway", "values":balances}]
+            d3_data = [{"key":"Runway", "values":balances, "username":current_user.email}]
             return make_response(dumps(d3_data))
         else:
-            return make_response(dumps([{'qb_authed':False}]))
+            return make_response(dumps([{'qb_authed':False, 'username':current_user.email}]))
 
     def post(self):
         args = request.args

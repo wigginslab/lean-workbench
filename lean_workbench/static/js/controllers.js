@@ -53,8 +53,10 @@ function OptimizationController($http, $scope){
 	    function(data) {
               // must have at least one value for each answer
 	      $scope.wufooData = data;
-	      console.log($scope.wufooData[0].values.length)
-	      $scope.wufooDataName = data[0]['name'];
+        if (wufooData[0]){
+	       console.log($scope.wufooData[0].values.length)
+	       $scope.wufooDataName = data[0]['name'];
+        }
 	    }
 	  ).error(function(data){
 		 }
@@ -69,9 +71,15 @@ function BaselineReturningController($scope,$http){
         ).success(
         function(data) {
           console.log(data);
+          
           var theirDays = data[0].values.length;
-          data[1].values = data[1].values.slice(0,theirDays);
-
+          var cohortDays = data[1].values.length;
+          if (theirDays < cohortDays){
+                data[1].values = data[1].values.slice(cohortDays-theirDays,cohortDays);
+            } 
+            if (theirDays > cohortDays){
+                data[0].values = data[0].values.slice(theirDays-cohortDays,theirDays);
+            }          
           $scope.googleRVData = data;
           $scope.has_ga_ret_data = true;
         }).error(function(data){
@@ -85,8 +93,15 @@ function BaselineSignupsController($scope,$http){
       ).success(
         function(data) {
           console.log(data)
-            var theirDays = data[0].values.length;
-          data[1].values = data[1].values.slice(0,theirDays);
+         
+          var theirDays = data[0].values.length;
+          var cohortDays = data[1].values.length;
+          if (theirDays < cohortDays){
+                data[1].values = data[1].values.slice(cohortDays-theirDays,cohortDays);
+            } 
+            if (theirDays > cohortDays){
+                data[0].values = data[0].values.slice(theirDays-cohortDays,theirDays);
+            }          
           $scope.has_ga_signup_data = true;
           $scope.googleSignupData = data;
         }
@@ -241,7 +256,17 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
         '/api/v1/twitter'
       ).success(
         function(data) {
+
+          var theirDays = data[0].values.length;
+          var cohortDays = data[1].values.length;
+          if (theirDays < cohortDays){
+                data[1].values = data[1].values.slice(cohortDays-theirDays,cohortDays);
+            } 
+            if (theirDays > cohortDays){
+                data[0].values = data[0].values.slice(theirDays-cohortDays,theirDays);
+            }          
           $scope.twitterData = data;
+          console.log(data);
           $scope.has_twitterData = true;
         }
       ).error(function(data){
@@ -301,19 +326,20 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
 		 }
 	  )
 
-        $http.get(
+/*        $http.get(
 	    '/api/v1/wufoo'
 	  ).success(
 	    function(data) {
               // must have at least one value for each answer
 	      $scope.wufooData = data;
 	      console.log($scope.wufooData)
-	      $scope.wufooDataName = data[0]['name'];
-	    }
+        if (data[0]){
+	       $scope.wufooDataName = data[0]['name'];
+	     }
 	  ).error(function(data){
 		 }
 	  )
-
+*/
 
         $http.get(
         '/api/v1/facebook'
@@ -324,6 +350,15 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
           }
           else{
             $scope.has_fb_data = true;
+            var theirDays = data[0].values.length;
+            var cohortDays = data[1].values.length;
+            if (theirDays < cohortDays){
+                data[1].values = data[1].values.slice(cohortDays-theirDays,cohortDays);
+            } 
+            if (theirDays > cohortDays){
+                data[0].values = data[0].values.slice(theirDays-cohortDays,theirDays);
+            }          
+            console.log(data)
             $scope.facebookData = data;
           }
         }
@@ -336,10 +371,13 @@ function DashboardControllerTwo($scope, $http, Hypotheses, $resource, $location)
       ).success(
         function(data) {
           if (data.hasOwnProperty('qb_authed')){
+            console.log(data)
               $scope.has_qb_data = false;
           }
           else{
-            $scope.has_qb_data = true;
+            console.log(data)
+              $scope.has_qb_data = true;
+
             $scope.quickbooksData = data;
           }
         }
@@ -533,7 +571,15 @@ function StickController($scope, $http, GoogleAnalytics){
 }
 
 function ViralityController($scope, $http, Facebook, Twitter){
+
     $("#logout").show();
+     $http.get('/api/v1/quickbooks'
+    ).success(function(data){
+      console.log(data)
+        if (data[0] && data[0].username){
+          $scope.username = data[0].username;
+        }
+      })
 	$http.defaults.headers.common['X-CSRFToken'] = $("#csrf").val();
 	var FBQuery = Facebook.get();
 
@@ -627,6 +673,7 @@ function PayController($scope, $http){
 		'/api/v1/quickbooks'
 		).success(
 			function(data){
+        console.lokg(data)
 				if (data['qb_authed']){
 					$scope.has_qb = true;
                                         $scope.qb_url = data['qb_url'];
