@@ -68,6 +68,9 @@ function BaselineReturningController($scope,$http){
         '/api/v1/google-analytics?metric=returning-visitors'
         ).success(
         function(data) {
+          console.log(data);
+          var theirDays = data[0].values.length;
+          data[1].values = data[1].values.slice(0,theirDays);
 
           $scope.googleRVData = data;
           $scope.has_ga_ret_data = true;
@@ -81,6 +84,9 @@ function BaselineSignupsController($scope,$http){
         '/api/v1/google-analytics?metric=signups'
       ).success(
         function(data) {
+          console.log(data)
+            var theirDays = data[0].values.length;
+          data[1].values = data[1].values.slice(0,theirDays);
           $scope.has_ga_signup_data = true;
           $scope.googleSignupData = data;
         }
@@ -500,7 +506,7 @@ function StickController($scope, $http, GoogleAnalytics){
 	}
 
 	var profiles =  $http.get(
-			'/api/v1/google-analytics?metric=profiles'
+			'/api/v1/google-analytics'
 			).success(
 			function(data){
         console.log(data);

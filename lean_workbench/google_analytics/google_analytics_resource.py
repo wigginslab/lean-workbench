@@ -29,6 +29,7 @@ class GoogleAnalyticsDAO(object):
         profile_id: id of specific GA profile to query
     """
     def __init__(self, username, profile_id=None, metric=None, dimension=None):
+        print 'init GA DAO'
         self.username = username
         self.profile_id = profile_id
         self.metric = metric
@@ -46,6 +47,7 @@ class GoogleAnalyticsDAO(object):
             user_accounts = g.get_user_accounts()
             return user_accounts.get('items')
         else:
+            print 'GA client does not exist'
             return []
 
     def get_user_profile_visits(self, username):
@@ -181,50 +183,52 @@ class GoogleAnalyticsResource(Resource):
         print 'profile:'
         print profile
         if not profile:
-            error = dumps({'error':'No Google Analytics Account is associated with this user.'})
-            resp = Response(response=error,status=400,mimetype="application/json")
-            return resp
-
+          print 'no profile'
+          error = dumps({'error':'No Google Analytics Account is associated with this user.'})
+          resp = Response(response=error,status=400,mimetype="application/json")
+          return resp
+        else:
+          print 'there is profile'
         profile_id = profile.profile_id
         print 'profile_id:'
         print profile_id
-        if profile and profile_id:
-                print 'there is profile'
+        if profile:
+              print 'there is profile'
+              GA = GoogleAnalyticsDAO(username = current_user.email)
+        if not metric:
+            if profile:
+                print 'get user profiles'
+                profiles = GA.get_user_profiles()
+                return make_response(dumps(profiles))
+            else:
+                print 'no profile' 
+                return jsonify(status=666)
+        elif metric == "visits":
+                return GA.get_user_profile_visits(username = current_user.email)
+
+        elif metric == "returning-visitors":
+            return GA.get_returning_visitors(username = current_user.email)
+
+        elif metric == "referrals":
+            return GA.get_user_referrals(username = current_user.email)
+
+        elif metric == "signups":
+            return GA.get_signups(username = current_user.email)
+        
+        elif metric == "experiments":
+            return GA.get_experiments(username = current_user.email)
+
+        else:
+            if profile:
                 GA = GoogleAnalyticsDAO(username = current_user.email)
-                if not metric:
-                    if profile:
-                        print 'get user profiles'
-                        profiles = GA.get_user_profiles()
-                        return make_response(dumps(profiles))
-                    else:
-                        
-                        return jsonify(status=666)
-                elif metric == "visits":
-                        return GA.get_user_profile_visits(username = current_user.email)
-
-                elif metric == "returning-visitors":
-                    return GA.get_returning_visitors(username = current_user.email)
-
-                elif metric == "referrals":
-                    return GA.get_user_referrals(username = current_user.email)
-
-                elif metric == "signups":
-                    return GA.get_signups(username = current_user.email)
-                
-                elif metric == "experiments":
-                    return GA.get_experiments(username = current_user.email)
-
-                else:
-                    if profile:
-                        GA = GoogleAnalyticsDAO(username = current_user.email)
-                        print 'trying to get user profiles'
-                        try:
-                            
-                            print 'attempting to get user profiles'
-                            profiles = GA.get_user_profiles()
-                            return make_response(dumps(profiles))
-                        except:
-                            return jsonify(status=111)
+                print 'trying to get user profiles'
+                try:
+                    
+                    print 'attempting to get user profiles'
+                    profiles = GA.get_user_profiles()
+                    return make_response(dumps(profiles))
+                except:
+                    return jsonify(status=111)
 
     def post(self, **kwargs):
         """
