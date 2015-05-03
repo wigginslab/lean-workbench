@@ -30,12 +30,12 @@
                     When you create Wufoo surveys for your features, we can gauge the sentiment in the free text responses. Here are your surveys and their sentiments.
                     <!-- graphs -->
                     <div>
+
                         <b>[[wufooDataName]]</b>
                         <div ng-show="wufooData[0].values.length != 0">
                            <nvd3-pie-chart
-                            ng-if="wufooData[0].values.length !=0"
                             data="wufooData"
-                            id="google_source"
+                            id="wufoo_source"
                             showLabels="true"
                             x="donutXFunction()"
                             y="donutYFunction()"

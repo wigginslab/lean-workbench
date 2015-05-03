@@ -38,6 +38,26 @@ function OperationsController(){
 }
 
 function OptimizationController($http, $scope){
+  
+
+     $scope.donutToolTipContentFunction = function(){
+      return function(key,  y, e, graph) {
+        return  'source: ' + key + '<br>' +'sessions: ' +y; 
+      }
+    };   
+
+
+
+  $scope.donutXFunction = function(){
+      return function(d) {
+        return d.key;
+    };
+  }
+  $scope.donutYFunction = function(){
+      return function(d) {
+        return d.y;
+      };
+  }
  $http.get(
         '/api/v1/google-analytics?metric=experiments'
       ).success(
@@ -52,9 +72,10 @@ function OptimizationController($http, $scope){
 	  ).success(
 	    function(data) {
               // must have at least one value for each answer
-	      $scope.wufooData = data;
-        if (wufooData[0]){
-	       console.log($scope.wufooData[0].values.length)
+	      $scope.wufooData = data[0].values;
+
+        console.log(data[0])
+        if (data[0]){
 	       $scope.wufooDataName = data[0]['name'];
         }
 	    }
