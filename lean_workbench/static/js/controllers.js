@@ -40,6 +40,21 @@ function OperationsController(){
 function OptimizationController($http, $scope){
   
 
+    $scope.xAxisTickFormat = function(){
+                return function(d){
+                    return d3.time.format('%x')(new Date(d));  //uncomment for date format
+                }
+    }
+
+    $scope.toolTipContentFunction = function(){
+        return function(key, x, y, e, graph) {
+            alert('tooltip content');
+            return  'Super New Tooltip' +
+              '<h1>' + key + '</h1>' +
+                    '<p>' +  y + ' at ' + x + '</p>'
+        }
+    };   
+
      $scope.donutToolTipContentFunction = function(){
       return function(key,  y, e, graph) {
         return  'source: ' + key + '<br>' +'sessions: ' +y; 
@@ -103,6 +118,7 @@ function BaselineReturningController($scope,$http){
             }          
           $scope.googleRVData = data;
           $scope.has_ga_ret_data = true;
+          $scope.$apply();
         }).error(function(data){
 
       })

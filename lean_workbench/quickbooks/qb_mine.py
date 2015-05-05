@@ -15,12 +15,14 @@ def mine_qb_data(quickbooks_server_url, api_token, username=None):
         for user in users:
             try:
                 username = user.username
-                quickbooks_server_url = quickbooks_server_url+"?username="+username+"&api_key="+api_token
-                if len(users) != 1:
-                    today = datetime.datetime.now()
-                    yesterday = today - datetime.timedelta(days=1)
-                    quickbooks_server_url = quickbooks_server_url+"&start_date="+yesterday+"&end_date="+today
-                r = requests.get(quickbooks_server_url)
+                user_quickbooks_server_url = quickbooks_server_url+"?username="+username+"&api_key="+api_token
+                print quickbooks_server_url
+                #if len(users) != 1:
+                 #   today = datetime.datetime.now()
+                  #  yesterday = today - datetime.timedelta(days=1)
+                   # quickbooks_server_url = quickbooks_server_url
+                    #+"&start_date="+yesterday+"&end_date="+today
+                r = requests.get(user_quickbooks_server_url)
                 data = r.json()
                 print data
                 for row in data:
@@ -38,8 +40,10 @@ def mine_qb_data(quickbooks_server_url, api_token, username=None):
                     user.active = True
                     db.session.add(user)
                     db.session.commit()
-            except:
-                print 'error in qb_mine.py for %s' %(user.username)
+            except Exception,e:
+                import traceback
+                traceback.print_exc()
+
 def date_tuple(date_string):
         date_tuple = datetime.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
         return date_tuple
