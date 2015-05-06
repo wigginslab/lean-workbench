@@ -21,3 +21,4 @@ oauth2
 rauth
 nose
 Flask-Migrate
+flask-admin

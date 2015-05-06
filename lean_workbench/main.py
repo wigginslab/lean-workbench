@@ -1,3 +1,70 @@
+from flask import Flask, send_file, make_response
+from flask.ext.admin import Admin, expose
+from flask.ext.admin.contrib.sqla import ModelView
+from flask.ext.admin.actions import action
+from users.user_model import User, Role
+from flask.ext.security import current_user
+
+from database import db
+import config
+
+# write to CSV
+from StringIO import StringIO
+import csv
+from flask.ext.admin.tools import rec_getattr
+
+
+class UserView(ModelView):
+	
+    # Disable model creation
+    can_create = False
+    list_template = 'admin/list.html'
+  	# Override displayed fields
+    #column_list = ('email','company', 'last_login_at')
+
+
+    # Exporting
+    def _get_data_for_export(self):
+        view_args = self._get_list_extra_args()
+ 
+        ## Map column index to column name
+        #sort_column = self._get_column_by_idx(view_args.sort)
+        #if sort_column is not None:
+            #sort_column = sort_column[0]
+ 
+        _, query = self.get_list(0, None, False, None, None, execute=False)
+ 
+        return query.limit(None).all()
+
+     
+    def get_export_csv(self):
+        self.export_columns = [column_name for column_name, _ in self._list_columns]
+ 
+        io = StringIO()
+        rows = csv.DictWriter(io, self.export_columns)
+ 
+        data = self._get_data_for_export()
+ 
+        rows.writeheader()
+ 
+        for item in data:
+            row = {column: unicode(rec_getattr(item, column)).encode('utf-8') for column in self.export_columns}
+            rows.writerow(row)
+ 
+        io.seek(0)
+        return io.getvalue()
+
+    @expose('/export/')
+    def export(self):
+        response = make_response(self.get_export_csv())
+        response.mimetype = 'text/csv'
+        response.headers['Content-Disposition'] = 'attachment; filename=%s.csv' % self.name.lower().replace(' ', '_')
+ 
+        return response
+
+    def is_accessible(self):
+   		return 'admin' in [role.name for role in current_user.roles]
+
 from flask import Flask, render_template, redirect, url_for, current_app
 from flask.ext.security import Security, SQLAlchemyUserDatastore, current_user, auth_token_required, current_user
 from users.user_model import User, Role
@@ -17,6 +84,8 @@ from ghosting.ghosting_resource import Ghosting_resource
 from scale.scale_resource import Scale_resource
 from users.user_resource import UserResource
 from flask.ext.migrate import Migrate, MigrateCommand
+from flask.ext.admin import Admin
+
 
 class SecuredStaticFlask(Flask):
 	def send_static_file(self, filename):
@@ -167,8 +236,13 @@ def configure_views(app):
 	security = Security(app, user_datastore, confirm_register_form= ExtendedRegisterForm)
 	csrf = CsrfProtect(app)
 	migrate = Migrate(app, db)
+	admin = Admin(app)
 
-	
+
+	admin.add_view(UserView(User, db.session))
+
+
+	print current_user
 	@app.route('/')
 	def index():
 		if current_user.is_authenticated():

@@ -30,12 +30,12 @@ class Dev(UserConfig):
  	'hypotheses.app',
  	'twitter.app',
    	'facebook.app',
-    	'quickbooks.app',
-     	'users.app',
-     	'ghosting.app',
-     	'scale.app'
-            # or ('blog.views.app', {'url_prefix':'/blog'})
-     	 ]  # each as (blueprint_instance, url_preffix)
+	'quickbooks.app',
+ 	'users.app',
+ 	'ghosting.app',
+ 	'scale.app'
+        # or ('blog.views.app', {'url_prefix':'/blog'})
+ 	 ]  # each as (blueprint_instance, url_preffix)
       
 	
 class Testing(UserConfig):
