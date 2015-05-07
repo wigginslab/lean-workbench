@@ -35,14 +35,14 @@ class DateCount(db.Model):
 			'date': time.mktime(datetime.datetime.timetuple(self.date))*1000,
 			'count':self.count
 		}
-
 class Word(db.Model):
 	__tablename__ = "twitter_word"
 	id = db.Column(db.Integer, primary_key=True)
 	word = db.Column(db.String(140))
 	counts = db.relationship('DateCount',  backref='twitter_word', lazy='dynamic')
 	
-
+	def __str__(self):
+		return str(self.word)
 
 	def as_dict(self):
 		return {

@@ -5,7 +5,9 @@ from flask.ext.admin.actions import action
 from users.user_model import User, Role
 from quickbooks.quickbooks_model import QuickbooksDailyAccountBalance
 from flask.ext.security import current_user
-
+from facebook.facebook_model import FacebookPageData
+from twitter.twitter_model import DateCount
+from google_analytics.google_analytics_models import *
 from database import db
 import config
 
@@ -14,8 +16,7 @@ from StringIO import StringIO
 import csv
 from flask.ext.admin.tools import rec_getattr
 
-
-class QuickbooksView(ModelView):
+class ExportView(ModelView):
 	
     list_template = 'admin/list.html'
 
@@ -61,6 +62,8 @@ class QuickbooksView(ModelView):
 
     def is_accessible(self):
    		return 'admin' in [role.name for role in current_user.roles]
+
+
 class UserView(ModelView):
 	
     list_template = 'admin/list.html'
@@ -286,8 +289,13 @@ def configure_views(app):
 
 
 	admin.add_view(UserView(User, db.session))
-	admin.add_view(QuickbooksView(QuickbooksDailyAccountBalance, db.session))
-
+	admin.add_view(ExportView(QuickbooksDailyAccountBalance, db.session,name="Quickbooks"))
+	admin.add_view(ExportView(FacebookPageData, db.session,name="Facebook"))
+	admin.add_view(ExportView(DateCount, db.session,name="Twitter Count"))
+	admin.add_view(ExportView(GoogleAnalyticsVisitors,db.session,
+		name="Visitors"))
+	admin.add_view(ExportView(GoogleAnalyticsSignups,db.session,
+		name="Signups"))
 
 
 	print current_user
