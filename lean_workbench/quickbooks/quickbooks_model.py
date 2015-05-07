@@ -7,6 +7,8 @@ class QuickbooksUser(db.Model):
     username = db.Column(db.String)
     active = db.Column(db.Boolean, default=False)
     daily_balances = db.relationship('QuickbooksDailyAccountBalance', backref='quickbooks_user', lazy='joined')
+    def __str__(self):
+        return str(self.username)
 
 class QuickbooksDailyAccountBalance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +21,8 @@ class QuickbooksDailyAccountBalance(db.Model):
             self.date = date
             self.balance = balance
             self.name = name
+
+
 
     def date_balance(self):
         return [time.mktime(datetime.datetime.timetuple(self.date))*1000, self.balance]
