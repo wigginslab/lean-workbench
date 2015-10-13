@@ -4,7 +4,6 @@
 *.so
 logs
 
-user_config.py
 *pyc
 #local
 venv
